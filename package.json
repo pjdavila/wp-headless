@@ -2,10 +2,10 @@
   "name": "@faustwp/faust-scaffold",
   "private": true,
   "scripts": {
-    "dev": "faust dev",
+    "dev": "faust dev -p 5000 -H 0.0.0.0",
     "build": "faust build",
     "generate": "faust generatePossibleTypes",
-    "start": "faust start",
+    "start": "faust start -p 5000 -H 0.0.0.0",
     "format": "prettier . --write",
     "test:format": "prettier . --check"
   },
