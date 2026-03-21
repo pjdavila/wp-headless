@@ -8,8 +8,8 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-NEXT_PUBLIC_WORDPRESS_URL = "https://faustexample.wpengine.com"
-NEXT_PUBLIC_SITE_URL = "https://faustexample.wpengine.com"
+NEXT_PUBLIC_WORDPRESS_URL = "https://vnmcms.wpenginepowered.com"
+NEXT_PUBLIC_SITE_URL = "https://vnmcms.wpenginepowered.com"
 
 [workflows]
 runButton = "Project"
