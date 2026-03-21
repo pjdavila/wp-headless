@@ -4,16 +4,15 @@ import styles from "../styles/featured-image.module.css";
 
 export function FeaturedImage({
   post,
-  classNames = "h-48 my-9 relative",
   uri = false,
   title = "",
 }) {
   if (!post.featuredImage?.node?.sourceUrl) {
-    return "";
+    return null;
   }
 
   return (
-    <div className={styles.wrapper + " " + classNames}>
+    <div className={styles.wrapper}>
       {typeof uri === "string" && uri.trim() !== "" ? (
         <Link href={uri} title={title} className={styles.link}>
           <Image

@@ -31,12 +31,11 @@ export default function PostListItem({ post }) {
         post={post}
         uri={uri}
         title={title}
-        classNames="h-48 my-9 relative"
       />
 
       <div
         className={styles.excerpt}
-        dangerouslySetInnerHTML={{ __html: excerpt }}
+        dangerouslySetInnerHTML={{ __html: excerpt || "" }}
       />
 
       <Link href={uri} title="Read more" className={styles.readMore}>

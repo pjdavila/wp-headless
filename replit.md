@@ -15,7 +15,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_WORDPRESS_URL` | URL of the WordPress site (set to `https://faustexample.wpengine.com`) |
+| `NEXT_PUBLIC_WORDPRESS_URL` | URL of the WordPress site (set to `https://vnmcms.wpenginepowered.com`) |
 | `NEXT_PUBLIC_SITE_URL` | Public URL of this frontend |
 | `FAUST_SECRET_KEY` | Secret key from WordPress Settings → Headless (required for preview mode) |
 
