@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "2X3RrwD-R0LQE7EHa4HCB"
+uri = "file://wordpress-demo-import.xml"
+type = "unspecified"
+title = "WordPress Demo Import - 20 Artículos"
