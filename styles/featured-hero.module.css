@@ -1,0 +1,172 @@
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.mainStory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: hsl(var(--primary-foreground));
+  background-color: hsl(var(--primary));
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+
+.badge:hover {
+  opacity: 0.9;
+  text-decoration: none;
+}
+
+.mainTitle {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.mainTitleLink {
+  color: hsl(var(--foreground));
+  text-decoration: none;
+}
+
+.mainTitleLink:hover {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.mainExcerpt {
+  font-size: 1rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+}
+
+.mainExcerpt p {
+  margin: 0;
+}
+
+.mainMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.author {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.secondaryGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.secondaryCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.secondaryCard:hover {
+  border-color: hsl(var(--muted-foreground));
+}
+
+.secondaryImgWrap {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  display: block;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.secondaryImg {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.secondaryCard:hover .secondaryImg {
+  transform: scale(1.03);
+}
+
+.secondaryBody {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.secondaryBadge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.secondaryBadge:hover {
+  text-decoration: underline;
+}
+
+.secondaryTitle {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.secondaryTitleLink {
+  color: hsl(var(--foreground));
+  text-decoration: none;
+}
+
+.secondaryTitleLink:hover {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.secondaryMeta {
+  font-size: 0.7rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .mainTitle {
+    font-size: 1.75rem;
+  }
+
+  .secondaryGrid {
+    grid-template-columns: 1fr;
+  }
+}

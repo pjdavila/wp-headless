@@ -20,6 +20,16 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Border Radius**: 2px (`--radius`)
 - **ThemeToggle**: Component in `components/ThemeToggle.js`, rendered in Header
 
+## Homepage Components
+
+- **FeaturedHero**: Text-first main story with large serif title, excerpt, metadata; 4-card secondary grid alongside
+- **StoryCard**: Card with featured image, green category badge, title, excerpt, author, date
+- **SidebarStoryCard**: Compact numbered card with thumbnail and relative Spanish timestamps
+- **SectionBlock**: Category-grouped StoryCard grid with section title and "Ver más" link
+- **MarketWatchlist**: Placeholder financial data sidebar widget
+- **Homepage Layout**: Hero → main+sidebar grid (sidebar at 320px, collapses on mobile)
+- **Data**: Fetches 20 posts, groups by WordPress category (skips uncategorized)
+
 ## Environment Variables
 
 | Variable | Description |
