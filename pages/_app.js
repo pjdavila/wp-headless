@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
 import "../styles/globals.css";
 
+const GA_ID = "G-F4RRT00M6P";
+
 const THEME_INIT_SCRIPT = `
 (function(){
   try {
@@ -17,6 +19,27 @@ const THEME_INIT_SCRIPT = `
     }
   } catch(e) {
     document.documentElement.classList.add('dark');
+  }
+})();
+`;
+
+const GA_INIT_SCRIPT = `
+(function(){
+  function loadGA() {
+    var s = document.createElement('script');
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_ID}';
+    s.async = true;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', '${GA_ID}', { send_page_view: true });
+  }
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(function(){ setTimeout(loadGA, 3000); });
+  } else {
+    setTimeout(loadGA, 3000);
   }
 })();
 `;
@@ -33,6 +56,11 @@ export default function MyApp({ Component, pageProps }) {
         id="theme-init"
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+      />
+      <Script
+        id="ga-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: GA_INIT_SCRIPT }}
       />
       <Component {...pageProps} key={router.asPath} />
     </FaustProvider>

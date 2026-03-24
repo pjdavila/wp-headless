@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import Head from "next/head";
 import Header from "../components/Header";
+import SeoHead from "../components/SeoHead";
 import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
@@ -59,9 +59,12 @@ export default function FrontPage(props) {
 
   return (
     <>
-      <Head>
-        <title>{siteTitle || "Business Journal Caribe"}</title>
-      </Head>
+      <SeoHead
+        title={null}
+        description="Noticias de negocios, tecnología, marketing y finanzas del Caribe. Tu fuente premium de información empresarial."
+        ogImage={heroPosts[0]?.featuredImage?.node?.sourceUrl}
+        url="/"
+      />
 
       <Header
         siteTitle={siteTitle}

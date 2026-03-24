@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import Head from "next/head";
 import Image from "next/image";
+import SeoHead from "../components/SeoHead";
 import Link from "next/link";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -22,6 +22,7 @@ const POST_QUERY = gql`
       id
       title
       content
+      excerpt
       uri
       date
       featuredImage {
@@ -127,9 +128,15 @@ export default function Component(props) {
 
   return (
     <>
-      <Head>
-        <title>{`${title} - ${siteTitle || "Business Journal Caribe"}`}</title>
-      </Head>
+      <SeoHead
+        title={title}
+        description={post.excerpt || content}
+        ogImage={imgSrc}
+        ogType="article"
+        url={uri}
+        articlePublished={date}
+        articleAuthor={author?.node?.name}
+      />
 
       <Header siteTitle={siteTitle} menuItems={menuItems} />
 

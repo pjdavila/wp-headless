@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import Head from "next/head";
 import Header from "../components/Header";
+import SeoHead from "../components/SeoHead";
 import Footer from "../components/Footer";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
@@ -138,10 +138,11 @@ export default function ArchivePage(props) {
 
   return (
     <>
-      <Head>
-        <title>{`${categoryName} - ${siteTitle || "Business Journal Caribe"}`}</title>
-        {description && <meta name="description" content={description} />}
-      </Head>
+      <SeoHead
+        title={categoryName}
+        description={description || `Artículos sobre ${categoryName} en Business Journal Caribe.`}
+        url={currentUri}
+      />
 
       <Header
         siteTitle={siteTitle}

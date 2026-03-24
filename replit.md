@@ -30,6 +30,35 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Homepage Layout**: Hero → main+sidebar grid (sidebar at 320px, collapses on mobile)
 - **Data**: Fetches 20 posts, groups by WordPress category (skips uncategorized)
 
+## Article Page Components
+
+- **ShareMenu**: Facebook, X, LinkedIn share + copy-to-clipboard with tooltip
+- **PhotoGallery**: Lightbox with keyboard navigation for posts with 2+ embedded images
+- **Reading Time**: Word count estimator (200 WPM), shown in metadata bar
+- **Related Posts**: Up to 3 posts from same category via nested GraphQL query
+- **Sidebar**: "Lo Más Reciente" with 6 numbered recent posts
+
+## Category/Archive Pages
+
+- **Template**: `wp-templates/archive.js` renders category and tag archives
+- **Grid**: 3-column StoryCard grid (responsive: 3→2→1)
+- **Pagination**: Load-more button with fetchMore (BATCH_SIZE=9)
+- **Sidebar**: Recent posts from other categories + ad placeholder
+- **Route**: `/blog/category/{slug}/` (mapped via Faust.js catch-all)
+
+## SEO & Analytics
+
+- **SeoHead Component**: Reusable `components/SeoHead.js` renders title, description, OG, Twitter card tags
+- **Title Format**: "Page Title | Business Journal Caribe" (homepage uses site name only)
+- **OG Tags**: og:title, og:description, og:image, og:type, og:url, og:site_name, og:locale
+- **Twitter Cards**: summary_large_image when OG image present, summary otherwise
+- **Article Meta**: article:published_time, article:author for posts
+- **Hero Image Preload**: `<link rel="preload">` for featured images
+- **Google Analytics**: GA4 (G-F4RRT00M6P) loaded via requestIdleCallback ~3s after page load
+- **robots.txt**: Blocks /api/ from crawlers
+- **Sitemap**: Faust.js built-in sitemap generation via `/sitemap.xml`
+- **Canonical URLs**: Set on all pages
+
 ## Environment Variables
 
 | Variable | Description |
