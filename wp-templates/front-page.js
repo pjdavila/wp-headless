@@ -30,8 +30,6 @@ export default function FrontPage(props) {
 
   const { data, loading, error } = useQuery(BLOG_POSTS_QUERY, {
     variables: { first: POSTS_PER_PAGE },
-    fetchPolicy: "cache-and-network",
-    notifyOnNetworkStatusChange: true,
   });
 
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
