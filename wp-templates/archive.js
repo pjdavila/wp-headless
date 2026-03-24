@@ -1,18 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
 import Head from "next/head";
 import Header from "../components/Header";
-import EntryHeader from "../components/EntryHeader";
 import Footer from "../components/Footer";
+import StoryCard from "../components/StoryCard";
+import SidebarStoryCard from "../components/SidebarStoryCard";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
-import PostListItem from "../components/PostListItem";
 import { getNextStaticProps } from "@faustwp/core";
 import { useState } from "react";
 import styles from "../styles/archive.module.css";
 
-// Change to how many posts you want to load at once
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 9;
 
 const ARCHIVE_QUERY = gql`
   ${POST_LIST_FRAGMENT}
@@ -21,7 +20,8 @@ const ARCHIVE_QUERY = gql`
       archiveType: __typename
       ... on Category {
         name
-        posts(first: $first, after: $after) {
+        description
+        posts(first: $first, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           pageInfo {
             hasNextPage
             endCursor
@@ -33,7 +33,8 @@ const ARCHIVE_QUERY = gql`
       }
       ... on Tag {
         name
-        posts(first: $first, after: $after) {
+        description
+        posts(first: $first, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           pageInfo {
             hasNextPage
             endCursor
@@ -47,11 +48,22 @@ const ARCHIVE_QUERY = gql`
   }
 `;
 
+const RECENT_POSTS_QUERY = gql`
+  ${POST_LIST_FRAGMENT}
+  query GetRecentPostsArchive {
+    posts(first: 6, where: { orderby: { field: DATE, order: DESC } }) {
+      nodes {
+        ...PostListFragment
+      }
+    }
+  }
+`;
+
 export default function ArchivePage(props) {
   const currentUri = props.__SEED_NODE__.uri;
   const {
     data,
-    loading = true,
+    loading,
     error,
     fetchMore,
   } = useQuery(ARCHIVE_QUERY, {
@@ -62,31 +74,48 @@ export default function ArchivePage(props) {
 
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useQuery(HEADER_MENU_QUERY) || {};
+  const { data: recentData } = useQuery(RECENT_POSTS_QUERY);
 
   if (loading && !data)
     return (
-      <div className="container-main flex justify-center py-20">Loading...</div>
+      <>
+        <div className={styles.loadingState}>
+          <div className={styles.loadingSpinner} />
+          <span>Cargando artículos...</span>
+        </div>
+      </>
     );
 
-  if (error) return <p>Error! {error.message}</p>;
-
-  if (!data?.nodeByUri?.posts?.nodes.length) {
-    return <p>No posts have been published</p>;
-  }
+  if (error)
+    return (
+      <div className={styles.errorState}>
+        <p>Error al cargar los artículos.</p>
+      </div>
+    );
 
   const siteData = siteDataQuery?.data?.generalSettings || {};
-  const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || {
-    nodes: [],
-  };
+  const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || [];
   const { title: siteTitle, description: siteDescription } = siteData;
-  const { archiveType, name, posts } = data?.nodeByUri || {};
+  const { archiveType, name, description, posts } = data?.nodeByUri || {};
+  const postNodes = posts?.nodes || [];
+
+  const categoryName = name || "Archivo";
+  const archiveLabel = archiveType === "Tag" ? "Etiqueta" : "";
+
+  const currentCategorySlug = currentUri?.replace(/\//g, "").replace("category", "");
+  const recentPosts = (recentData?.posts?.nodes || [])
+    .filter((p) => {
+      const cats = p.categories?.nodes || [];
+      return !cats.some((c) => c.slug === currentCategorySlug);
+    })
+    .slice(0, 6);
 
   const loadMorePosts = async () => {
     await fetchMore({
       variables: {
         first: BATCH_SIZE,
         after: posts.pageInfo.endCursor,
-        uri: currentUri
+        uri: currentUri,
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prevResult;
@@ -110,7 +139,8 @@ export default function ArchivePage(props) {
   return (
     <>
       <Head>
-        <title>{`${archiveType}: ${name} - ${siteTitle}`}</title>
+        <title>{`${categoryName} - ${siteTitle || "Business Journal Caribe"}`}</title>
+        {description && <meta name="description" content={description} />}
       </Head>
 
       <Header
@@ -119,22 +149,55 @@ export default function ArchivePage(props) {
         menuItems={menuItems}
       />
 
-      <main className="container mx-auto px-4">
-        <EntryHeader title={`Archive for ${archiveType}: ${name}`} />
+      <main className="container">
+        <div className={styles.sectionHeader}>
+          {archiveLabel && (
+            <span className={styles.archiveLabel}>{archiveLabel}</span>
+          )}
+          <h1 className={styles.sectionTitle}>{categoryName}</h1>
+          {description && (
+            <p className={styles.sectionDescription}>{description}</p>
+          )}
+          <div className={styles.postCount}>
+            {postNodes.length} artículo{postNodes.length !== 1 ? "s" : ""}
+          </div>
+        </div>
 
-        <div className="space-y-12">
-          {posts && posts.nodes && posts.nodes.length > 0 ? (
-            posts.nodes.map((post) => (
-              <PostListItem key={post.id} post={post} />
-            ))
-          ) : (
-            <p>No posts found.</p>
-          )}
-          {posts.pageInfo.hasNextPage && (
-            <div className={styles.loadMoreButtonContainer}>
-              <LoadMoreButton onClick={loadMorePosts} />
+        <div className={styles.layout}>
+          <div className={styles.mainContent}>
+            {postNodes.length > 0 ? (
+              <div className={styles.grid}>
+                {postNodes.map((post) => (
+                  <StoryCard key={post.id} post={post} />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>No se encontraron artículos en esta sección.</p>
+              </div>
+            )}
+
+            {posts?.pageInfo?.hasNextPage && (
+              <div className={styles.loadMoreContainer}>
+                <LoadMoreButton onClick={loadMorePosts} loading={loading} />
+              </div>
+            )}
+          </div>
+
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarSection}>
+              <h3 className={styles.sidebarTitle}>Lo Más Reciente</h3>
+              <div className={styles.sidebarList}>
+                {recentPosts.map((post, i) => (
+                  <SidebarStoryCard key={post.id} post={post} index={i} />
+                ))}
+              </div>
             </div>
-          )}
+
+            <div className={styles.adPlaceholder}>
+              <span>PUBLICIDAD</span>
+            </div>
+          </aside>
         </div>
       </main>
 
@@ -150,26 +213,34 @@ export async function getStaticProps(context) {
   });
 }
 
-const LoadMoreButton = ({ onClick }) => {
-  const [loading, setLoading] = useState(false);
+function LoadMoreButton({ onClick, loading }) {
+  const [localLoading, setLocalLoading] = useState(false);
+  const isLoading = loading || localLoading;
 
-  const handleLoadMore = async () => {
-    setLoading(true);
+  const handleClick = async () => {
+    setLocalLoading(true);
     await onClick();
-    setLoading(false);
+    setLocalLoading(false);
   };
 
   return (
     <button
       type="button"
       className={styles.loadMoreButton}
-      onClick={handleLoadMore}
-      disabled={loading}
+      onClick={handleClick}
+      disabled={isLoading}
     >
-      {loading ? <>Loading...</> : <>Load more</>}
+      {isLoading ? (
+        <>
+          <span className={styles.btnSpinner} />
+          Cargando...
+        </>
+      ) : (
+        "Cargar más artículos"
+      )}
     </button>
   );
-};
+}
 
 ArchivePage.queries = [
   {
@@ -185,5 +256,8 @@ ArchivePage.queries = [
   },
   {
     query: HEADER_MENU_QUERY,
+  },
+  {
+    query: RECENT_POSTS_QUERY,
   },
 ];
