@@ -52,8 +52,8 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
 
   return (
     <>
-      <MarketTicker />
       <header className={style.header}>
+        <MarketTicker />
         <div className={style.topBar}>
           <div className={`container ${style.topBarInner}`}>
             <span className={style.date}>{getSpanishDate()}</span>
@@ -91,8 +91,17 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
               ))}
             </ul>
 
+            <div className={style.searchDesktop}>
+              <SearchIcon />
+              <input
+                type="search"
+                placeholder="Buscar noticias..."
+                className={style.searchInput}
+              />
+            </div>
+
             <button
-              className={style.searchBtn}
+              className={style.searchMobileBtn}
               onClick={() => setSearchOpen(!searchOpen)}
               aria-label="Buscar"
             >
@@ -101,7 +110,7 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
           </div>
 
           {searchOpen && (
-            <div className={`container ${style.searchBar}`}>
+            <div className={`container ${style.searchMobileBar}`}>
               <input
                 type="search"
                 placeholder="Buscar noticias..."
