@@ -6,10 +6,19 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 
 - **Framework**: Next.js 15 + Faust.js 3
 - **Data Source**: WordPress via GraphQL (WPGraphQL)
-- **Styling**: CSS in `styles/`
+- **Styling**: CSS Modules in `styles/` with global design system tokens in `globals.css`
 - **Templates**: WordPress page/post templates live in `wp-templates/`
 - **Components**: Reusable React components in `components/`
 - **Pages**: Next.js pages in `pages/` (includes API routes for Faust preview/auth)
+
+## Design System
+
+- **CSS Tokens**: HSL custom properties in `:root` (light) and `.dark` (dark mode) — see `styles/globals.css`
+- **Typography**: Inter (sans-serif, body) loaded from Google Fonts; Georgia (serif, headings) as system font
+- **Primary Color**: Green financial brand (`--primary: 130 44% 34%`)
+- **Dark Mode**: Default. Toggle persists in `localStorage` key `bj-theme`. Init script in `_app.js` prevents FOUC.
+- **Border Radius**: 2px (`--radius`)
+- **ThemeToggle**: Component in `components/ThemeToggle.js`, rendered in Header
 
 ## Environment Variables
 

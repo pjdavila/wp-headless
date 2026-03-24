@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggle";
 import style from "../styles/header.module.css";
 
 export default function Header({ siteTitle, siteDescription, menuItems }) {
@@ -11,15 +12,18 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
           <p className={style.siteDescription}>{siteDescription}</p>
         </Link>
 
-        <nav className={style.nav}>
-          <ul>
-            {(Array.isArray(menuItems) ? menuItems : []).map((item) => (
-              <li key={item.id}>
-                <Link href={item.uri}>{item.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className={style.actions}>
+          <nav className={style.nav}>
+            <ul>
+              {(Array.isArray(menuItems) ? menuItems : []).map((item) => (
+                <li key={item.id}>
+                  <Link href={item.uri}>{item.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

@@ -1,11 +1,18 @@
 .footer {
   text-align: center;
-  padding: 2rem;
-  border-top: 1px solid #e1e1e1;
+  padding: 2rem 1rem;
+  border-top: 1px solid hsl(var(--border));
   margin-top: auto;
+  background-color: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
 }
 
 .footer a {
-  color: royalblue;
+  color: hsl(var(--primary));
   margin: 0 0.5rem 0 0;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }

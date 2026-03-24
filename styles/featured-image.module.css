@@ -1,5 +1,6 @@
 .image {
   object-fit: cover;
+  border-radius: var(--radius);
 }
 
 .link {
@@ -7,10 +8,8 @@
   position: relative;
   width: 100%;
   height: 100%;
-  opacity: 0.8;
-  transition-duration: 150ms;
-  transition-property: opacity;
-  transition-timing-function: ease-in-out;
+  opacity: 0.9;
+  transition: opacity 0.15s ease;
 }
 
 .link:hover {
@@ -19,6 +18,8 @@
 
 .wrapper {
   height: 12rem;
-  margin: 2.25rem 0;
+  margin: 1.5rem 0;
   position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
 }

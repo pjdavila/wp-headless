@@ -1,20 +1,26 @@
+.header {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
 .header > div {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 2rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .siteTitle {
   font-size: 2rem;
   margin: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+  color: hsl(var(--foreground));
 }
 
 .siteDescription {
-  font-size: 1rem;
+  font-size: 0.875rem;
   margin: 0;
+  color: hsl(var(--muted-foreground));
 }
 
 .nav ul {
@@ -22,22 +28,39 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  gap: 1.25rem;
 }
 
 .nav ul li {
-  margin-right: 1rem;
-  font-size: 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.nav ul li:last-child {
-  margin-right: 0;
+.nav ul li a {
+  color: hsl(var(--muted-foreground));
+  transition: color 0.15s ease;
 }
 
-@media (max-width: 600px) {
-  .container {
+.nav ul li a:hover {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .header > div {
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
   }
+
   .brand,
   .nav {
     width: 100%;
@@ -45,7 +68,13 @@
     text-align: center;
   }
 
-  .nav {
-    margin-top: 1rem;
+  .nav ul {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .actions {
+    justify-content: center;
   }
 }
