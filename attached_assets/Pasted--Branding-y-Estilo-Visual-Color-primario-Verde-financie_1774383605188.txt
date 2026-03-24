@@ -1,0 +1,89 @@
+
+Branding y Estilo Visual
+Color primario: Verde financiero #2E7D32 (HSL: 130 44% 34% light / 130 44% 38% dark)
+Color destructivo/negativo: Rojo #EF4444; positivo mercados: #4CAF50
+Tipografía headings: Georgia, 'Times New Roman', serif (font-heading, font-serif)
+Tipografía body: Inter 400/500/600/700 (font-sans)
+Border radius: 2px globalmente (estética rectilinear de terminal financiera). rounded-full solo para dots/pills pequeños
+Dark mode por defecto: Background oscuro #111111. Toggle con clase CSS .dark en <html>, persistido en localStorage con clave bj-theme
+Sombras: Mínimas/planas — shadow values en 0 opacity para aspecto flat
+Logo: Logo blanco de "Business Journal Caribe" en WebP (funciona directo sobre fondos oscuros, sin invertir)
+Tokens CSS (variables)
+Definir en :root (light) y .dark (dark mode) con HSL sin hsl() wrapper:
+
+Light: --primary: 130 44% 34%; --background: 0 0% 100%; --foreground: 0 0% 7%; --border: 0 0% 88%; --card: 0 0% 98%; --muted: 0 0% 94%; --muted-foreground: 0 0% 40%;
+Dark: --primary: 130 44% 38%; --background: 0 0% 7%; --foreground: 0 0% 93%; --border: 0 0% 16%; --card: 0 0% 9%; --muted: 0 0% 14%; --muted-foreground: 0 0% 60%;
+Páginas
+Homepage (/): Hero de artículo principal (text-first, sin imagen dominante — solo título, extracto y metadata), barra de breaking news ("Última Hora"), bloques de sección por categoría con grids densos de StoryCards, sidebar con "Lo Más Reciente" y Market Watchlist
+
+Páginas de sección (/[section]): Ruta dinámica por categoría WP (slug). Grid de artículos con paginación. Sidebar con artículos recientes y ads
+
+Página de Negocios (/negocios): Sección especializada con widgets financieros adicionales: Calendario de Earnings, Calendario de IPOs, gráficos de mercado
+
+Páginas de artículo (/[year]/[month]/[day]/[slug]): URL con fecha. Cuerpo del artículo con tipografía serif para <p> y <li>. Inserción dinámica de ads y video outstream entre párrafos. Galería de fotos, video player, menú de compartir (Facebook, X, LinkedIn). Tiempo estimado de lectura. Artículos relacionados
+
+Página Coming Soon (/coming-soon): Gate con contraseña protegida por middleware. Logo, título "Próximamente", input de contraseña, branding verde/oscuro. Password validado via API route, cookie HMAC-signed
+
+Sitemap dinámico (/sitemap.xml): Generado desde datos de WordPress
+
+Componentes Principales
+Header (sticky):
+
+Market Ticker en la parte superior: barra scrollable con S&P 500, DJIA, NASDAQ, BTC — cada uno con sparkline SVG inline (48×20px), valor y % cambio con color verde/rojo
+Logo del sitio centrado
+Navegación por categorías dinámicas de WP
+Barra de búsqueda visible en desktop (bg-gray-900, border gray-700); en mobile solo ícono
+Menú mobile con drawer
+Fecha actual formateada en español
+Breaking News Ticker: Barra roja "ÚLTIMA HORA" con marquee de titulares
+
+FeaturedHero: Grid denso text-first — historia principal SIN imagen prominente, solo título grande en serif, extracto y metadata. Stories secundarias al lado
+
+StoryCard: Tarjeta con imagen, categoría badge verde, título, extracto, autor, fecha. Border-radius 2px
+
+SidebarStoryCard: Versión compacta con timestamps relativos en español ("hace 5 min", "hace 2 horas")
+
+SectionBlock: Contenedor de grids de noticias por categoría con título de sección y enlace "Ver más"
+
+Footer: Logo, enlaces de categorías, redes sociales, texto legal. Fondo oscuro
+
+Widgets Financieros:
+
+MarketWatchlist: Tabla de cotizaciones en el sidebar
+MarketCharts: Gráficos de índices bursátiles
+EarningsCalendar: Calendario de reportes de ganancias corporativas (colores verdes, sin rounded corners)
+IPOCalendar: Calendario de IPOs próximos (misma estética)
+ShareMenu: Botones de compartir en artículos (Facebook, X/Twitter, LinkedIn, copiar enlace)
+
+PhotoGallery: Galería interactiva de fotos en artículos
+
+VideoPlayer / VideoOutstream: Reproductor de video y video outstream mid-article
+
+ThemeToggle: Switch light/dark mode
+
+Integración de Datos
+WordPress (WPGraphQL):
+
+Categorías dinámicas mapeadas a secciones de navegación
+Categorías con fallback estático: negocios, investigacion, tendencias, tecnologia, economia, politica, redes-sociales, entretenimiento, sociedad, noticias
+Solo mostrar categorías activas (con posts en los últimos 3 meses)
+Imágenes optimizadas vía Cloudflare Image Transformations (/cdn-cgi/image/)
+Caching con ISR/SWR: listas de artículos fresh 5min, stale 15min
+Finnhub API (para datos de mercado):
+
+Cotizaciones de S&P 500, Dow Jones, NASDAQ, Bitcoin
+Data para calendarios de earnings e IPOs
+API key como variable de entorno FINNHUB_API_KEY
+Publicidad (Google Ad Manager / GPT)
+Carga lazy del script GPT (solo cuando se necesita, no en page load)
+Slots: Leaderboard top (728×90/320×50), sidebar rectangles (300×250), in-article inline, anchor banner fixed bottom
+Side Rails: Dos skyscrapers 160×600 fijos flanqueando el contenido, visibles solo en pantallas >1500px
+Ad unit de producción: /59391304/PRI/Metro
+Video outstream via Google IMA SDK insertado entre párrafos del artículo
+SEO
+Títulos únicos por página con formato "Título | Business Journal Caribe"
+Meta descriptions dinámicas del extracto de cada artículo
+Open Graph tags para compartir en redes
+Google Analytics: G-F4RRT00M6P (cargado con requestIdleCallback ~3s después del load)
+robots.txt bloquea /api/ de crawlers
+Hero images con <link rel="preload" imagesrcset> responsive
