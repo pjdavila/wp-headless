@@ -20,13 +20,6 @@ const HOMEPAGE_QUERY = gql`
         ...PostListFragment
       }
     }
-    categories(first: 10, where: { hideEmpty: true }) {
-      nodes {
-        name
-        slug
-        uri
-      }
-    }
   }
 `;
 
@@ -44,8 +37,6 @@ export default function FrontPage(props) {
   const { title: siteTitle } = siteData;
 
   const allPosts = data?.posts?.nodes || [];
-  const categories = data?.categories?.nodes || [];
-
   const heroPosts = allPosts.slice(0, 5);
   const recentPosts = allPosts.slice(0, 8);
 
