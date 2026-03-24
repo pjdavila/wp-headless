@@ -1,18 +1,121 @@
 .footer {
-  text-align: center;
-  padding: 2rem 1rem;
-  border-top: 1px solid hsl(var(--border));
   margin-top: auto;
   background-color: hsl(var(--card));
-  color: hsl(var(--muted-foreground));
-  font-size: 0.875rem;
+  border-top: 2px solid hsl(var(--primary));
+  padding: 3rem 0 0;
 }
 
-.footer a {
+.inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 2rem;
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.logo {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+.logo:hover {
+  text-decoration: none;
   color: hsl(var(--primary));
-  margin: 0 0.5rem 0 0;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+.tagline {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+  margin: 0;
+  max-width: 320px;
+}
+
+.socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.socialLink:hover {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.linkCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.colTitle {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.25rem;
+}
+
+.footerLink {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  transition: color 0.15s ease;
+  line-height: 1.8;
+}
+
+.footerLink:hover {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.bottom {
+  border-top: 1px solid hsl(var(--border));
+  padding: 1.25rem 0;
+  text-align: center;
+}
+
+.bottom p {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer {
+    padding: 2rem 0 0;
+  }
 }

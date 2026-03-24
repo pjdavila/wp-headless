@@ -1,0 +1,72 @@
+.wrapper {
+  background-color: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  overflow: hidden;
+  position: relative;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.track {
+  display: flex;
+  gap: 2rem;
+  animation: scroll 40s linear infinite;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.symbol {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sparkline {
+  flex-shrink: 0;
+}
+
+.value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+.change {
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.up {
+  color: hsl(var(--positive));
+}
+
+.down {
+  color: hsl(var(--destructive));
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}

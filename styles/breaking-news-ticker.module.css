@@ -1,0 +1,76 @@
+.wrapper {
+  display: flex;
+  align-items: stretch;
+  background-color: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  height: 36px;
+  overflow: hidden;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background-color: hsl(var(--destructive));
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.trackContainer {
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.track {
+  display: flex;
+  gap: 2rem;
+  animation: marquee 30s linear infinite;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: hsl(var(--foreground));
+  transition: color 0.15s ease;
+}
+
+.item:hover {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.dot {
+  color: hsl(var(--destructive));
+  font-size: 0.5rem;
+}
+
+.title {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
