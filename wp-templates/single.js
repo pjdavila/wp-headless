@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +19,7 @@ const POST_QUERY = gql`
   ${POST_LIST_FRAGMENT}
   query GetPost($databaseId: ID!, $asPreview: Boolean = false) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
+      id
       title
       content
       uri
@@ -101,7 +102,7 @@ export default function Component(props) {
   const siteDataQuery = useFaustQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useFaustQuery(HEADER_MENU_QUERY) || {};
 
-  const { data: recentData } = useQuery(RECENT_POSTS_QUERY);
+  const recentData = useFaustQuery(RECENT_POSTS_QUERY) || {};
 
   const siteData = siteDataQuery?.generalSettings || {};
   const menuItems = headerMenuDataQuery?.primaryMenuItems?.nodes || [];
