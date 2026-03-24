@@ -3,6 +3,7 @@ import Head from "next/head";
 const SITE_NAME = "Business Journal Caribe";
 const DEFAULT_DESCRIPTION =
   "Noticias de negocios, tecnología, marketing y finanzas del Caribe. Tu fuente premium de información empresarial.";
+const DEFAULT_OG_IMAGE = "https://vnmcms.wpenginepowered.com/wp-content/uploads/2026/03/bj-caribe-og-default.png";
 
 export default function SeoHead({
   title,
@@ -18,6 +19,7 @@ export default function SeoHead({
   const metaDescription = stripHtml(description) || DEFAULT_DESCRIPTION;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const canonicalUrl = url ? `${siteUrl}${url}` : siteUrl;
+  const imageUrl = ogImage || DEFAULT_OG_IMAGE;
 
   return (
     <Head>
@@ -33,14 +35,14 @@ export default function SeoHead({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:locale" content="es_ES" />
-      {ogImage && <meta property="og:image" content={ogImage} />}
-      {ogImage && <meta property="og:image:width" content="1200" />}
-      {ogImage && <meta property="og:image:height" content="630" />}
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
 
-      <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={metaDescription} />
-      {ogImage && <meta name="twitter:image" content={ogImage} />}
+      <meta name="twitter:image" content={imageUrl} />
 
       {ogType === "article" && articlePublished && (
         <meta property="article:published_time" content={articlePublished} />
