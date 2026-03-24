@@ -12,6 +12,7 @@ const PAGE_QUERY = gql`
     page(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       title
       content
+      uri
     }
   }
 `;
@@ -57,13 +58,14 @@ export default function SinglePage(props) {
     nodes: [],
   };
   const { title: siteTitle, description: siteDescription } = siteData;
-  const { title, content } = data?.page || {};
+  const { title, content, uri } = data?.page || {};
 
   return (
     <>
       <SeoHead
         title={title}
         description={content}
+        url={uri}
       />
 
       <Header
