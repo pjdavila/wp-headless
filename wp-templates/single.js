@@ -5,6 +5,7 @@ import Link from "next/link";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ShareMenu from "../components/ShareMenu";
+import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
@@ -71,6 +72,17 @@ function formatDate(dateStr) {
   });
 }
 
+function extractImagesFromContent(html) {
+  if (!html) return [];
+  const regex = /<img[^>]+src=["']([^"']+)["'][^>]*(?:alt=["']([^"']*)["'])?[^>]*>/gi;
+  const images = [];
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    images.push({ sourceUrl: match[1], altText: match[2] || "" });
+  }
+  return images;
+}
+
 function ClockIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -101,10 +113,11 @@ export default function Component(props) {
   const readTime = estimateReadingTime(content);
   const imgSrc = featuredImage?.node?.sourceUrl;
 
-  const currentId = post.id || post.databaseId;
   const relatedPosts = (category?.posts?.nodes || []).filter(
-    (p) => p.title !== title
+    (p) => p.id !== post.id && p.title !== title
   ).slice(0, 3);
+
+  const galleryImages = extractImagesFromContent(content);
 
   const recentPosts = (recentData?.posts?.nodes || []).slice(0, 6);
 
@@ -170,6 +183,10 @@ export default function Component(props) {
               className={styles.articleBody}
               dangerouslySetInnerHTML={{ __html: content }}
             />
+
+            {galleryImages.length > 1 && (
+              <PhotoGallery images={galleryImages} />
+            )}
 
             <ShareMenu url={pageUrl} title={title} />
 
