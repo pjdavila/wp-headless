@@ -5,7 +5,12 @@ const { withFaust } = require("@faustwp/core");
  **/
 module.exports = withFaust({
   images: {
-    domains: ["vnmcms.wpenginepowered.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "vnmcms.wpenginepowered.com",
+      },
+    ],
   },
   trailingSlash: true,
 });
