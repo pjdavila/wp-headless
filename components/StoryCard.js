@@ -50,7 +50,7 @@ export default function StoryCard({ post }) {
           {author?.node?.name && (
             <span className={styles.author}>{author.node.name}</span>
           )}
-          {date && <time dateTime={date}>{formatDate(date)}</time>}
+          {date && <time dateTime={date} suppressHydrationWarning>{formatDate(date)}</time>}
         </div>
       </div>
     </article>

@@ -53,7 +53,7 @@ export default function SidebarStoryCard({ post, index }) {
             {title}
           </Link>
         </h4>
-        {date && <time className={styles.time} dateTime={date}>{relativeTime(date)}</time>}
+        {date && <time className={styles.time} dateTime={date} suppressHydrationWarning>{relativeTime(date)}</time>}
       </div>
     </article>
   );

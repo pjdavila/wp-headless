@@ -56,7 +56,7 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
         <MarketTicker />
         <div className={style.topBar}>
           <div className={`container ${style.topBarInner}`}>
-            <span className={style.date}>{getSpanishDate()}</span>
+            <span className={style.date} suppressHydrationWarning>{getSpanishDate()}</span>
             <div className={style.topActions}>
               <ThemeToggle />
             </div>

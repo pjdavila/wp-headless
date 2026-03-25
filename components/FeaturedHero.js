@@ -40,7 +40,7 @@ export default function FeaturedHero({ posts }) {
           {main.author?.node?.name && (
             <span className={styles.author}>{main.author.node.name}</span>
           )}
-          {main.date && <time dateTime={main.date}>{formatDate(main.date)}</time>}
+          {main.date && <time dateTime={main.date} suppressHydrationWarning>{formatDate(main.date)}</time>}
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function FeaturedHero({ posts }) {
                   </h3>
                   <div className={styles.secondaryMeta}>
                     {post.date && (
-                      <time dateTime={post.date}>{formatDate(post.date)}</time>
+                      <time dateTime={post.date} suppressHydrationWarning>{formatDate(post.date)}</time>
                     )}
                   </div>
                 </div>
