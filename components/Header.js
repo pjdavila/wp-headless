@@ -78,18 +78,14 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
             <Link href="/" className={style.brand}>
-              {isDark ? (
-                <Image
-                  src="/logo-dark.webp"
-                  alt="Caribbean Business"
-                  width={400}
-                  height={50}
-                  className={style.logoImage}
-                  priority
-                />
-              ) : (
-                <h1 className={style.siteTitle}>Business Journal Caribe</h1>
-              )}
+              <Image
+                src={isDark ? "/logo-dark.webp" : "/logo-light.webp"}
+                alt="Caribbean Business"
+                width={400}
+                height={50}
+                className={style.logoImage}
+                priority
+              />
             </Link>
           </div>
         </div>
