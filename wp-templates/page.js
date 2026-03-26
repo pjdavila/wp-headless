@@ -54,9 +54,8 @@ export default function SinglePage(props) {
 
 
   const siteData = siteDataQuery?.data?.generalSettings || {};
-  const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || {
-    nodes: [],
-  };
+  const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || [];
+  const categories = headerMenuDataQuery?.data?.categories?.nodes || [];
   const { title: siteTitle, description: siteDescription } = siteData;
   const { title, content, uri } = data?.page || {};
 
@@ -72,6 +71,7 @@ export default function SinglePage(props) {
         siteTitle={siteTitle}
         siteDescription={siteDescription}
         menuItems={menuItems}
+        categories={categories}
       />
 
       <main className="container">

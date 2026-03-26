@@ -107,6 +107,7 @@ export default function Component(props) {
 
   const siteData = siteDataQuery?.generalSettings || {};
   const menuItems = headerMenuDataQuery?.primaryMenuItems?.nodes || [];
+  const navCategories = headerMenuDataQuery?.categories?.nodes || [];
   const { title: siteTitle } = siteData;
 
   const post = contentQuery?.post || {};
@@ -138,7 +139,7 @@ export default function Component(props) {
         articleAuthor={author?.node?.name}
       />
 
-      <Header siteTitle={siteTitle} menuItems={menuItems} />
+      <Header siteTitle={siteTitle} menuItems={menuItems} categories={navCategories} />
 
       <main className="container">
         <div className={styles.layout}>

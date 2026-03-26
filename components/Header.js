@@ -35,7 +35,9 @@ function getSpanishDate() {
   return `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
 }
 
-export default function Header({ siteTitle, siteDescription, menuItems }) {
+const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
+
+export default function Header({ siteTitle, siteDescription, menuItems, categories }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
 
@@ -49,7 +51,9 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
     return () => observer.disconnect();
   }, []);
 
-  const items = Array.isArray(menuItems) ? menuItems : [];
+  const catItems = Array.isArray(categories)
+    ? categories.filter((c) => !SKIP_SLUGS.includes(c.slug))
+    : [];
 
   return (
     <>
@@ -90,10 +94,10 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
             </button>
 
             <ul className={style.navList}>
-              {items.map((item) => (
-                <li key={item.id}>
-                  <Link href={item.uri} className={style.navLink}>
-                    {item.label}
+              {catItems.map((cat) => (
+                <li key={cat.slug}>
+                  <Link href={cat.uri} className={style.navLink}>
+                    {cat.name}
                   </Link>
                 </li>
               ))}
@@ -119,14 +123,14 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
               </button>
             </div>
             <nav className={style.drawerNav}>
-              {items.map((item) => (
+              {catItems.map((cat) => (
                 <Link
-                  key={item.id}
-                  href={item.uri}
+                  key={cat.slug}
+                  href={cat.uri}
                   className={style.drawerLink}
                   onClick={() => setDrawerOpen(false)}
                 >
-                  {item.label}
+                  {cat.name}
                 </Link>
               ))}
             </nav>
@@ -157,6 +161,13 @@ Header.fragments = {
               name
             }
           }
+        }
+      }
+      categories {
+        nodes {
+          name
+          slug
+          uri
         }
       }
     }

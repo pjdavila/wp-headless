@@ -34,6 +34,7 @@ export default function FrontPage(props) {
 
   const siteData = siteDataQuery?.data?.generalSettings || {};
   const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || [];
+  const categories = headerMenuDataQuery?.data?.categories?.nodes || [];
   const { title: siteTitle } = siteData;
 
   const allPosts = data?.posts?.nodes || [];
@@ -69,6 +70,7 @@ export default function FrontPage(props) {
       <Header
         siteTitle={siteTitle}
         menuItems={menuItems}
+        categories={categories}
       />
 
       <main className="container">

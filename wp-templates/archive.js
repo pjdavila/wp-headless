@@ -95,6 +95,7 @@ export default function ArchivePage(props) {
 
   const siteData = siteDataQuery?.data?.generalSettings || {};
   const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || [];
+  const categories = headerMenuDataQuery?.data?.categories?.nodes || [];
   const { title: siteTitle, description: siteDescription } = siteData;
   const { archiveType, name, description, posts } = data?.nodeByUri || {};
   const postNodes = posts?.nodes || [];
@@ -148,6 +149,7 @@ export default function ArchivePage(props) {
         siteTitle={siteTitle}
         siteDescription={siteDescription}
         menuItems={menuItems}
+        categories={categories}
       />
 
       <main className="container">

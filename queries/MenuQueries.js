@@ -17,5 +17,12 @@ export const HEADER_MENU_QUERY = gql`
         }
       }
     }
+    categories {
+      nodes {
+        name
+        slug
+        uri
+      }
+    }
   }
 `;
