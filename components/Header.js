@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 import MarketTicker from "./MarketTicker";
 import BreakingNewsTicker from "./BreakingNewsTicker";
@@ -47,6 +48,17 @@ function getSpanishDate() {
 export default function Header({ siteTitle, siteDescription, menuItems }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
 
   const items = Array.isArray(menuItems) ? menuItems : [];
 
@@ -66,7 +78,18 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
             <Link href="/" className={style.brand}>
-              <h1 className={style.siteTitle}>Business Journal Caribe</h1>
+              {isDark ? (
+                <Image
+                  src="/logo-dark.webp"
+                  alt="Caribbean Business"
+                  width={400}
+                  height={50}
+                  className={style.logoImage}
+                  priority
+                />
+              ) : (
+                <h1 className={style.siteTitle}>Business Journal Caribe</h1>
+              )}
             </Link>
           </div>
         </div>
