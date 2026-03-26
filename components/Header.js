@@ -4,17 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 import MarketTicker from "./MarketTicker";
-import BreakingNewsTicker from "./BreakingNewsTicker";
 import style from "../styles/header.module.css";
-
-function SearchIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
 
 function MenuIcon() {
   return (
@@ -47,7 +37,6 @@ function getSpanishDate() {
 
 export default function Header({ siteTitle, siteDescription, menuItems }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
@@ -110,38 +99,10 @@ export default function Header({ siteTitle, siteDescription, menuItems }) {
               ))}
             </ul>
 
-            <div className={style.searchDesktop}>
-              <SearchIcon />
-              <input
-                type="search"
-                placeholder="Buscar noticias..."
-                className={style.searchInput}
-              />
-            </div>
-
-            <button
-              className={style.searchMobileBtn}
-              onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Buscar"
-            >
-              <SearchIcon />
-            </button>
           </div>
-
-          {searchOpen && (
-            <div className={`container ${style.searchMobileBar}`}>
-              <input
-                type="search"
-                placeholder="Buscar noticias..."
-                className={style.searchInput}
-                autoFocus
-              />
-            </div>
-          )}
         </nav>
       </header>
 
-      <BreakingNewsTicker />
 
       {drawerOpen && (
         <>
