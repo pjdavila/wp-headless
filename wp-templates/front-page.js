@@ -91,7 +91,7 @@ export default function FrontPage(props) {
       />
 
       <main className="container">
-        <FeaturedHero posts={heroPosts} sliderPosts={featuredPosts} />
+        <FeaturedHero posts={allPosts} sliderPosts={featuredPosts} />
 
         <ExploreCategories categories={categories} posts={allPosts} />
 
