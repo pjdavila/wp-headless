@@ -132,7 +132,7 @@ export default function FeaturedHero({ posts, sliderPosts }) {
     return () => clearInterval(timerRef.current);
   }, [paused, slideCount]);
 
-  if (!posts || posts.length === 0) return null;
+  if ((!posts || posts.length === 0) && slides.length === 0) return null;
 
   return (
     <section className={styles.hero}>
