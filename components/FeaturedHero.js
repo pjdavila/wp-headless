@@ -105,10 +105,10 @@ function Slide({ post, isActive }) {
 
 export default function FeaturedHero({ posts, sliderPosts }) {
   const hasTaggedPosts = sliderPosts && sliderPosts.length > 0;
-  const slides = hasTaggedPosts ? sliderPosts : (posts || []).slice(0, 5);
+  const slides = hasTaggedPosts ? sliderPosts : (posts || []).slice(0, 1);
   const sideCards = hasTaggedPosts
     ? (posts || []).slice(0, 4)
-    : (posts || []).slice(5, 9);
+    : (posts || []).slice(1, 5);
 
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
