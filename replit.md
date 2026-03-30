@@ -67,12 +67,20 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 | `NEXT_PUBLIC_SITE_URL` | Public URL of this frontend |
 | `FAUST_SECRET_KEY` | Secret key from WordPress Settings → Headless (required for preview mode) |
 
+## WPEngine Atlas Deployment
+
+- **Node.js**: v20 (set via `engines` in package.json)
+- **Build**: `wpe-build` script runs `faust build`
+- **Start**: `faust start` (uses Atlas default port 8080)
+- **`@wpengine/atlas-next`**: Wraps Next.js config for ISR + Atlas optimizations
+- **`package-lock.json`**: Committed (removed from .gitignore) for deterministic `npm ci` builds
+
 ## Running the App
 
 ```bash
-npm run dev      # Start dev server on port 5000
+npm run dev      # Start dev server on port 5000 (local/Replit)
 npm run build    # Build for production
-npm run start    # Start production server on port 5000
+npm run start    # Start production server (Atlas uses port 8080)
 ```
 
 ## Replit Configuration
