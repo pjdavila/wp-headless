@@ -64,13 +64,12 @@ export default function ShareMenu({ url, title }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* fallback: no clipboard API */
     }
   };
 
   return (
     <div className={styles.menu}>
-      <span className={styles.label}>Compartir:</span>
+      <span className={styles.label}>Share:</span>
       {shareLinks.map((link) => (
         <a
           key={link.label}
@@ -78,7 +77,7 @@ export default function ShareMenu({ url, title }) {
           target="_blank"
           rel="noopener noreferrer"
           className={styles.btn}
-          aria-label={`Compartir en ${link.label}`}
+          aria-label={`Share on ${link.label}`}
           title={link.label}
         >
           {link.icon}
@@ -87,11 +86,11 @@ export default function ShareMenu({ url, title }) {
       <button
         className={styles.btn}
         onClick={handleCopy}
-        aria-label="Copiar enlace"
-        title={copied ? "¡Copiado!" : "Copiar enlace"}
+        aria-label="Copy link"
+        title={copied ? "Copied!" : "Copy link"}
       >
         <LinkIcon />
-        {copied && <span className={styles.copiedTip}>¡Copiado!</span>}
+        {copied && <span className={styles.copiedTip}>Copied!</span>}
       </button>
     </div>
   );

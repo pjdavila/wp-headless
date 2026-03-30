@@ -36,11 +36,11 @@ export default function PhotoGallery({ images }) {
             key={i}
             className={styles.thumb}
             onClick={() => setLightboxIndex(i)}
-            aria-label={`Ver imagen ${i + 1}`}
+            aria-label={`View image ${i + 1}`}
           >
             <Image
               src={img.sourceUrl}
-              alt={img.altText || `Imagen ${i + 1}`}
+              alt={img.altText || `Image ${i + 1}`}
               fill
               sizes="(max-width: 768px) 50vw, 200px"
               className={styles.thumbImg}
@@ -52,7 +52,7 @@ export default function PhotoGallery({ images }) {
       {lightboxIndex >= 0 && (
         <div className={styles.lightbox} onClick={close}>
           <div className={styles.lightboxInner} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.closeBtn} onClick={close} aria-label="Cerrar">
+            <button className={styles.closeBtn} onClick={close} aria-label="Close">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
@@ -60,7 +60,7 @@ export default function PhotoGallery({ images }) {
             </button>
 
             {images.length > 1 && (
-              <button className={styles.navBtn} data-dir="prev" onClick={prev} aria-label="Anterior">
+              <button className={styles.navBtn} data-dir="prev" onClick={prev} aria-label="Previous">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="15 18 9 12 15 6" />
                 </svg>
@@ -78,7 +78,7 @@ export default function PhotoGallery({ images }) {
             </div>
 
             {images.length > 1 && (
-              <button className={styles.navBtn} data-dir="next" onClick={next} aria-label="Siguiente">
+              <button className={styles.navBtn} data-dir="next" onClick={next} aria-label="Next">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="9 18 15 12 9 6" />
                 </svg>

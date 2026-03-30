@@ -2,17 +2,17 @@ import Link from "next/link";
 import styles from "../styles/footer.module.css";
 
 const SECTIONS = [
-  { label: "Negocios", href: "/category/negocios/" },
-  { label: "Tecnología", href: "/category/tecnologia/" },
-  { label: "Economía", href: "/category/economia/" },
-  { label: "Finanzas", href: "/category/finanzas/" },
+  { label: "Business", href: "/category/negocios/" },
+  { label: "Technology", href: "/category/tecnologia/" },
+  { label: "Economy", href: "/category/economia/" },
+  { label: "Finance", href: "/category/finanzas/" },
 ];
 
 const COMPANY = [
-  { label: "Sobre Nosotros", href: "/about" },
-  { label: "Contacto", href: "/contact" },
-  { label: "Publicidad", href: "/advertise" },
-  { label: "Términos de Uso", href: "/terms" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  { label: "Advertise", href: "/advertise" },
+  { label: "Terms of Use", href: "/terms" },
 ];
 
 function SocialIcon({ type }) {
@@ -48,10 +48,10 @@ export default function Footer() {
         <div className={styles.grid}>
           <div className={styles.brandCol}>
             <Link href="/" className={styles.logo}>
-              Business Journal Caribe
+              Caribbean Business
             </Link>
             <p className={styles.tagline}>
-              Noticias de negocios, finanzas y tecnología del Caribe y América Latina.
+              Business, finance, and technology news from the Caribbean and Latin America.
             </p>
             <div className={styles.socials}>
               {["facebook", "x", "instagram", "linkedin"].map((s) => (
@@ -70,7 +70,7 @@ export default function Footer() {
           </div>
 
           <div className={styles.linkCol}>
-            <h4 className={styles.colTitle}>Secciones</h4>
+            <h4 className={styles.colTitle}>Sections</h4>
             {SECTIONS.map((link) => (
               <Link key={link.href} href={link.href} className={styles.footerLink}>
                 {link.label}
@@ -79,7 +79,7 @@ export default function Footer() {
           </div>
 
           <div className={styles.linkCol}>
-            <h4 className={styles.colTitle}>Compañía</h4>
+            <h4 className={styles.colTitle}>Company</h4>
             {COMPANY.map((link) => (
               <Link key={link.href} href={link.href} className={styles.footerLink}>
                 {link.label}
@@ -89,7 +89,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.bottom}>
-          <p>&copy; {new Date().getFullYear()} Business Journal Caribe. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Caribbean Business. All rights reserved.</p>
         </div>
       </div>
     </footer>

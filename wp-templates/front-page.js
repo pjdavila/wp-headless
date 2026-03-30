@@ -63,7 +63,7 @@ export default function FrontPage(props) {
     <>
       <SeoHead
         title={null}
-        description="Noticias de negocios, tecnología, marketing y finanzas del Caribe. Tu fuente premium de información empresarial."
+        description="Business, technology, marketing, and finance news from the Caribbean. Your premium source for business insights."
         ogImage={heroPosts[0]?.featuredImage?.node?.sourceUrl}
         url="/"
       />
@@ -92,7 +92,7 @@ export default function FrontPage(props) {
 
             {sections.length === 0 && !loading && allPosts.length > 5 && (
               <SectionBlock
-                title="Últimas Noticias"
+                title="Latest News"
                 posts={allPosts.slice(5, 11)}
               />
             )}
@@ -100,7 +100,7 @@ export default function FrontPage(props) {
 
           <aside className={styles.sidebar}>
             <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarTitle}>Lo Más Reciente</h3>
+              <h3 className={styles.sidebarTitle}>Most Recent</h3>
               <div className={styles.recentList}>
                 {recentPosts.map((post, i) => (
                   <SidebarStoryCard key={post.id} post={post} index={i} />

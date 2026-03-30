@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "../styles/story-card.module.css";
 
 function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString("es-ES", {
+  return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",

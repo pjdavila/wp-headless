@@ -11,7 +11,7 @@ export default function SectionBlock({ title, categoryUri, posts }) {
         <h2 className={styles.title}>{title}</h2>
         {categoryUri && (
           <Link href={categoryUri} className={styles.viewMore}>
-            Ver más →
+            View more →
           </Link>
         )}
       </div>

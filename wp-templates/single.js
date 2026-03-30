@@ -67,7 +67,7 @@ const RECENT_POSTS_QUERY = gql`
 `;
 
 function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString("es-ES", {
+  return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -182,7 +182,7 @@ export default function Component(props) {
               <span className={styles.metaDot}>·</span>
               <span className={`${styles.metaItem} ${styles.readingTime}`}>
                 <ClockIcon />
-                {readTime} min de lectura
+                {readTime} min read
               </span>
             </div>
 
@@ -201,7 +201,7 @@ export default function Component(props) {
 
             {relatedPosts.length > 0 && (
               <section className={styles.relatedSection}>
-                <h2 className={styles.relatedTitle}>Artículos Relacionados</h2>
+                <h2 className={styles.relatedTitle}>Related Articles</h2>
                 <div className={styles.relatedGrid}>
                   {relatedPosts.map((p) => (
                     <StoryCard key={p.id} post={p} />
@@ -213,7 +213,7 @@ export default function Component(props) {
 
           <aside className={styles.sidebar}>
             <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarTitle}>Lo Más Reciente</h3>
+              <h3 className={styles.sidebarTitle}>Most Recent</h3>
               {recentPosts.map((p, i) => (
                 <SidebarStoryCard key={p.id} post={p} index={i} />
               ))}

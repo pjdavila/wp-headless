@@ -25,14 +25,14 @@ function CloseIcon() {
   );
 }
 
-function getSpanishDate() {
-  const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-  const months = [
-    "enero", "febrero", "marzo", "abril", "mayo", "junio",
-    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-  ];
+function getFormattedDate() {
   const now = new Date();
-  return `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+  return now.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
@@ -61,7 +61,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
         <MarketTicker />
         <div className={style.topBar}>
           <div className={`container ${style.topBarInner}`}>
-            <span className={style.date} suppressHydrationWarning>{getSpanishDate()}</span>
+            <span className={style.date} suppressHydrationWarning>{getFormattedDate()}</span>
             <div className={style.topActions}>
               <ThemeToggle />
             </div>
@@ -88,7 +88,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
             <button
               className={style.hamburger}
               onClick={() => setDrawerOpen(true)}
-              aria-label="Abrir menú"
+              aria-label="Open menu"
             >
               <MenuIcon />
             </button>
@@ -113,11 +113,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
           <div className={style.overlay} onClick={() => setDrawerOpen(false)} />
           <div className={style.drawer}>
             <div className={style.drawerHeader}>
-              <span className={style.drawerTitle}>Menú</span>
+              <span className={style.drawerTitle}>Menu</span>
               <button
                 className={style.drawerClose}
                 onClick={() => setDrawerOpen(false)}
-                aria-label="Cerrar menú"
+                aria-label="Close menu"
               >
                 <CloseIcon />
               </button>

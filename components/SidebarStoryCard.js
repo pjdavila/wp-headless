@@ -7,20 +7,20 @@ function relativeTime(dateStr) {
   const then = new Date(dateStr).getTime();
   const diff = Math.floor((now - then) / 1000);
 
-  if (diff < 60) return "hace un momento";
+  if (diff < 60) return "just now";
   if (diff < 3600) {
     const m = Math.floor(diff / 60);
-    return `hace ${m} min`;
+    return `${m} min ago`;
   }
   if (diff < 86400) {
     const h = Math.floor(diff / 3600);
-    return `hace ${h}h`;
+    return `${h}h ago`;
   }
   if (diff < 604800) {
     const d = Math.floor(diff / 86400);
-    return `hace ${d}d`;
+    return `${d}d ago`;
   }
-  return new Date(dateStr).toLocaleDateString("es-ES", {
+  return new Date(dateStr).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
   });

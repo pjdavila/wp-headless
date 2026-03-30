@@ -81,7 +81,7 @@ export default function ArchivePage(props) {
       <>
         <div className={styles.loadingState}>
           <div className={styles.loadingSpinner} />
-          <span>Cargando artículos...</span>
+          <span>Loading articles...</span>
         </div>
       </>
     );
@@ -89,7 +89,7 @@ export default function ArchivePage(props) {
   if (error)
     return (
       <div className={styles.errorState}>
-        <p>Error al cargar los artículos.</p>
+        <p>Error loading articles.</p>
       </div>
     );
 
@@ -100,8 +100,8 @@ export default function ArchivePage(props) {
   const { archiveType, name, description, posts } = data?.nodeByUri || {};
   const postNodes = posts?.nodes || [];
 
-  const categoryName = name || "Archivo";
-  const archiveLabel = archiveType === "Tag" ? "Etiqueta" : "";
+  const categoryName = name || "Archive";
+  const archiveLabel = archiveType === "Tag" ? "Tag" : "";
 
   const currentCategorySlug = currentUri?.replace(/\//g, "").replace("category", "");
   const recentPosts = (recentData?.posts?.nodes || [])
@@ -141,7 +141,7 @@ export default function ArchivePage(props) {
     <>
       <SeoHead
         title={categoryName}
-        description={description || `Artículos sobre ${categoryName} en Business Journal Caribe.`}
+        description={description || `Articles about ${categoryName} on Caribbean Business.`}
         url={currentUri}
       />
 
@@ -162,7 +162,7 @@ export default function ArchivePage(props) {
             <p className={styles.sectionDescription}>{description}</p>
           )}
           <div className={styles.postCount}>
-            {postNodes.length} artículo{postNodes.length !== 1 ? "s" : ""}
+            {postNodes.length} article{postNodes.length !== 1 ? "s" : ""}
           </div>
         </div>
 
@@ -176,7 +176,7 @@ export default function ArchivePage(props) {
               </div>
             ) : (
               <div className={styles.emptyState}>
-                <p>No se encontraron artículos en esta sección.</p>
+                <p>No articles found in this section.</p>
               </div>
             )}
 
@@ -189,7 +189,7 @@ export default function ArchivePage(props) {
 
           <aside className={styles.sidebar}>
             <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarTitle}>Lo Más Reciente</h3>
+              <h3 className={styles.sidebarTitle}>Most Recent</h3>
               <div className={styles.sidebarList}>
                 {recentPosts.map((post, i) => (
                   <SidebarStoryCard key={post.id} post={post} index={i} />
@@ -198,7 +198,7 @@ export default function ArchivePage(props) {
             </div>
 
             <div className={styles.adPlaceholder}>
-              <span>PUBLICIDAD</span>
+              <span>ADVERTISEMENT</span>
             </div>
           </aside>
         </div>
@@ -236,10 +236,10 @@ function LoadMoreButton({ onClick, loading }) {
       {isLoading ? (
         <>
           <span className={styles.btnSpinner} />
-          Cargando...
+          Loading...
         </>
       ) : (
-        "Cargar más artículos"
+        "Load more articles"
       )}
     </button>
   );

@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "../styles/featured-hero.module.css";
 
 function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString("es-ES", {
+  return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -43,7 +43,7 @@ function MiniCard({ post }) {
         </h3>
         <div className={styles.miniMeta}>
           {post.author?.node?.name && (
-            <span className={styles.miniAuthor}>Por {post.author.node.name}</span>
+            <span className={styles.miniAuthor}>By {post.author.node.name}</span>
           )}
           {post.date && (
             <time dateTime={post.date} suppressHydrationWarning>
@@ -91,7 +91,7 @@ export default function FeaturedHero({ posts }) {
             <h1 className={styles.featuredTitle}>{main.title}</h1>
             <div className={styles.featuredMeta}>
               {main.author?.node?.name && (
-                <span className={styles.featuredAuthor}>Por {main.author.node.name}</span>
+                <span className={styles.featuredAuthor}>By {main.author.node.name}</span>
               )}
               {main.date && (
                 <time dateTime={main.date} suppressHydrationWarning>

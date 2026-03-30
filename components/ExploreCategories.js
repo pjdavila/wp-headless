@@ -35,7 +35,7 @@ export default function ExploreCategories({ categories, posts }) {
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Explorar Categorías</h2>
+        <h2 className={styles.title}>Explore Categories</h2>
       </div>
       <div className={styles.grid}>
         {items.map((item) => (
