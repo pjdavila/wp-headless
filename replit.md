@@ -26,12 +26,13 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 
 ## Homepage Components
 
-- **FeaturedHero**: Text-first main story with large serif title, excerpt, metadata; 4-card secondary grid alongside
+- **FeaturedHero** (Nerio-style): 2-column layout — large featured image with gradient overlay + text (category badge, title, author, date) on left, 4 stacked horizontal mini-cards on right. Mini-cards show thumbnail + category + title + author + date.
+- **ExploreCategories**: Horizontal scrollable row of category cards with background images (from most recent post) and category name overlay. Placed between hero and category sections.
 - **StoryCard**: Card with featured image, green category badge, title, excerpt, author, date
 - **SidebarStoryCard**: Compact numbered card with thumbnail and relative Spanish timestamps
 - **SectionBlock**: Category-grouped StoryCard grid with section title and "Ver más" link
 - **MarketWatchlist**: Placeholder financial data sidebar widget
-- **Homepage Layout**: Hero → main+sidebar grid (sidebar at 320px, collapses on mobile)
+- **Homepage Layout**: Hero → ExploreCategories → main+sidebar grid (sidebar at 320px, collapses on mobile)
 - **Data**: Fetches 20 posts, groups by WordPress category (skips uncategorized)
 
 ## Article Page Components

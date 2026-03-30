@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import SeoHead from "../components/SeoHead";
 import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
+import ExploreCategories from "../components/ExploreCategories";
 import SectionBlock from "../components/SectionBlock";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
@@ -75,6 +76,8 @@ export default function FrontPage(props) {
 
       <main className="container">
         <FeaturedHero posts={heroPosts} />
+
+        <ExploreCategories categories={categories} posts={allPosts} />
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>
