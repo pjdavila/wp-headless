@@ -24,12 +24,27 @@ const HOMEPAGE_QUERY = gql`
   }
 `;
 
+const FEATURED_POSTS_QUERY = gql`
+  ${POST_LIST_FRAGMENT}
+  query GetFeaturedPosts {
+    posts(
+      first: 10
+      where: { tag: "destacado", orderby: { field: DATE, order: DESC } }
+    ) {
+      nodes {
+        ...PostListFragment
+      }
+    }
+  }
+`;
+
 export default function FrontPage(props) {
   if (props.loading) {
     return <>Loading...</>;
   }
 
   const { data, loading, error } = useQuery(HOMEPAGE_QUERY);
+  const { data: featuredData } = useQuery(FEATURED_POSTS_QUERY);
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useQuery(HEADER_MENU_QUERY) || {};
 
@@ -39,6 +54,7 @@ export default function FrontPage(props) {
   const { title: siteTitle } = siteData;
 
   const allPosts = data?.posts?.nodes || [];
+  const featuredPosts = featuredData?.posts?.nodes || [];
   const heroPosts = allPosts.slice(0, 5);
   const recentPosts = allPosts.slice(0, 8);
 
@@ -75,7 +91,7 @@ export default function FrontPage(props) {
       />
 
       <main className="container">
-        <FeaturedHero posts={heroPosts} />
+        <FeaturedHero posts={heroPosts} sliderPosts={featuredPosts} />
 
         <ExploreCategories categories={categories} posts={allPosts} />
 
@@ -128,6 +144,9 @@ export async function getStaticProps(context) {
 FrontPage.queries = [
   {
     query: HOMEPAGE_QUERY,
+  },
+  {
+    query: FEATURED_POSTS_QUERY,
   },
   {
     query: SITE_DATA_QUERY,

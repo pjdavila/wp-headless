@@ -28,5 +28,11 @@ export const POST_LIST_FRAGMENT = gql`
         uri
       }
     }
+    tags {
+      nodes {
+        name
+        slug
+      }
+    }
   }
 `;
