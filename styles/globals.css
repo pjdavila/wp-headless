@@ -1,29 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary: 130 44% 34%;
+  --primary: 152 56% 38%;
   --primary-foreground: 0 0% 100%;
   --background: 0 0% 100%;
-  --foreground: 0 0% 7%;
-  --border: 0 0% 88%;
-  --card: 0 0% 98%;
-  --muted: 0 0% 94%;
-  --muted-foreground: 0 0% 40%;
+  --foreground: 220 15% 12%;
+  --border: 220 10% 90%;
+  --card: 220 14% 97%;
+  --muted: 220 12% 93%;
+  --muted-foreground: 220 8% 46%;
   --destructive: 0 84% 60%;
-  --positive: 122 39% 49%;
-  --radius: 2px;
+  --positive: 152 56% 45%;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .dark {
-  --primary: 130 44% 38%;
-  --background: 0 0% 7%;
-  --foreground: 0 0% 93%;
-  --border: 0 0% 16%;
-  --card: 0 0% 9%;
-  --muted: 0 0% 14%;
-  --muted-foreground: 0 0% 60%;
+  --primary: 152 56% 45%;
+  --background: 225 15% 6%;
+  --foreground: 220 10% 94%;
+  --border: 225 10% 13%;
+  --card: 225 12% 9%;
+  --muted: 225 10% 12%;
+  --muted-foreground: 220 8% 55%;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.15);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2);
 }
 
 *,
@@ -46,7 +55,7 @@ body {
   line-height: 1.6;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -55,7 +64,7 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 img {
@@ -77,13 +86,14 @@ button {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  line-height: 1.2;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  line-height: 1.15;
   color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
 }
 
-h1 { font-size: 2.5rem; }
+h1 { font-size: 2.75rem; }
 h2 { font-size: 2rem; }
 h3 { font-size: 1.5rem; }
 h4 { font-size: 1.25rem; }
@@ -103,8 +113,8 @@ p {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 .sr-only {
@@ -120,6 +130,6 @@ p {
 }
 
 ::selection {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
 }

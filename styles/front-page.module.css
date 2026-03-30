@@ -1,7 +1,7 @@
 .layout {
   display: grid;
   grid-template-columns: 1fr 320px;
-  gap: 2.5rem;
+  gap: 3rem;
   padding: 1rem 0 3rem;
 }
 
@@ -17,19 +17,20 @@
 
 .sidebarSection {
   background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  padding: 1rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .sidebarTitle {
-  font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid hsl(var(--primary));
-  color: hsl(var(--foreground));
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .recentList {

@@ -10,15 +10,20 @@
   aspect-ratio: 4/3;
   overflow: hidden;
   border-radius: var(--radius);
-  border: 1px solid hsl(var(--border));
   cursor: pointer;
   background: none;
   padding: 0;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.thumb:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .thumbImg {
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease;
 }
 
 .thumb:hover .thumbImg {
@@ -29,7 +34,8 @@
   position: fixed;
   inset: 0;
   z-index: 300;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,7 +70,7 @@
   cursor: pointer;
   z-index: 2;
   opacity: 0.8;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
 }
 
 .closeBtn:hover {
@@ -76,22 +82,23 @@
   top: 50%;
   transform: translateY(-50%);
   color: #fff;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   border: none;
   cursor: pointer;
   z-index: 2;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   opacity: 0.8;
-  transition: opacity 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .navBtn:hover {
   opacity: 1;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .navBtn[data-dir="prev"] {

@@ -1,0 +1,53 @@
+target distro name/version labels not found, reading /etc/os-release file
+[2mBuilder version: v2.70.3[0m
+[1m[0m
+[1mNode.js Setup:[0m
+  Detecting Node.js version
+[2m    Searching for the Node.js version in package.json => engines or .nvmrc[0m
+[2m    [0m
+[2m    Using Node.js ">=20.0.0 <21.0.0" from the package.json engines field[0m
+  Installing Node.js
+  [34mnodejs[0m: [33mContributing[0m to layer
+[2m    Node.js v20.20.2 installed because it is the latest version that matches the constraint ">=20.0.0 <21.0.0"[0m
+[1m[0m
+[1mnpm Setup:[0m
+  Detecting npm version
+[2m    Searching for the npm version in:[0m
+[2m    	 1. package.json => engines[0m
+[2m    	 2. package.json => packageManager[0m
+[2m    [0m
+[2m    npm version not found, using the default npm for this version of Node.js[0m
+[2m    [0m
+  Installing npm
+  [34mnpm[0m: [33mContributing[0m to layer
+[2m    npm v10.8.2 installed[0m
+[1m[0m
+[1mnpm Install Packages:[0m
+  package-lock.json file found, running: "npm ci"
+  
+[2m╔═ Install Output: ═══════════════════════════════════[0m
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@8.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@11.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+added 265 packages in 9s
+
+44 packages are looking for funding
+  run `npm fund` for details
+[2m╚═════════════════════════════════════════════════════[0m
+[1m[0m
+[1mBuild Application:[0m
+  Running: "npm run wpe-build"
+[2m    Build command: "faust build"[0m
+[2m    [0m
+[2m╔═ Build Output: ═════════════════════════════════════[0m
+
+> wpe-build
+> faust build
+
+error - Validation error: 400 - Bad Request
+error - Validation Failed, Faust is shutting down: Your Faust front-end site URL value is misconfigured. It should NOT match the `NEXT_PUBLIC_WORDPRESS_URL.`
+[2m╚═════════════════════════════════════════════════════[0m
+
+[31;1mnpm run failed: exit status 1[0m
+[31;1mERROR: [0mfailed to build: exit status 1

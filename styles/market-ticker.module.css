@@ -1,6 +1,5 @@
 .wrapper {
   background-color: hsl(var(--card));
-  border-bottom: 1px solid hsl(var(--border));
   overflow: hidden;
   position: relative;
   height: 36px;
@@ -10,7 +9,7 @@
 
 .track {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
   animation: scroll 40s linear infinite;
   white-space: nowrap;
   will-change: transform;
@@ -57,12 +56,8 @@
 }
 
 @keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {

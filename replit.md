@@ -11,13 +11,17 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Components**: Reusable React components in `components/`
 - **Pages**: Next.js pages in `pages/` (includes API routes for Faust preview/auth)
 
-## Design System
+## Design System (2026 Refresh)
 
 - **CSS Tokens**: HSL custom properties in `:root` (light) and `.dark` (dark mode) — see `styles/globals.css`
-- **Typography**: Inter (sans-serif, body) loaded from Google Fonts; Georgia (serif, headings) as system font
-- **Primary Color**: Green financial brand (`--primary: 130 44% 34%`)
+- **Typography**: Inter for all text (headings + body), loaded from Google Fonts
+- **Primary Color**: Green financial brand (`--primary: 152 56% 38%` light / `152 56% 45%` dark)
 - **Dark Mode**: Default. Toggle persists in `localStorage` key `bj-theme`. Init script in `_app.js` prevents FOUC.
-- **Border Radius**: 2px (`--radius`)
+- **Border Radius**: `--radius: 12px`, `--radius-sm: 8px`, `--radius-lg: 16px`, `--radius-xl: 20px`
+- **Shadows**: `--shadow-sm`, `--shadow-md`, `--shadow-lg` (replaces border-based card styling)
+- **Header**: Glassmorphism effect (`backdrop-filter: blur(20px) saturate(180%)`)
+- **Cards**: Hover lift/scale effects (`translateY(-4px)`, image `scale(1.05)`)
+- **Badges**: Gradient fills and pill-style category tags
 - **ThemeToggle**: Component in `components/ThemeToggle.js`, rendered in Header
 
 ## Homepage Components

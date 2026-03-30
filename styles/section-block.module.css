@@ -1,6 +1,5 @@
 .section {
-  padding: 2rem 0;
-  border-bottom: 1px solid hsl(var(--border));
+  padding: 2.5rem 0;
 }
 
 .section:last-child {
@@ -9,19 +8,30 @@
 
 .header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid hsl(var(--primary));
+  margin-bottom: 1.5rem;
 }
 
 .title {
-  font-family: var(--font-serif);
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: 800;
   margin: 0;
   color: hsl(var(--foreground));
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--primary) / 0.5));
+  border-radius: 2px;
 }
 
 .viewMore {
@@ -29,13 +39,16 @@
   font-weight: 600;
   color: hsl(var(--primary));
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
 }
 
 .viewMore:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 .grid {
