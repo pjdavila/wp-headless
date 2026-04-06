@@ -1,9 +1,10 @@
 import "../faust.config";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Script from "next/script";
 import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
+import ComingSoon from "../components/ComingSoon";
 import "../styles/globals.css";
 
 const GA_ID = "G-F4RRT00M6P";
@@ -44,8 +45,56 @@ const GA_INIT_SCRIPT = `
 })();
 `;
 
+const isComingSoonEnabled =
+  process.env.COMING_SOON === "true" ||
+  process.env.NEXT_PUBLIC_COMING_SOON === "true";
+
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const [gateOpen, setGateOpen] = useState(!isComingSoonEnabled);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (!isComingSoonEnabled) {
+      setGateOpen(true);
+      setChecked(true);
+      return;
+    }
+    const hasCookie = document.cookie
+      .split(";")
+      .some((c) => c.trim().startsWith("site_access="));
+    if (hasCookie) {
+      setGateOpen(true);
+    }
+    setChecked(true);
+  }, []);
+
+  const handleUnlock = () => {
+    setGateOpen(true);
+  };
+
+  if (!checked) {
+    return null;
+  }
+
+  if (!gateOpen) {
+    return (
+      <>
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+          <title>Caribbean Business — Coming Soon</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+        <ComingSoon onUnlock={handleUnlock} />
+      </>
+    );
+  }
 
   return (
     <FaustProvider pageProps={pageProps}>
