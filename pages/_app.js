@@ -72,11 +72,7 @@ export default function MyApp({ Component, pageProps }) {
     setGateOpen(true);
   };
 
-  if (!checked) {
-    return null;
-  }
-
-  if (!gateOpen) {
+  if (!checked || !gateOpen) {
     return (
       <>
         <Head>
