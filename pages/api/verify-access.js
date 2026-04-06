@@ -1,4 +1,8 @@
-import { timingSafeEqual } from "crypto";
+import { timingSafeEqual, createHmac } from "crypto";
+
+function signToken(secret) {
+  return createHmac("sha256", secret).update("site_access_granted").digest("hex");
+}
 
 export default function handler(req, res) {
   if (req.method !== "POST") {
@@ -22,10 +26,11 @@ export default function handler(req, res) {
   const isValid = a.length === b.length && timingSafeEqual(a, b);
 
   if (isValid) {
+    const token = signToken(sitePassword);
     const isProduction = process.env.NODE_ENV === "production";
     const secure = isProduction ? "; Secure" : "";
     res.setHeader("Set-Cookie", [
-      `site_access=granted; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${secure}`,
+      `site_access=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${secure}`,
     ]);
     return res.status(200).json({ success: true });
   }

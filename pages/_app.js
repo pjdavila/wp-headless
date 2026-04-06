@@ -52,21 +52,20 @@ const isComingSoonEnabled =
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [gateOpen, setGateOpen] = useState(!isComingSoonEnabled);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(!isComingSoonEnabled);
 
   useEffect(() => {
-    if (!isComingSoonEnabled) {
-      setGateOpen(true);
-      setChecked(true);
-      return;
-    }
-    const hasCookie = document.cookie
-      .split(";")
-      .some((c) => c.trim().startsWith("site_access="));
-    if (hasCookie) {
-      setGateOpen(true);
-    }
-    setChecked(true);
+    if (!isComingSoonEnabled) return;
+
+    fetch("/api/check-access")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.granted) setGateOpen(true);
+        setChecked(true);
+      })
+      .catch(() => {
+        setChecked(true);
+      });
   }, []);
 
   const handleUnlock = () => {
