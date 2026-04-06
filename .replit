@@ -10,6 +10,8 @@ channel = "stable-25_05"
 [userenv.shared]
 NEXT_PUBLIC_WORDPRESS_URL = "https://vnmcms.wpenginepowered.com/cbusiness"
 NEXT_PUBLIC_SITE_URL = "https://vnmcms.wpenginepowered.com"
+COMING_SOON = "true"
+NEXT_PUBLIC_COMING_SOON = "true"
 
 [workflows]
 runButton = "Project"
