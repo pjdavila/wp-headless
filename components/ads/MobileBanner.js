@@ -7,7 +7,7 @@ const AD_CONFIG = {
 
 export default function MobileBanner() {
   return (
-    <div className="bg-[#000000]" style={{ justifyContent: "center", margin: "1rem 0", display: "flex" }}>
+    <div style={{ justifyContent: "center", margin: "1rem 0", display: "flex" }}>
       <div className="hidden md:block">
         <AdIframe zoneId={AD_CONFIG.DESKTOP.zoneId} width={AD_CONFIG.DESKTOP.width} height={AD_CONFIG.DESKTOP.height} />
       </div>
