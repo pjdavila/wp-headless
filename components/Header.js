@@ -25,16 +25,6 @@ function CloseIcon() {
   );
 }
 
-function getFormattedDate() {
-  const now = new Date();
-  return now.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
 const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
 
 export default function Header({ siteTitle, siteDescription, menuItems, categories }) {
@@ -101,11 +91,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
           </div>
         </nav>
 
-        <div className={style.dateBar}>
-          <div className={`container ${style.dateBarInner}`}>
-            <span className={style.date} suppressHydrationWarning>{getFormattedDate()}</span>
-          </div>
-        </div>
       </header>
 
       {drawerOpen && (

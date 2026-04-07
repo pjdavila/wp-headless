@@ -103,21 +103,6 @@
   text-decoration: none;
 }
 
-.dateBar {
-  padding: 0.5rem 0;
-}
-
-.dateBarInner {
-  display: flex;
-  align-items: center;
-}
-
-.date {
-  font-size: 0.75rem;
-  color: hsl(var(--muted-foreground));
-  letter-spacing: 0.02em;
-  font-weight: 500;
-}
 
 .overlay {
   position: fixed;
@@ -224,7 +209,4 @@
     max-height: 36px;
   }
 
-  .dateBar {
-    padding: 0.4rem 0;
-  }
 }
