@@ -19,7 +19,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Dark Mode**: Default. Toggle persists in `localStorage` key `bj-theme`. Init script in `_app.js` prevents FOUC.
 - **Border Radius**: `--radius: 12px`, `--radius-sm: 8px`, `--radius-lg: 16px`, `--radius-xl: 20px`
 - **Shadows**: `--shadow-sm`, `--shadow-md`, `--shadow-lg` (replaces border-based card styling)
-- **Header**: Mercado-style layout — MarketTicker on top, logo bar (hamburger left | centered logo | theme toggle right), centered nav bar, date line below. Glassmorphism effect (`backdrop-filter: blur(20px) saturate(180%)`). Hamburger always visible, opens left drawer. On mobile, nav links hide.
+- **Header**: Mercado-style layout — MarketTicker on top, logo bar (hamburger left | centered logo | theme toggle right), centered nav bar. Always-dark header: scoped CSS variable overrides on `.header` force dark-mode colors regardless of page theme. Logo always uses `logo-dark.webp`. Glassmorphism effect (`backdrop-filter: blur(20px) saturate(180%)`). Hamburger always visible, opens left drawer. On mobile, nav links hide.
 - **Cards**: Hover lift/scale effects (`translateY(-4px)`, image `scale(1.05)`)
 - **Badges**: Gradient fills and pill-style category tags
 - **ThemeToggle**: Component in `components/ThemeToggle.js`, rendered in Header

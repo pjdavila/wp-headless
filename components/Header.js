@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
@@ -29,17 +29,6 @@ const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
 
 export default function Header({ siteTitle, siteDescription, menuItems, categories }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    };
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
 
   const catItems = Array.isArray(categories)
     ? categories.filter((c) => !SKIP_SLUGS.includes(c.slug))
@@ -62,7 +51,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
 
             <Link href="/" className={style.brand}>
               <Image
-                src={isDark ? "/logo-dark.webp" : "/logo-light.webp"}
+                src="/logo-dark.webp"
                 alt="Caribbean Business"
                 width={400}
                 height={50}

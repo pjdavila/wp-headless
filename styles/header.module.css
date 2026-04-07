@@ -6,6 +6,13 @@
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid hsl(var(--border) / 0.5);
+
+  --background: 225 15% 6%;
+  --foreground: 220 10% 94%;
+  --border: 225 10% 13%;
+  --card: 225 12% 9%;
+  --muted: 225 10% 12%;
+  --muted-foreground: 220 8% 55%;
 }
 
 .logoBar {
