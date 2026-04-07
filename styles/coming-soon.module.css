@@ -61,7 +61,7 @@
 }
 
 .title {
-  font-family: var(--font-sans, 'Bodoni 72', Georgia, serif);
+  font-family: var(--font-serif);
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -102,7 +102,7 @@
   background: hsl(225 12% 10%);
   border: none;
   color: #fff;
-  font-family: var(--font-sans, 'Bodoni 72', Georgia, serif);
+  font-family: var(--font-sans);
   font-size: 0.95rem;
   outline: none;
 }
