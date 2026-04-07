@@ -100,6 +100,18 @@ npm run start    # Start production server (Atlas uses port 8080)
   - `InterstitialAd.js` — modal overlay ad, max 1/session, 3s delay, 5s countdown (desktop 700x500, mobile 320x480)
 - **Placements**: StaticBanner in Header, StickyBottomBanner in _app.js, SidebarBanner in front-page/single/archive sidebars, ArticleBanner in single post content, MobileBanner in SectionBlock, InterstitialAd in front-page/single
 
+## Tailwind CSS
+
+- **Version**: Tailwind CSS v4 via `@tailwindcss/postcss`
+- **Config**: `postcss.config.js` with `@tailwindcss/postcss` plugin
+- **Usage**: `@import "tailwindcss" source(none)` in `globals.css` with explicit `@source` directives to prevent dev server recompilation loops
+- **Purpose**: Responsive utility classes for ad components (`hidden`, `block`, `md:`, `lg:` prefixes)
+
+## Post-Merge Setup
+
+- **Script**: `scripts/post-merge.sh` — runs `npm install` after task merges
+- **Timeout**: 120s
+
 ## Replit Configuration
 
 - Dev server runs on port `5000` with host `0.0.0.0` for Replit proxy compatibility
