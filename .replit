@@ -12,6 +12,7 @@ NEXT_PUBLIC_WORDPRESS_URL = "https://vnmcms.wpenginepowered.com/cbusiness"
 NEXT_PUBLIC_SITE_URL = "https://vnmcms.wpenginepowered.com"
 COMING_SOON = "true"
 NEXT_PUBLIC_COMING_SOON = "true"
+RECOMBEE_REGION = "ca-east"
 
 [workflows]
 runButton = "Project"
