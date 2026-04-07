@@ -22,15 +22,13 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, skipped: true });
   }
 
-  try {
-    await client.send(
-      new rqs.AddDetailView(userId, itemId, {
-        cascadeCreate: true,
-      })
-    );
-    return res.status(200).json({ ok: true });
-  } catch (err) {
+  client.send(
+    new rqs.AddDetailView(userId, itemId, {
+      cascadeCreate: true,
+    })
+  ).catch((err) => {
     console.error("Recombee track error:", err.message);
-    return res.status(200).json({ ok: true, error: true });
-  }
+  });
+
+  return res.status(200).json({ ok: true });
 }

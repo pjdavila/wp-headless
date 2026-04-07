@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   const { type, itemId, userId, count = "6" } = req.query;
-  const n = Math.min(parseInt(count, 10) || 6, 20);
+  const n = Math.max(1, Math.min(parseInt(count, 10) || 6, 20));
 
   if (!isValidId(userId)) {
     return res.status(400).json({ error: "Invalid userId" });
