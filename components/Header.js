@@ -59,17 +59,17 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
     <>
       <header className={style.header}>
         <MarketTicker />
-        <div className={style.topBar}>
-          <div className={`container ${style.topBarInner}`}>
-            <span className={style.date} suppressHydrationWarning>{getFormattedDate()}</span>
-            <div className={style.topActions}>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
 
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
+            <button
+              className={style.hamburger}
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Open menu"
+            >
+              <MenuIcon />
+            </button>
+
             <Link href="/" className={style.brand}>
               <Image
                 src={isDark ? "/logo-dark.webp" : "/logo-light.webp"}
@@ -80,19 +80,15 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 priority
               />
             </Link>
+
+            <div className={style.rightActions}>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
 
         <nav className={style.navBar}>
           <div className={`container ${style.navBarInner}`}>
-            <button
-              className={style.hamburger}
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open menu"
-            >
-              <MenuIcon />
-            </button>
-
             <ul className={style.navList}>
               {catItems.map((cat) => (
                 <li key={cat.slug}>
@@ -102,11 +98,15 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 </li>
               ))}
             </ul>
-
           </div>
         </nav>
-      </header>
 
+        <div className={style.dateBar}>
+          <div className={`container ${style.dateBarInner}`}>
+            <span className={style.date} suppressHydrationWarning>{getFormattedDate()}</span>
+          </div>
+        </div>
+      </header>
 
       {drawerOpen && (
         <>

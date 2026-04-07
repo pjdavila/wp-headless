@@ -8,43 +8,41 @@
   border-bottom: 1px solid hsl(var(--border) / 0.5);
 }
 
-.topBar {
-  padding: 0.4rem 0;
-}
-
-.topBarInner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.date {
-  font-size: 0.75rem;
-  color: hsl(var(--muted-foreground));
-  letter-spacing: 0.02em;
-  font-weight: 500;
-}
-
-.topActions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
 .logoBar {
-  padding: 1rem 0;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.3);
 }
 
 .logoBarInner {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
+}
+
+.hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  color: hsl(var(--foreground));
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+  justify-self: start;
+}
+
+.hamburger:hover {
+  background-color: hsl(var(--muted));
 }
 
 .brand {
   text-decoration: none;
   text-align: center;
   transition: opacity 0.2s ease;
+  justify-self: center;
 }
 
 .brand:hover {
@@ -59,17 +57,23 @@
   object-fit: contain;
 }
 
+.rightActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 .navBar {
   padding: 0.25rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.3);
 }
 
 .navBarInner {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   height: 42px;
-  gap: 0.25rem;
 }
 
 .navList {
@@ -99,24 +103,20 @@
   text-decoration: none;
 }
 
-.hamburger {
-  display: none;
-  position: absolute;
-  left: 0;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  color: hsl(var(--foreground));
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: background-color 0.2s ease;
+.dateBar {
+  padding: 0.5rem 0;
 }
 
-.hamburger:hover {
-  background-color: hsl(var(--muted));
+.dateBarInner {
+  display: flex;
+  align-items: center;
+}
+
+.date {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  letter-spacing: 0.02em;
+  font-weight: 500;
 }
 
 .overlay {
@@ -212,15 +212,19 @@
 }
 
 @media (max-width: 768px) {
-  .navList {
+  .navBar {
     display: none;
   }
 
-  .hamburger {
-    display: flex;
+  .logoBar {
+    padding: 0.5rem 0;
   }
 
-  .logoBar {
-    padding: 0.75rem 0;
+  .logoImage {
+    max-height: 36px;
+  }
+
+  .dateBar {
+    padding: 0.4rem 0;
   }
 }
