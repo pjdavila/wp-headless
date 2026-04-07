@@ -35,7 +35,14 @@
 
 .logo:hover {
   text-decoration: none;
-  color: hsl(var(--primary));
+  opacity: 0.85;
+}
+
+.logoImage {
+  height: auto;
+  max-height: 35px;
+  width: auto;
+  object-fit: contain;
 }
 
 .tagline {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "../styles/footer.module.css";
 
 const SECTIONS = [
@@ -48,7 +49,13 @@ export default function Footer() {
         <div className={styles.grid}>
           <div className={styles.brandCol}>
             <Link href="/" className={styles.logo}>
-              Caribbean Business
+              <Image
+                src="/logo-dark.webp"
+                alt="Caribbean Business"
+                width={280}
+                height={35}
+                className={styles.logoImage}
+              />
             </Link>
             <p className={styles.tagline}>
               Business, finance, and technology news from the Caribbean and Latin America.
