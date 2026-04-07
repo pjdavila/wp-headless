@@ -1,5 +1,6 @@
 import Link from "next/link";
 import StoryCard from "./StoryCard";
+import MobileBanner from "./ads/MobileBanner";
 import styles from "../styles/section-block.module.css";
 
 export default function SectionBlock({ title, categoryUri, posts }) {
@@ -20,6 +21,7 @@ export default function SectionBlock({ title, categoryUri, posts }) {
           <StoryCard key={post.id} post={post} />
         ))}
       </div>
+      <MobileBanner />
     </section>
   );
 }

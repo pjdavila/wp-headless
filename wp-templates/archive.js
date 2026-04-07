@@ -10,6 +10,7 @@ import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
 import { getNextStaticProps } from "@faustwp/core";
 import { useState } from "react";
+import SidebarBanner from "../components/ads/SidebarBanner";
 import styles from "../styles/archive.module.css";
 
 const BATCH_SIZE = 9;
@@ -204,9 +205,7 @@ export default function ArchivePage(props) {
               </div>
             </div>
 
-            <div className={styles.adPlaceholder}>
-              <span>ADVERTISEMENT</span>
-            </div>
+            <SidebarBanner />
           </aside>
         </div>
       </main>

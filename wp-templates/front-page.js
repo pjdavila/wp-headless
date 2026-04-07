@@ -8,6 +8,8 @@ import ExploreCategories from "../components/ExploreCategories";
 import SectionBlock from "../components/SectionBlock";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
+import SidebarBanner from "../components/ads/SidebarBanner";
+import InterstitialAd from "../components/ads/InterstitialAd";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -128,10 +130,13 @@ export default function FrontPage(props) {
             </div>
 
             <MarketWatchlist />
+
+            <SidebarBanner />
           </aside>
         </div>
       </main>
 
+      <InterstitialAd />
       <Footer />
     </>
   );

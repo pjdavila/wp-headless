@@ -14,6 +14,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 ## Design System (2026 Refresh)
 
 - **CSS Tokens**: HSL custom properties in `:root` (light) and `.dark` (dark mode) — see `styles/globals.css`
+- **Tailwind CSS v4**: Installed for ad component responsive breakpoints (`hidden`, `block`, `md:`, `lg:` utilities). Configured via `@import "tailwindcss" source(none)` in globals.css with explicit `@source` directives. PostCSS config in `postcss.config.js` uses `@tailwindcss/postcss`.
 - **Typography**: Playfair Display for headings (Google Fonts, 400/700/800), Source Sans 3 for body/UI text (Google Fonts, 400/600/700)
 - **Primary Color**: Green financial brand (`--primary: 152 56% 38%` light / `152 56% 45%` dark)
 - **Dark Mode**: Default. Toggle persists in `localStorage` key `bj-theme`. Init script in `_app.js` prevents FOUC.
@@ -48,7 +49,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Template**: `wp-templates/archive.js` renders category and tag archives
 - **Grid**: 3-column StoryCard grid (responsive: 3→2→1)
 - **Pagination**: Load-more button with fetchMore (BATCH_SIZE=9)
-- **Sidebar**: Recent posts from other categories + ad placeholder
+- **Sidebar**: Recent posts from other categories + SidebarBanner ad
 - **Route**: `/blog/category/{slug}/` (mapped via Faust.js catch-all)
 
 ## SEO & Analytics (2026 Optimization)
@@ -85,6 +86,19 @@ npm run dev      # Start dev server on port 5000 (local/Replit)
 npm run build    # Build for production
 npm run start    # Start production server (Atlas uses port 8080)
 ```
+
+## AdButler Ad Units
+
+- **Account ID**: 188652
+- **Ad Components**: All in `components/ads/`
+  - `AdIframe.js` — shared base iframe component
+  - `StaticBanner.js` — responsive header banner (desktop 970x90 zone 909696, tablet 728x90 zone 921050, mobile 320x100 zone 921049)
+  - `StickyBottomBanner.js` — fixed bottom banner (same zones as StaticBanner)
+  - `SidebarBanner.js` — 300x250 sidebar ad (zone 921047)
+  - `ArticleBanner.js` — in-article 300x250 ad wrapper
+  - `MobileBanner.js` — 320x100 mobile-only ad (zone 909696)
+  - `InterstitialAd.js` — modal overlay ad, max 1/session, 3s delay, 5s countdown (desktop 700x500, mobile 320x480)
+- **Placements**: StaticBanner in Header, StickyBottomBanner in _app.js, SidebarBanner in front-page/single/archive sidebars, ArticleBanner in single post content, MobileBanner in SectionBlock, InterstitialAd in front-page/single
 
 ## Replit Configuration
 

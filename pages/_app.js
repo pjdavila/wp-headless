@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
 import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
+import StickyBottomBanner from "../components/ads/StickyBottomBanner";
 import "../styles/globals.css";
 
 const GA_ID = "G-F4RRT00M6P";
@@ -108,6 +109,7 @@ export default function MyApp({ Component, pageProps }) {
         dangerouslySetInnerHTML={{ __html: GA_INIT_SCRIPT }}
       />
       <Component {...pageProps} key={router.asPath} />
+      <StickyBottomBanner />
     </FaustProvider>
   );
 }

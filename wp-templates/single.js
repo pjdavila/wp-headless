@@ -14,6 +14,9 @@ import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
 import { useFaustQuery } from "@faustwp/core";
 import { estimateReadingTime } from "../utils/readingTime";
+import SidebarBanner from "../components/ads/SidebarBanner";
+import InterstitialAd from "../components/ads/InterstitialAd";
+import ArticleBanner from "../components/ads/ArticleBanner";
 import styles from "../styles/single.module.css";
 
 const POST_QUERY = gql`
@@ -85,6 +88,25 @@ function extractImagesFromContent(html) {
     images.push({ sourceUrl: match[1], altText: match[2] || "" });
   }
   return images;
+}
+
+function ArticleContent({ content }) {
+  if (!content) return null;
+  const parts = content.split(/<\/p>/i);
+  const paragraphs = parts.filter((p) => p.trim().length > 0);
+
+  const splitAt = Math.min(2, paragraphs.length);
+  const before = paragraphs.slice(0, splitAt).map((p) => p + "</p>").join("");
+  const after = paragraphs.slice(splitAt).map((p) => p + "</p>").join("");
+
+  return (
+    <>
+      <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: before }} />
+      <ArticleBanner />
+      <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: after }} />
+      <ArticleBanner />
+    </>
+  );
 }
 
 function ClockIcon() {
@@ -210,10 +232,7 @@ export default function Component(props) {
 
             <h1 className={styles.articleTitle}>{title}</h1>
 
-            <div
-              className={styles.articleBody}
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
+            <ArticleContent content={content} />
 
             {galleryImages.length > 1 && (
               <PhotoGallery images={galleryImages} />
@@ -240,10 +259,13 @@ export default function Component(props) {
                 <SidebarStoryCard key={p.id} post={p} index={i} />
               ))}
             </div>
+
+            <SidebarBanner />
           </aside>
         </div>
       </main>
 
+      <InterstitialAd />
       <Footer />
     </>
   );

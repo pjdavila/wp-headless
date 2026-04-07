@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 import MarketTicker from "./MarketTicker";
+import StaticBanner from "./ads/StaticBanner";
 import style from "../styles/header.module.css";
 
 function MenuIcon() {
@@ -36,6 +37,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
 
   return (
     <>
+      <StaticBanner />
       <header className={style.header}>
         <MarketTicker />
 
