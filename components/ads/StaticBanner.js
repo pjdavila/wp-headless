@@ -1,7 +1,7 @@
 import AdIframe from "./AdIframe";
 
 const AD_CONFIG = {
-  DESKTOP: { zoneId: 909696, width: 970, height: 90 },
+  DESKTOP: { zoneId: 921050, width: 728, height: 90 },
   TABLET: { zoneId: 921050, width: 728, height: 90 },
   MOBILE: { zoneId: 921049, width: 320, height: 100 },
 };
