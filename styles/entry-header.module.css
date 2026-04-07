@@ -6,7 +6,7 @@
 
 .title {
   font-size: 2.25rem;
-  font-weight: 800;
+  font-weight: 700;
   margin: 0 0 1rem;
   color: hsl(var(--foreground));
   letter-spacing: -0.02em;

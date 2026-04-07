@@ -74,7 +74,7 @@
 
 .articleTitle {
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   color: hsl(var(--foreground));
@@ -157,7 +157,7 @@
 
 .relatedTitle {
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 1.5rem;
   color: hsl(var(--foreground));
   letter-spacing: -0.01em;
