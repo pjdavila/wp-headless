@@ -105,7 +105,6 @@ function ArticleContent({ content }) {
       <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: before }} />
       <ArticleBanner />
       <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: after }} />
-      <ArticleBanner />
     </>
   );
 }
