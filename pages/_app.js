@@ -77,7 +77,6 @@ export default function MyApp({ Component, pageProps }) {
       <>
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
           <title>Caribbean Business — Coming Soon</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
@@ -95,7 +94,6 @@ export default function MyApp({ Component, pageProps }) {
     <FaustProvider pageProps={pageProps}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </Head>
       <Script
         id="theme-init"

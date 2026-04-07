@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import Image from "next/image";
 import SeoHead from "../components/SeoHead";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "../components/JsonLd";
 import Link from "next/link";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -137,6 +138,24 @@ export default function Component(props) {
         url={uri}
         articlePublished={date}
         articleAuthor={author?.node?.name}
+        articleSection={category?.name}
+        imageAlt={featuredImage?.node?.altText || title}
+      />
+      <ArticleJsonLd
+        title={title}
+        description={post.excerpt || content}
+        url={uri}
+        imageUrl={imgSrc}
+        datePublished={date}
+        authorName={author?.node?.name}
+        categoryName={category?.name}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "/" },
+          ...(category ? [{ name: category.name, url: category.uri }] : []),
+          { name: title },
+        ]}
       />
 
       <Header siteTitle={siteTitle} menuItems={menuItems} categories={navCategories} />

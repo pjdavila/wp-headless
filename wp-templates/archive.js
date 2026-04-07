@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import SeoHead from "../components/SeoHead";
+import { BreadcrumbJsonLd } from "../components/JsonLd";
 import Footer from "../components/Footer";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
@@ -143,6 +144,12 @@ export default function ArchivePage(props) {
         title={categoryName}
         description={description || `Articles about ${categoryName} on Caribbean Business.`}
         url={currentUri}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "/" },
+          { name: categoryName },
+        ]}
       />
 
       <Header

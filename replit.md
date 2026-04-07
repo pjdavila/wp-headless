@@ -51,17 +51,15 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Sidebar**: Recent posts from other categories + ad placeholder
 - **Route**: `/blog/category/{slug}/` (mapped via Faust.js catch-all)
 
-## SEO & Analytics
+## SEO & Analytics (2026 Optimization)
 
-- **SeoHead Component**: Reusable `components/SeoHead.js` renders title, description, OG, Twitter card tags
-- **Title Format**: "Page Title | Business Journal Caribe" (homepage uses site name only)
-- **OG Tags**: og:title, og:description, og:image, og:type, og:url, og:site_name, og:locale
-- **Twitter Cards**: summary_large_image when OG image present, summary otherwise
-- **Article Meta**: article:published_time, article:author for posts
+- **SeoHead Component**: `components/SeoHead.js` — title, description, OG (image, type, url, site_name, locale, image:alt, image:type), Twitter card (summary_large_image, twitter:site @cbusinesspr, twitter:image:alt), article meta (published_time, modified_time, author, section). Supports webp/svg/png/jpeg image type detection.
+- **JSON-LD Structured Data**: `components/JsonLd.js` — OrganizationJsonLd, WebSiteJsonLd (front-page.js), ArticleJsonLd + BreadcrumbJsonLd (single.js), BreadcrumbJsonLd (archive.js). XSS-safe serialization via `safeJsonLd()` (escapes `<`/`>` in script tags). HTML-stripped descriptions.
+- **Title Format**: "Page Title | Caribbean Business" (homepage uses site name only)
 - **Hero Image Preload**: `<link rel="preload">` for featured images
 - **Google Analytics**: GA4 (G-F4RRT00M6P) loaded via requestIdleCallback ~3s after page load
-- **robots.txt**: Blocks /api/ from crawlers
-- **Sitemap**: Faust.js built-in sitemap generation via `/sitemap.xml`
+- **robots.txt**: Dynamic via `pages/robots.txt.js` (getServerSideProps, text/plain). Uses `NEXT_PUBLIC_SITE_URL` for sitemap URL. Blocks /api/.
+- **_document.js**: `lang="en"`, theme-color meta (dark/light), apple-touch-icon (180x180), favicon SVG
 - **Canonical URLs**: Set on all pages
 
 ## Environment Variables
