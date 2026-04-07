@@ -5,7 +5,6 @@ import SeoHead from "../components/SeoHead";
 import { WebSiteJsonLd } from "../components/JsonLd";
 import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
-import ExploreCategories from "../components/ExploreCategories";
 import SectionBlock from "../components/SectionBlock";
 import StoryCard from "../components/StoryCard";
 import MobileBanner from "../components/ads/MobileBanner";
@@ -112,8 +111,6 @@ export default function FrontPage(props) {
 
       <main className="container">
         <FeaturedHero posts={allPosts} sliderPosts={featuredPosts} />
-
-        <ExploreCategories categories={categories} posts={allPosts} />
 
         {recommendedPosts.length > 0 && (
           <section className={styles.recommendedSection}>
