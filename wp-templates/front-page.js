@@ -1,3 +1,4 @@
+import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import SeoHead from "../components/SeoHead";
@@ -6,6 +7,7 @@ import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import ExploreCategories from "../components/ExploreCategories";
 import SectionBlock from "../components/SectionBlock";
+import MobileBanner from "../components/ads/MobileBanner";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import SidebarBanner from "../components/ads/SidebarBanner";
@@ -102,13 +104,15 @@ export default function FrontPage(props) {
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>
-            {sections.map((section) => (
-              <SectionBlock
-                key={section.name}
-                title={section.name}
-                categoryUri={section.uri}
-                posts={section.posts}
-              />
+            {sections.map((section, index) => (
+              <React.Fragment key={section.name}>
+                <SectionBlock
+                  title={section.name}
+                  categoryUri={section.uri}
+                  posts={section.posts}
+                />
+                {(index + 1) % 2 === 0 && <MobileBanner />}
+              </React.Fragment>
             ))}
 
             {sections.length === 0 && !loading && allPosts.length > 5 && (
