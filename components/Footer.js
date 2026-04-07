@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/footer.module.css";
@@ -43,6 +44,18 @@ function SocialIcon({ type }) {
 }
 
 export default function Footer() {
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
@@ -50,7 +63,7 @@ export default function Footer() {
           <div className={styles.brandCol}>
             <Link href="/" className={styles.logo}>
               <Image
-                src="/logo-dark.webp"
+                src={isDark ? "/logo-dark.webp" : "/logo-light.webp"}
                 alt="Caribbean Business"
                 width={280}
                 height={35}
