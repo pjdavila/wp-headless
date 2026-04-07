@@ -5,6 +5,7 @@ import Script from "next/script";
 import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
 import ComingSoon from "../components/ComingSoon";
+import { OrganizationJsonLd } from "../components/JsonLd";
 import "../styles/globals.css";
 
 const GA_ID = "G-F4RRT00M6P";
@@ -95,6 +96,7 @@ export default function MyApp({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+      <OrganizationJsonLd />
       <Script
         id="theme-init"
         strategy="beforeInteractive"

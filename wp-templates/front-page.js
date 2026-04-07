@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import SeoHead from "../components/SeoHead";
-import { OrganizationJsonLd, WebSiteJsonLd } from "../components/JsonLd";
+import { WebSiteJsonLd } from "../components/JsonLd";
 import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import ExploreCategories from "../components/ExploreCategories";
@@ -85,7 +85,6 @@ export default function FrontPage(props) {
         url="/"
         imageAlt={heroPosts[0]?.title || "Caribbean Business"}
       />
-      <OrganizationJsonLd />
       <WebSiteJsonLd />
 
       <Header
