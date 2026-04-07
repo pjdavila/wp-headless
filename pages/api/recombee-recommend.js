@@ -44,16 +44,25 @@ export default async function handler(req, res) {
     }
 
     const response = await client.send(request);
-    const items = (response.recomms || []).map((r) => ({
-      id: r.id,
-      title: r.values?.title || "",
-      excerpt: r.values?.excerpt || "",
-      uri: r.values?.uri || "",
-      date: r.values?.date || "",
-      imageUrl: r.values?.image_url || "",
-      category: r.values?.category || "",
-      categoryUri: r.values?.category_uri || "",
-    }));
+    const items = (response.recomms || []).map((r) => {
+      const link = r.values?.link || "";
+      let uri = link;
+      try {
+        if (link && link.startsWith("http")) {
+          uri = new URL(link).pathname;
+        }
+      } catch {}
+      return {
+        id: r.id,
+        title: r.values?.title || "",
+        excerpt: r.values?.description || "",
+        uri,
+        date: r.values?.pubDate || "",
+        imageUrl: r.values?.["media:content"] || "",
+        category: r.values?.categories || "",
+        categoryUri: "",
+      };
+    });
 
     res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({ items });
