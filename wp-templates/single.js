@@ -154,17 +154,26 @@ export default function Component(props) {
     enabled: !!postSlug,
   });
 
-  const relatedPosts = recombeeItems.length > 0
-    ? recombeeItems.map((r) => ({
-        id: r.id,
-        title: r.title,
-        excerpt: r.excerpt,
-        uri: r.uri,
-        date: r.date,
-        featuredImage: r.imageUrl ? { node: { sourceUrl: r.imageUrl, altText: r.title } } : null,
-        categories: r.category ? { nodes: [{ name: r.category, uri: r.categoryUri }] } : { nodes: [] },
-      }))
-    : fallbackRelated;
+  const recombeeFormatted = recombeeItems.map((r) => ({
+    id: r.id,
+    title: r.title,
+    excerpt: r.excerpt,
+    uri: r.uri,
+    date: r.date,
+    featuredImage: r.imageUrl ? { node: { sourceUrl: r.imageUrl, altText: r.title } } : null,
+    categories: r.category ? { nodes: [{ name: r.category, uri: r.categoryUri }] } : { nodes: [] },
+  }));
+
+  let relatedPosts;
+  if (recombeeFormatted.length >= 3) {
+    relatedPosts = recombeeFormatted;
+  } else if (recombeeFormatted.length > 0) {
+    const recIds = new Set(recombeeFormatted.map((r) => r.uri));
+    const fillers = fallbackRelated.filter((p) => !recIds.has(p.uri));
+    relatedPosts = [...recombeeFormatted, ...fillers].slice(0, 3);
+  } else {
+    relatedPosts = fallbackRelated;
+  }
 
   const galleryImages = extractImagesFromContent(content);
 
