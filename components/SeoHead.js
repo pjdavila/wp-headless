@@ -25,11 +25,12 @@ export default function SeoHead({
   const canonicalUrl = url ? `${siteUrl}${url}` : siteUrl;
   const imageUrl = ogImage || DEFAULT_OG_IMAGE;
   const imgAlt = imageAlt || title || SITE_NAME;
-  const imageType = imageUrl.endsWith(".png")
+  const imgPath = imageUrl.split("?")[0];
+  const imageType = imgPath.endsWith(".png")
     ? "image/png"
-    : imageUrl.endsWith(".webp")
+    : imgPath.endsWith(".webp")
       ? "image/webp"
-      : imageUrl.endsWith(".svg")
+      : imgPath.endsWith(".svg")
         ? "image/svg+xml"
         : "image/jpeg";
 

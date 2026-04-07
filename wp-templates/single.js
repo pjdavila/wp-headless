@@ -26,6 +26,7 @@ const POST_QUERY = gql`
       excerpt
       uri
       date
+      modified
       featuredImage {
         node {
           sourceUrl
@@ -112,7 +113,7 @@ export default function Component(props) {
   const { title: siteTitle } = siteData;
 
   const post = contentQuery?.post || {};
-  const { title, content, date, uri, featuredImage, author, categories } = post;
+  const { title, content, date, modified, uri, featuredImage, author, categories } = post;
   const category = categories?.nodes?.find((c) => c.slug !== "uncategorized") || categories?.nodes?.[0];
   const readTime = estimateReadingTime(content);
   const imgSrc = featuredImage?.node?.sourceUrl;
@@ -137,6 +138,7 @@ export default function Component(props) {
         ogType="article"
         url={uri}
         articlePublished={date}
+        articleModified={modified}
         articleAuthor={author?.node?.name}
         articleSection={category?.name}
         imageAlt={featuredImage?.node?.altText || title}
@@ -147,6 +149,7 @@ export default function Component(props) {
         url={uri}
         imageUrl={imgSrc}
         datePublished={date}
+        dateModified={modified}
         authorName={author?.node?.name}
         categoryName={category?.name}
       />
