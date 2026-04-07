@@ -14,7 +14,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 ## Design System (2026 Refresh)
 
 - **CSS Tokens**: HSL custom properties in `:root` (light) and `.dark` (dark mode) — see `styles/globals.css`
-- **Typography**: Bodoni 72 for headings (self-hosted woff2 in `public/fonts/`), Source Sans 3 for body/UI text (Google Fonts)
+- **Typography**: Playfair Display for headings (Google Fonts, 400/700/800), Source Sans 3 for body/UI text (Google Fonts, 400/600/700)
 - **Primary Color**: Green financial brand (`--primary: 152 56% 38%` light / `152 56% 45%` dark)
 - **Dark Mode**: Default. Toggle persists in `localStorage` key `bj-theme`. Init script in `_app.js` prevents FOUC.
 - **Border Radius**: `--radius: 12px`, `--radius-sm: 8px`, `--radius-lg: 16px`, `--radius-xl: 20px`
