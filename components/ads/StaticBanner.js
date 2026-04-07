@@ -8,7 +8,7 @@ const AD_CONFIG = {
 
 export default function StaticBanner() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "0.5rem 0", background: "hsl(var(--muted) / 0.3)" }}>
+    <div className="bg-[#000000]" style={{ display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
       <div className="hidden lg:block">
         <AdIframe zoneId={AD_CONFIG.DESKTOP.zoneId} width={AD_CONFIG.DESKTOP.width} height={AD_CONFIG.DESKTOP.height} />
       </div>
