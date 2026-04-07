@@ -118,12 +118,29 @@ export default async function handler(req, res) {
     const response = await client.send(request);
     const recomms = response.recomms || [];
 
-    const needsWp = recomms.some((r) => !r.values?.title);
-    const slugs = needsWp ? recomms.map((r) => r.id) : [];
-    const wpMap = needsWp ? await fetchPostsBySlug(slugs) : {};
+    const slugsForWp = [];
+    const idToSlug = {};
+    for (const r of recomms) {
+      let slug = r.id;
+      if (!r.values?.title || !r.values?.["media:content"]) {
+        const link = r.values?.link || "";
+        if (link) {
+          try {
+            const pathname = new URL(link).pathname;
+            slug = pathname.replace(/^\/|\/$/g, "");
+          } catch {}
+        }
+        idToSlug[r.id] = slug;
+        slugsForWp.push(slug);
+      }
+    }
+    const wpMap = slugsForWp.length > 0 ? await fetchPostsBySlug(slugsForWp) : {};
 
     const items = recomms
-      .map((r) => mapRecombeeItem(r, wpMap[r.id]))
+      .map((r) => {
+        const slug = idToSlug[r.id] || r.id;
+        return mapRecombeeItem(r, wpMap[slug]);
+      })
       .filter((item) => item.title);
 
     res.setHeader("Cache-Control", "no-store");
