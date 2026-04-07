@@ -33,7 +33,8 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **SidebarStoryCard**: Compact numbered card with thumbnail and relative Spanish timestamps
 - **SectionBlock**: Category-grouped StoryCard grid with section title and "Ver más" link
 - **MarketWatchlist**: Placeholder financial data sidebar widget
-- **Homepage Layout**: Hero → ExploreCategories → main+sidebar grid (sidebar at 320px, collapses on mobile)
+- **Recommended For You**: Client-side personalized section below category sections. Fetches from Recombee `RecommendItemsToUser` after page load. Hidden if no recommendations. Does not affect ISR cache.
+- **Homepage Layout**: Hero → ExploreCategories → main+sidebar grid (sidebar at 320px, collapses on mobile) → Recommended For You
 - **Data**: Fetches 20 posts, groups by WordPress category (skips uncategorized)
 
 ## Article Page Components
@@ -41,7 +42,8 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **ShareMenu**: Facebook, X, LinkedIn share + copy-to-clipboard with tooltip
 - **PhotoGallery**: Lightbox with keyboard navigation for posts with 2+ embedded images
 - **Reading Time**: Word count estimator (200 WPM), shown in metadata bar
-- **Related Posts**: Up to 3 posts from same category via nested GraphQL query
+- **Related Posts**: AI-powered via Recombee (item-to-item recommendations). Falls back to same-category posts if Recombee returns empty or errors.
+- **View Tracking**: Fires `AddDetailView` to Recombee on article load (fire-and-forget)
 - **Sidebar**: "Lo Más Reciente" with 6 numbered recent posts
 
 ## Category/Archive Pages
@@ -63,6 +65,17 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **_document.js**: `lang="en"`, theme-color meta (dark/light), apple-touch-icon (180x180), favicon SVG
 - **Canonical URLs**: Set on all pages
 
+## Recombee AI Recommendations
+
+- **Architecture**: Server-side proxy pattern. Private Token stays in API routes. Recommendations fetched client-side after cached page renders (ISR-safe).
+- **Server Utilities**: `lib/recombee.js` — singleton ApiClient using `RECOMBEE_DB_ID` + `RECOMBEE_PRIVATE_TOKEN`. Optional `RECOMBEE_REGION` env var.
+- **Client Utilities**: `lib/visitor-id.js` — anonymous visitor ID in localStorage (key `cb-visitor-id`). `lib/useRecombee.js` — `useTrackView(itemId)` + `useRecommendations({type, itemId, count})` hooks.
+- **API Routes**:
+  - `pages/api/recombee-track.js` — POST `{userId, itemId}` → `AddDetailView` (cascadeCreate)
+  - `pages/api/recombee-recommend.js` — GET `?type=item-to-item|user&userId=...&itemId=...&count=6` → `{items: [...]}` with `returnProperties: true`
+- **Fallback**: If Recombee returns no items or errors, related posts fall back to category-based query. Homepage "Recommended" section simply hidden.
+- **Catalog Sync**: Done in WordPress CMS (not frontend). Items need properties: title, excerpt, uri, date, image_url, category, category_uri.
+
 ## Environment Variables
 
 | Variable | Description |
@@ -70,6 +83,9 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 | `NEXT_PUBLIC_WORDPRESS_URL` | URL of the WordPress multisite (set to `https://vnmcms.wpenginepowered.com/cbusiness`) |
 | `NEXT_PUBLIC_SITE_URL` | Public URL of this frontend |
 | `FAUST_SECRET_KEY` | Secret key from WordPress Settings → Headless (required for preview mode) |
+| `RECOMBEE_DB_ID` | Recombee database identifier (server-side only) |
+| `RECOMBEE_PRIVATE_TOKEN` | Recombee private API token (server-side only, secret) |
+| `RECOMBEE_REGION` | Optional Recombee region (e.g. `us-west`, `eu-west`) |
 
 ## WPEngine Atlas Deployment
 

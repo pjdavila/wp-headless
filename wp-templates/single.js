@@ -14,6 +14,7 @@ import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
 import { useFaustQuery } from "@faustwp/core";
 import { estimateReadingTime } from "../utils/readingTime";
+import { useTrackView, useRecommendations } from "../lib/useRecombee";
 import SidebarBanner from "../components/ads/SidebarBanner";
 import InterstitialAd from "../components/ads/InterstitialAd";
 import ArticleBanner from "../components/ads/ArticleBanner";
@@ -140,9 +141,30 @@ export default function Component(props) {
   const readTime = estimateReadingTime(content);
   const imgSrc = featuredImage?.node?.sourceUrl;
 
-  const relatedPosts = (category?.posts?.nodes || []).filter(
+  const fallbackRelated = (category?.posts?.nodes || []).filter(
     (p) => p.id !== post.id && p.title !== title
   ).slice(0, 3);
+
+  const postSlug = uri ? uri.replace(/^\/|\/$/g, "") : "";
+  useTrackView(postSlug);
+  const { items: recombeeItems } = useRecommendations({
+    type: "item-to-item",
+    itemId: postSlug,
+    count: 3,
+    enabled: !!postSlug,
+  });
+
+  const relatedPosts = recombeeItems.length > 0
+    ? recombeeItems.map((r) => ({
+        id: r.id,
+        title: r.title,
+        excerpt: r.excerpt,
+        uri: r.uri,
+        date: r.date,
+        featuredImage: r.imageUrl ? { node: { sourceUrl: r.imageUrl, altText: r.title } } : null,
+        categories: r.category ? { nodes: [{ name: r.category, uri: r.categoryUri }] } : { nodes: [] },
+      }))
+    : fallbackRelated;
 
   const galleryImages = extractImagesFromContent(content);
 

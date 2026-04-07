@@ -38,6 +38,39 @@
   flex-direction: column;
 }
 
+.recommendedSection {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.recommendedTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  position: relative;
+  color: hsl(var(--foreground));
+  font-family: var(--font-heading);
+}
+
+.recommendedTitle::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: hsl(var(--accent));
+  border-radius: 2px;
+}
+
+.recommendedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
 @media (max-width: 1024px) {
   .layout {
     grid-template-columns: 1fr;
@@ -45,5 +78,15 @@
 
   .sidebar {
     order: 1;
+  }
+
+  .recommendedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .recommendedGrid {
+    grid-template-columns: 1fr;
   }
 }

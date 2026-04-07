@@ -7,11 +7,13 @@ import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import ExploreCategories from "../components/ExploreCategories";
 import SectionBlock from "../components/SectionBlock";
+import StoryCard from "../components/StoryCard";
 import MobileBanner from "../components/ads/MobileBanner";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import SidebarBanner from "../components/ads/SidebarBanner";
 import InterstitialAd from "../components/ads/InterstitialAd";
+import { useRecommendations } from "../lib/useRecombee";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -80,6 +82,17 @@ export default function FrontPage(props) {
 
   const sections = Object.values(categoryGroups).filter((g) => g.posts.length > 0);
 
+  const { items: recItems } = useRecommendations({ type: "user", count: 6 });
+  const recommendedPosts = recItems.map((r) => ({
+    id: r.id,
+    title: r.title,
+    excerpt: r.excerpt,
+    uri: r.uri,
+    date: r.date,
+    featuredImage: r.imageUrl ? { node: { sourceUrl: r.imageUrl, altText: r.title } } : null,
+    categories: r.category ? { nodes: [{ name: r.category, uri: r.categoryUri }] } : { nodes: [] },
+  }));
+
   return (
     <>
       <SeoHead
@@ -120,6 +133,17 @@ export default function FrontPage(props) {
                 title="Latest News"
                 posts={allPosts.slice(5, 11)}
               />
+            )}
+
+            {recommendedPosts.length > 0 && (
+              <section className={styles.recommendedSection}>
+                <h2 className={styles.recommendedTitle}>Recommended For You</h2>
+                <div className={styles.recommendedGrid}>
+                  {recommendedPosts.map((p) => (
+                    <StoryCard key={p.id} post={p} />
+                  ))}
+                </div>
+              </section>
             )}
           </div>
 

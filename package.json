@@ -26,6 +26,7 @@
     "prettier": "^3.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "recombee-api-client": "^6.1.0",
     "tailwindcss": "^4.2.2"
   }
 }
