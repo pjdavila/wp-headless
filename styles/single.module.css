@@ -235,7 +235,18 @@
   }
 
   .relatedGrid {
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .relatedGrid > * {
+    flex: 0 0 calc(50% - 0.375rem);
+    min-width: calc(50% - 0.375rem);
+    scroll-snap-align: start;
   }
 
   .articleBody {
