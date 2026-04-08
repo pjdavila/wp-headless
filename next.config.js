@@ -12,6 +12,10 @@ module.exports = withAtlasConfig(
           protocol: "https",
           hostname: "vnmcms.wpenginepowered.com",
         },
+        {
+          protocol: "https",
+          hostname: "img.caribbean.business",
+        },
       ],
     },
     trailingSlash: true,
