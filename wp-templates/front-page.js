@@ -27,6 +27,27 @@ const HOMEPAGE_QUERY = gql`
         ...PostListFragment
       }
     }
+    business: posts(first: 3, where: { categoryName: "cbusiness-category", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
+    economy: posts(first: 3, where: { categoryName: "cbusiness-economy", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
+    energyOil: posts(first: 3, where: { categoryName: "cbusiness-energy-oil", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
+    jobsLabor: posts(first: 3, where: { categoryName: "cbusiness-jobs-labor", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
+    marketing: posts(first: 3, where: { categoryName: "marketing", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
+    mediaEntertainment: posts(first: 3, where: { categoryName: "cbusiness-media-entertainment", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
+    techAi: posts(first: 3, where: { categoryName: "cbusiness-tech-ai", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
   }
 `;
 
@@ -64,22 +85,23 @@ export default function FrontPage(props) {
   const heroPosts = allPosts.slice(0, 5);
   const recentPosts = allPosts.slice(0, 8);
 
-  const categoryGroups = {};
-  const skipSlugs = ["uncategorized", "sin-categoria"];
-  for (const post of allPosts) {
-    const cats = post.categories?.nodes || [];
-    for (const cat of cats) {
-      if (skipSlugs.includes(cat.slug)) continue;
-      if (!categoryGroups[cat.slug]) {
-        categoryGroups[cat.slug] = { name: cat.name, uri: cat.uri, posts: [] };
-      }
-      if (categoryGroups[cat.slug].posts.length < 3) {
-        categoryGroups[cat.slug].posts.push(post);
-      }
-    }
-  }
+  const CATEGORY_MAP = [
+    { key: "business", name: "Business", uri: "/category/cbusiness-category/" },
+    { key: "economy", name: "Economy", uri: "/category/cbusiness-economy/" },
+    { key: "energyOil", name: "Energy & Oil", uri: "/category/cbusiness-energy-oil/" },
+    { key: "jobsLabor", name: "Jobs & Labor", uri: "/category/cbusiness-jobs-labor/" },
+    { key: "marketing", name: "Marketing", uri: "/category/marketing/" },
+    { key: "mediaEntertainment", name: "Media & Entertainment", uri: "/category/cbusiness-media-entertainment/" },
+    { key: "techAi", name: "Tech & AI", uri: "/category/cbusiness-tech-ai/" },
+  ];
 
-  const sections = Object.values(categoryGroups).filter((g) => g.posts.length > 0);
+  const sections = CATEGORY_MAP
+    .map((cat) => ({
+      name: cat.name,
+      uri: cat.uri,
+      posts: data?.[cat.key]?.nodes || [],
+    }))
+    .filter((g) => g.posts.length > 0);
 
   const { items: recItems } = useRecommendations({ type: "user", count: 6 });
   const recommendedPosts = recItems.map((r) => ({
