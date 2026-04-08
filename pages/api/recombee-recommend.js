@@ -107,11 +107,13 @@ export default async function handler(req, res) {
       request = new rqs.RecommendItemsToItem(itemId, userId, n, {
         returnProperties: true,
         cascadeCreate: true,
+        scenario: "related-articles",
       });
     } else {
       request = new rqs.RecommendItemsToUser(userId, n, {
         returnProperties: true,
         cascadeCreate: true,
+        scenario: "homepage-recommended",
       });
     }
 
