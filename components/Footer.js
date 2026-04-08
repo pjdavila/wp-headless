@@ -96,22 +96,24 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className={styles.linkCol}>
-            <h4 className={styles.colTitle}>Sections</h4>
-            {SECTIONS.map((link) => (
-              <Link key={link.href} href={link.href} className={styles.footerLink}>
-                {link.label}
-              </Link>
-            ))}
-          </div>
+          <div className={styles.linkColumns}>
+            <div className={styles.linkCol}>
+              <h4 className={styles.colTitle}>Sections</h4>
+              {SECTIONS.map((link) => (
+                <Link key={link.href} href={link.href} className={styles.footerLink}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
 
-          <div className={styles.linkCol}>
-            <h4 className={styles.colTitle}>Company</h4>
-            {COMPANY.map((link) => (
-              <Link key={link.href} href={link.href} className={styles.footerLink}>
-                {link.label}
-              </Link>
-            ))}
+            <div className={styles.linkCol}>
+              <h4 className={styles.colTitle}>Company</h4>
+              {COMPANY.map((link) => (
+                <Link key={link.href} href={link.href} className={styles.footerLink}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 

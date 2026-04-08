@@ -17,6 +17,10 @@
   padding-bottom: 2.5rem;
 }
 
+.linkColumns {
+  display: contents;
+}
+
 .brandCol {
   display: flex;
   flex-direction: column;
@@ -122,6 +126,12 @@
   .grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .linkColumns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
   }
 
   .footer {
