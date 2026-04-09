@@ -88,6 +88,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Auth Hook**: `lib/useAuth.js` — `useAuth()` returns `{ user, loading }` from `onAuthStateChanged`. Used in Header for login/avatar state.
 - **Auth Modal**: `components/AuthModal.js` + `styles/auth-modal.module.css` — Sign In / Sign Up tabs with email+password and Google Sign-In (`signInWithPopup`). Dark-themed modal with Escape-to-close, body scroll lock, `role="dialog"` / `aria-modal`. Sanitized error messages.
 - **Header Auth Button**: Next to ThemeToggle in `rightActions`. Shows "Sign In" button (icon-only on mobile) when logged out, avatar with dropdown (email + Sign Out) when logged in. Outside-click closes dropdown.
+- **Moosend Integration**: On new user registration (email/password or first-time Google Sign-In), a fire-and-forget POST is sent to `/api/moosend-subscribe` which subscribes the email to the Moosend list. API key stays server-side. Failures are logged but never block the auth flow.
 - **Usage**: Any component can access Firebase via `const { auth, db } = useFirebase()`. For FCM: `const { requestPermission, fcmToken } = useFirebaseMessaging()`.
 
 ## Environment Variables
@@ -102,6 +103,8 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 | `RECOMBEE_REGION` | Optional Recombee region (e.g. `us-west`, `eu-west`) |
 | `FIREBASE_API_KEY` | Firebase API key (mapped to `NEXT_PUBLIC_FIREBASE_API_KEY` via next.config.js for client-side use; restricted by Firebase Security Rules) |
 | `NEXT_PUBLIC_FIREBASE_VAPID_KEY` | Optional FCM VAPID key for web push (from Firebase Console → Cloud Messaging → Web Push certificates) |
+| `MOOSEND_API_KEY` | Moosend API key for email list subscriptions (server-side only, secret) |
+| `MOOSEND_LIST_ID` | Moosend mailing list ID to subscribe new users to |
 
 ## WPEngine Atlas Deployment
 

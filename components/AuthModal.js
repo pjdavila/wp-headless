@@ -3,12 +3,21 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  getAdditionalUserInfo,
   GoogleAuthProvider,
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import styles from "../styles/auth-modal.module.css";
 
 const googleProvider = new GoogleAuthProvider();
+
+function subscribeMoosend(email, name) {
+  fetch("/api/moosend-subscribe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, name }),
+  }).catch(() => {});
+}
 
 function GoogleIcon() {
   return (
@@ -53,7 +62,8 @@ export default function AuthModal({ onClose }) {
       if (tab === "signin") {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        subscribeMoosend(result.user.email, result.user.displayName);
       }
       onClose();
     } catch (err) {
@@ -77,7 +87,11 @@ export default function AuthModal({ onClose }) {
   const handleGoogle = async () => {
     setError("");
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const info = getAdditionalUserInfo(result);
+      if (info && info.isNewUser) {
+        subscribeMoosend(result.user.email, result.user.displayName);
+      }
       onClose();
     } catch (err) {
       if (err.code !== "auth/popup-closed-by-user") {
