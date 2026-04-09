@@ -20,6 +20,7 @@
     "@tailwindcss/postcss": "^4.2.2",
     "@wpengine/atlas-next": "^1.0.0",
     "autoprefixer": "^10.4.27",
+    "firebase": "^12.11.0",
     "graphql": "^16.10.0",
     "next": "^15.5.2",
     "postcss": "^8.5.8",
