@@ -89,6 +89,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Auth Modal**: `components/AuthModal.js` + `styles/auth-modal.module.css` — Sign In / Sign Up tabs with email+password and Google Sign-In (`signInWithPopup`). Dark-themed modal with Escape-to-close, body scroll lock, `role="dialog"` / `aria-modal`. Sanitized error messages.
 - **Header Auth Button**: Next to ThemeToggle in `rightActions`. Shows "Sign In" button (icon-only on mobile) when logged out, avatar with dropdown (email + Sign Out) when logged in. Outside-click closes dropdown.
 - **Moosend Integration**: On new user registration (email/password or first-time Google Sign-In), a fire-and-forget POST is sent to `/api/moosend-subscribe` which subscribes the email to the Moosend list. API key stays server-side. Failures are logged but never block the auth flow.
+- **Welcome Email (Resend)**: On new user registration, a branded HTML welcome email is sent via Resend (`/api/send-welcome-email`). Sender: `noreply@caribbean.business`. Dark-themed template with Caribbean Business branding and green accent. Fire-and-forget, never blocks auth.
 - **Usage**: Any component can access Firebase via `const { auth, db } = useFirebase()`. For FCM: `const { requestPermission, fcmToken } = useFirebaseMessaging()`.
 
 ## Environment Variables
@@ -105,6 +106,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 | `NEXT_PUBLIC_FIREBASE_VAPID_KEY` | Optional FCM VAPID key for web push (from Firebase Console → Cloud Messaging → Web Push certificates) |
 | `MOOSEND_API_KEY` | Moosend API key for email list subscriptions (server-side only, secret) |
 | `MOOSEND_LIST_ID` | Moosend mailing list ID to subscribe new users to |
+| `RESEND_API_KEY` | Resend API key for sending transactional emails (server-side only, secret) |
 
 ## WPEngine Atlas Deployment
 

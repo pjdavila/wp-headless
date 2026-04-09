@@ -19,6 +19,14 @@ function subscribeMoosend(email, name) {
   }).catch(() => {});
 }
 
+function sendWelcomeEmail(email, name) {
+  fetch("/api/send-welcome-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, name }),
+  }).catch(() => {});
+}
+
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24">
@@ -64,6 +72,7 @@ export default function AuthModal({ onClose }) {
       } else {
         const result = await createUserWithEmailAndPassword(auth, email, password);
         subscribeMoosend(result.user.email, result.user.displayName);
+        sendWelcomeEmail(result.user.email, result.user.displayName);
       }
       onClose();
     } catch (err) {
@@ -91,6 +100,7 @@ export default function AuthModal({ onClose }) {
       const info = getAdditionalUserInfo(result);
       if (info && info.isNewUser) {
         subscribeMoosend(result.user.email, result.user.displayName);
+        sendWelcomeEmail(result.user.email, result.user.displayName);
       }
       onClose();
     } catch (err) {
