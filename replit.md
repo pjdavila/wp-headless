@@ -85,6 +85,9 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Notification Prompt**: `components/NotificationPrompt.js` — auto-requests notification permission 10s after page load (once per visitor, dismissal saved in localStorage)
 - **Cloud Messaging Hook**: `lib/useFirebaseMessaging.js` — `useFirebaseMessaging()` returns `{ fcmToken, permission, requestPermission }`. Handles foreground messages, permission request, and FCM token retrieval.
 - **Service Worker**: `public/firebase-messaging-sw.js` — generated at build time by `scripts/generate-firebase-sw.js` (runs as `predev`/`prebuild`/`wpe-build` step). Injects `FIREBASE_API_KEY` from env vars. File is gitignored since it's generated.
+- **Auth Hook**: `lib/useAuth.js` — `useAuth()` returns `{ user, loading }` from `onAuthStateChanged`. Used in Header for login/avatar state.
+- **Auth Modal**: `components/AuthModal.js` + `styles/auth-modal.module.css` — Sign In / Sign Up tabs with email+password and Google Sign-In (`signInWithPopup`). Dark-themed modal with Escape-to-close, body scroll lock, `role="dialog"` / `aria-modal`. Sanitized error messages.
+- **Header Auth Button**: Next to ThemeToggle in `rightActions`. Shows "Sign In" button (icon-only on mobile) when logged out, avatar with dropdown (email + Sign Out) when logged in. Outside-click closes dropdown.
 - **Usage**: Any component can access Firebase via `const { auth, db } = useFirebase()`. For FCM: `const { requestPermission, fcmToken } = useFirebaseMessaging()`.
 
 ## Environment Variables
