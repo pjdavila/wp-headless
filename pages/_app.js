@@ -4,6 +4,7 @@ import Head from "next/head";
 import Script from "next/script";
 import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
+import { FirebaseProvider } from "../components/FirebaseProvider";
 import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
 import StickyBottomBanner from "../components/ads/StickyBottomBanner";
@@ -94,22 +95,24 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <FaustProvider pageProps={pageProps}>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <OrganizationJsonLd />
-      <Script
-        id="theme-init"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
-      />
-      <Script
-        id="ga-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: GA_INIT_SCRIPT }}
-      />
-      <Component {...pageProps} key={router.asPath} />
-      <StickyBottomBanner />
+      <FirebaseProvider>
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        </Head>
+        <OrganizationJsonLd />
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+        <Script
+          id="ga-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{ __html: GA_INIT_SCRIPT }}
+        />
+        <Component {...pageProps} key={router.asPath} />
+        <StickyBottomBanner />
+      </FirebaseProvider>
     </FaustProvider>
   );
 }
