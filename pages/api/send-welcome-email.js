@@ -36,12 +36,12 @@ export default async function handler(req, res) {
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#151720;border-radius:12px;overflow:hidden;">
-          <!-- Header -->
+          <!-- Banner Image -->
           <tr>
-            <td style="background-color:#1a1c28;padding:32px 40px;text-align:center;border-bottom:2px solid #2a9d6a;">
-              <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;color:#ffffff;letter-spacing:0.02em;">
-                CARIBBEAN <span style="color:#2a9d6a;">BUSINESS</span>
-              </h1>
+            <td style="padding:0;line-height:0;">
+              <a href="https://caribbean.business" target="_blank" style="display:block;">
+                <img src="https://img.caribbean.business/welcome-email.jpeg" alt="Welcome to Caribbean Business" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;" />
+              </a>
             </td>
           </tr>
           <!-- Body -->
