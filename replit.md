@@ -80,8 +80,9 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 
 - **Project**: `caribbean-business` (Firebase Console)
 - **Services**: Authentication, Firestore, Cloud Messaging (FCM)
-- **Config Module**: `lib/firebase.js` — initializes Firebase app, exports `auth` (Auth), `db` (Firestore), `app`, and `firebaseConfig`
-- **Context Provider**: `components/FirebaseProvider.js` — wraps app in `_app.js`, provides `useFirebase()` hook returning `{ auth, db }`
+- **Config Module**: `lib/firebase.js` — initializes Firebase app, exports `auth` (Auth), `db` (Firestore), `messaging` (FCM, client-only), `app`, and `firebaseConfig`
+- **Context Provider**: `components/FirebaseProvider.js` — wraps app in `_app.js`, provides `useFirebase()` hook returning `{ auth, db, messaging }`
+- **Notification Prompt**: `components/NotificationPrompt.js` — auto-requests notification permission 10s after page load (once per visitor, dismissal saved in localStorage)
 - **Cloud Messaging Hook**: `lib/useFirebaseMessaging.js` — `useFirebaseMessaging()` returns `{ fcmToken, permission, requestPermission }`. Handles foreground messages, permission request, and FCM token retrieval.
 - **Service Worker**: Served dynamically via `pages/api/firebase-messaging-sw.js` with a rewrite from `/firebase-messaging-sw.js` in `next.config.js`. API key injected server-side from env var.
 - **Usage**: Any component can access Firebase via `const { auth, db } = useFirebase()`. For FCM: `const { requestPermission, fcmToken } = useFirebaseMessaging()`.

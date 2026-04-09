@@ -5,6 +5,7 @@ import Script from "next/script";
 import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
 import { FirebaseProvider } from "../components/FirebaseProvider";
+import NotificationPrompt from "../components/NotificationPrompt";
 import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
 import StickyBottomBanner from "../components/ads/StickyBottomBanner";
@@ -111,6 +112,7 @@ export default function MyApp({ Component, pageProps }) {
           dangerouslySetInnerHTML={{ __html: GA_INIT_SCRIPT }}
         />
         <Component {...pageProps} key={router.asPath} />
+        <NotificationPrompt />
         <StickyBottomBanner />
       </FirebaseProvider>
     </FaustProvider>
