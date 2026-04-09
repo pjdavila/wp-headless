@@ -6,6 +6,9 @@ const { withAtlasConfig } = require("@wpengine/atlas-next");
  **/
 module.exports = withAtlasConfig(
   withFaust({
+    env: {
+      NEXT_PUBLIC_FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+    },
     images: {
       remotePatterns: [
         {
@@ -19,14 +22,6 @@ module.exports = withAtlasConfig(
       ],
     },
     trailingSlash: true,
-    async rewrites() {
-      return [
-        {
-          source: "/firebase-messaging-sw.js",
-          destination: "/api/firebase-messaging-sw",
-        },
-      ];
-    },
     async redirects() {
       return [
         {

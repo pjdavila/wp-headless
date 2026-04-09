@@ -84,7 +84,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Context Provider**: `components/FirebaseProvider.js` — wraps app in `_app.js`, provides `useFirebase()` hook returning `{ auth, db, messaging }`
 - **Notification Prompt**: `components/NotificationPrompt.js` — auto-requests notification permission 10s after page load (once per visitor, dismissal saved in localStorage)
 - **Cloud Messaging Hook**: `lib/useFirebaseMessaging.js` — `useFirebaseMessaging()` returns `{ fcmToken, permission, requestPermission }`. Handles foreground messages, permission request, and FCM token retrieval.
-- **Service Worker**: Served dynamically via `pages/api/firebase-messaging-sw.js` with a rewrite from `/firebase-messaging-sw.js` in `next.config.js`. API key injected server-side from env var.
+- **Service Worker**: `public/firebase-messaging-sw.js` — generated at build time by `scripts/generate-firebase-sw.js` (runs as `predev`/`prebuild`/`wpe-build` step). Injects `FIREBASE_API_KEY` from env vars. File is gitignored since it's generated.
 - **Usage**: Any component can access Firebase via `const { auth, db } = useFirebase()`. For FCM: `const { requestPermission, fcmToken } = useFirebaseMessaging()`.
 
 ## Environment Variables
@@ -97,7 +97,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 | `RECOMBEE_DB_ID` | Recombee database identifier (server-side only) |
 | `RECOMBEE_PRIVATE_TOKEN` | Recombee private API token (server-side only, secret) |
 | `RECOMBEE_REGION` | Optional Recombee region (e.g. `us-west`, `eu-west`) |
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase API key (client-side, restricted by Firebase Security Rules) |
+| `FIREBASE_API_KEY` | Firebase API key (mapped to `NEXT_PUBLIC_FIREBASE_API_KEY` via next.config.js for client-side use; restricted by Firebase Security Rules) |
 | `NEXT_PUBLIC_FIREBASE_VAPID_KEY` | Optional FCM VAPID key for web push (from Firebase Console → Cloud Messaging → Web Push certificates) |
 
 ## WPEngine Atlas Deployment

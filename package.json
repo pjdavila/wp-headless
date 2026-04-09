@@ -5,9 +5,11 @@
     "node": ">=20.0.0 <21.0.0"
   },
   "scripts": {
+    "predev": "node scripts/generate-firebase-sw.js",
     "dev": "faust dev -p 5000 -H 0.0.0.0",
+    "prebuild": "node scripts/generate-firebase-sw.js",
     "build": "faust build",
-    "wpe-build": "faust build",
+    "wpe-build": "node scripts/generate-firebase-sw.js && faust build",
     "generate": "faust generatePossibleTypes",
     "start": "faust start",
     "format": "prettier . --write",

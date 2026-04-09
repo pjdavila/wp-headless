@@ -1,8 +1,9 @@
-export default function handler(req, res) {
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "";
+const fs = require("fs");
+const path = require("path");
 
-  const sw = `
-importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js");
+const apiKey = process.env.FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "";
+
+const sw = `importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js");
 
 firebase.initializeApp({
@@ -24,10 +25,8 @@ messaging.onBackgroundMessage(function (payload) {
     icon: n.icon || "/favicon.ico",
   });
 });
-`.trim();
+`;
 
-  res.setHeader("Content-Type", "application/javascript; charset=utf-8");
-  res.setHeader("Cache-Control", "public, max-age=3600");
-  res.setHeader("Service-Worker-Allowed", "/");
-  res.status(200).send(sw);
-}
+const outPath = path.join(__dirname, "..", "public", "firebase-messaging-sw.js");
+fs.writeFileSync(outPath, sw, "utf-8");
+console.log("Generated public/firebase-messaging-sw.js");
