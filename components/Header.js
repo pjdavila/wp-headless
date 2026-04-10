@@ -7,7 +7,6 @@ import { auth } from "../lib/firebase";
 import { useAuth } from "../lib/useAuth";
 import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
-import MarketTicker from "./MarketTicker";
 import StaticBanner from "./ads/StaticBanner";
 import style from "../styles/header.module.css";
 
@@ -82,8 +81,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
     <>
       <StaticBanner />
       <header className={style.header}>
-        <MarketTicker />
-
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
             <button
