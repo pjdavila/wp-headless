@@ -12,6 +12,7 @@ import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import SidebarBanner from "../components/ads/SidebarBanner";
 import InterstitialAd from "../components/ads/InterstitialAd";
+import NewsletterWidget from "../components/NewsletterWidget";
 import { useRecommendations } from "../lib/useRecombee";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -171,6 +172,8 @@ export default function FrontPage(props) {
                 ))}
               </div>
             </div>
+
+            <NewsletterWidget />
 
             <MarketWatchlist />
 
