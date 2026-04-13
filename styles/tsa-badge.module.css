@@ -1,0 +1,44 @@
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  background-color: hsl(225 12% 9%);
+  border: 1px solid hsl(225 10% 16%);
+  border-radius: 100px;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.icon {
+  color: hsl(152 56% 45%);
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(220 8% 55%);
+}
+
+.value {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: hsl(152 56% 50%);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-sans);
+}
+
+@media (max-width: 480px) {
+  .badge {
+    display: none;
+  }
+}

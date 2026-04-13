@@ -8,6 +8,7 @@ import { useAuth } from "../lib/useAuth";
 import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import StaticBanner from "./ads/StaticBanner";
+import TsaBadge from "./TsaBadge";
 import style from "../styles/header.module.css";
 
 function MenuIcon() {
@@ -112,13 +113,16 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
       <header className={style.header}>
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
-            <button
-              className={style.hamburger}
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open menu"
-            >
-              <MenuIcon />
-            </button>
+            <div className={style.leftActions}>
+              <button
+                className={style.hamburger}
+                onClick={() => setDrawerOpen(true)}
+                aria-label="Open menu"
+              >
+                <MenuIcon />
+              </button>
+              <TsaBadge />
+            </div>
 
             <Link href="/" className={style.brand}>
               <Image

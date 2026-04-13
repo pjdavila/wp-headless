@@ -26,6 +26,13 @@
   align-items: center;
 }
 
+.leftActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: start;
+}
+
 .hamburger {
   display: flex;
   align-items: center;
@@ -38,7 +45,6 @@
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: background-color 0.2s ease;
-  justify-self: start;
 }
 
 .hamburger:hover {
