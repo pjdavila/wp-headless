@@ -55,8 +55,8 @@ const FEATURED_POSTS_QUERY = gql`
   ${POST_LIST_FRAGMENT}
   query GetFeaturedPosts {
     posts(
-      first: 10
-      where: { tag: "destacado", orderby: { field: DATE, order: DESC } }
+      first: 3
+      where: { tag: "portada", orderby: { field: DATE, order: DESC } }
     ) {
       nodes {
         ...PostListFragment
