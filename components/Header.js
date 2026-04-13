@@ -74,7 +74,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [drawerNewsOpen, setDrawerNewsOpen] = useState(false);
+  const [drawerExpandedSlugs, setDrawerExpandedSlugs] = useState({});
   const { user, loading } = useAuth();
   const dropdownRef = useRef(null);
 
@@ -227,12 +227,15 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   <div key={cat.slug} className={style.drawerGroup}>
                     <button
                       className={style.drawerGroupToggle}
-                      onClick={() => setDrawerNewsOpen((v) => !v)}
+                      onClick={() => setDrawerExpandedSlugs((prev) => ({
+                        ...prev,
+                        [cat.slug]: !prev[cat.slug],
+                      }))}
                     >
                       <span>{cat.name}</span>
-                      <ChevronIcon open={drawerNewsOpen} />
+                      <ChevronIcon open={!!drawerExpandedSlugs[cat.slug]} />
                     </button>
-                    {drawerNewsOpen && (
+                    {drawerExpandedSlugs[cat.slug] && (
                       <div className={style.drawerSublinks}>
                         <Link
                           href={cat.uri}
