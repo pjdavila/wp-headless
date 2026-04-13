@@ -93,7 +93,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
 
             <Link href="/" className={style.brand}>
               <Image
-                src="/logo-dark.webp"
+                src="https://img.caribbean.business/Logo-CB-White.png"
                 alt="Caribbean Business"
                 width={400}
                 height={50}
