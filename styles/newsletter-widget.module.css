@@ -8,7 +8,7 @@
 }
 
 .header {
-  background: linear-gradient(160deg, hsl(152 45% 7%), hsl(152 30% 11%));
+  background: linear-gradient(160deg, hsl(152 45% 7%), hsl(var(--card)));
   padding: 1.5rem 1.25rem 1.25rem;
   display: flex;
   flex-direction: column;
