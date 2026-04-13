@@ -69,7 +69,7 @@ function buildNavItems(categories) {
     );
     return { ...cat, children };
   });
-  items.sort((a, b) => (b.children.length > 0) - (a.children.length > 0));
+  items.sort((a, b) => (b.slug === "news") - (a.slug === "news") || (b.children.length > 0) - (a.children.length > 0));
   return items;
 }
 
