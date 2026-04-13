@@ -63,12 +63,14 @@ function buildNavItems(categories) {
   if (!Array.isArray(categories)) return [];
   const filtered = categories.filter((c) => !SKIP_SLUGS.includes(c.slug));
   const topLevel = filtered.filter((c) => !c.parentId);
-  return topLevel.map((cat) => {
+  const items = topLevel.map((cat) => {
     const children = (cat.children?.nodes || []).filter(
       (ch) => !SKIP_SLUGS.includes(ch.slug)
     );
     return { ...cat, children };
   });
+  items.sort((a, b) => (b.children.length > 0) - (a.children.length > 0));
+  return items;
 }
 
 export default function Header({ siteTitle, siteDescription, menuItems, categories }) {
