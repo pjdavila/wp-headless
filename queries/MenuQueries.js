@@ -17,11 +17,19 @@ export const HEADER_MENU_QUERY = gql`
         }
       }
     }
-    categories {
+    categories(first: 100) {
       nodes {
         name
         slug
         uri
+        parentId
+        children(first: 50) {
+          nodes {
+            name
+            slug
+            uri
+          }
+        }
       }
     }
   }

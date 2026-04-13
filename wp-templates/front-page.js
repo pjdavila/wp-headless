@@ -39,7 +39,7 @@ const HOMEPAGE_QUERY = gql`
     jobsLabor: posts(first: 3, where: { categoryName: "cbusiness-jobs-labor", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    marketing: posts(first: 3, where: { categoryName: "marketing", orderby: { field: DATE, order: DESC } }) {
+    crypto: posts(first: 3, where: { categoryName: "crypto", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
     mediaEntertainment: posts(first: 3, where: { categoryName: "cbusiness-media-entertainment", orderby: { field: DATE, order: DESC } }) {
@@ -86,13 +86,13 @@ export default function FrontPage(props) {
   const recentPosts = allPosts.slice(0, 8);
 
   const CATEGORY_MAP = [
-    { key: "business", name: "Business", uri: "/category/cbusiness-category/" },
-    { key: "economy", name: "Economy", uri: "/category/cbusiness-economy/" },
-    { key: "energyOil", name: "Energy & Oil", uri: "/category/cbusiness-energy-oil/" },
-    { key: "jobsLabor", name: "Jobs & Labor", uri: "/category/cbusiness-jobs-labor/" },
-    { key: "marketing", name: "Marketing", uri: "/category/marketing/" },
-    { key: "mediaEntertainment", name: "Media & Entertainment", uri: "/category/cbusiness-media-entertainment/" },
-    { key: "techAi", name: "Tech & AI", uri: "/category/cbusiness-tech-ai/" },
+    { key: "business", name: "Business", uri: "/category/news/cbusiness-category/" },
+    { key: "economy", name: "Economy", uri: "/category/news/cbusiness-economy/" },
+    { key: "energyOil", name: "Energy & Oil", uri: "/category/news/cbusiness-energy-oil/" },
+    { key: "jobsLabor", name: "Jobs & Labor", uri: "/category/news/cbusiness-jobs-labor/" },
+    { key: "crypto", name: "Crypto", uri: "/category/news/crypto/" },
+    { key: "mediaEntertainment", name: "Media & Entertainment", uri: "/category/news/cbusiness-media-entertainment/" },
+    { key: "techAi", name: "Tech & AI", uri: "/category/news/cbusiness-tech-ai/" },
   ];
 
   const sections = CATEGORY_MAP

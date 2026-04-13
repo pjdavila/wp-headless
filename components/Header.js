@@ -38,12 +38,43 @@ function UserIcon() {
   );
 }
 
+function ChevronIcon({ open }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`${style.chevron} ${open ? style.chevronOpen : ""}`}
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
+
+function buildNavItems(categories) {
+  if (!Array.isArray(categories)) return [];
+  const filtered = categories.filter((c) => !SKIP_SLUGS.includes(c.slug));
+  const topLevel = filtered.filter((c) => !c.parentId);
+  return topLevel.map((cat) => {
+    const children = (cat.children?.nodes || []).filter(
+      (ch) => !SKIP_SLUGS.includes(ch.slug)
+    );
+    return { ...cat, children };
+  });
+}
 
 export default function Header({ siteTitle, siteDescription, menuItems, categories }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [drawerNewsOpen, setDrawerNewsOpen] = useState(false);
   const { user, loading } = useAuth();
   const dropdownRef = useRef(null);
 
@@ -73,9 +104,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
     return "U";
   };
 
-  const catItems = Array.isArray(categories)
-    ? categories.filter((c) => !SKIP_SLUGS.includes(c.slug))
-    : [];
+  const navItems = buildNavItems(categories);
 
   return (
     <>
@@ -145,13 +174,33 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
         <nav className={style.navBar}>
           <div className={`container ${style.navBarInner}`}>
             <ul className={style.navList}>
-              {catItems.map((cat) => (
-                <li key={cat.slug}>
-                  <Link href={cat.uri} className={style.navLink}>
-                    {cat.name}
-                  </Link>
-                </li>
-              ))}
+              {navItems.map((cat) =>
+                cat.children.length > 0 ? (
+                  <li key={cat.slug} className={style.navItem}>
+                    <Link href={cat.uri} className={style.navLink}>
+                      {cat.name}
+                      <ChevronIcon />
+                    </Link>
+                    <div className={style.navSubmenu}>
+                      {cat.children.map((child) => (
+                        <Link
+                          key={child.slug}
+                          href={child.uri}
+                          className={style.navSubmenuLink}
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </li>
+                ) : (
+                  <li key={cat.slug} className={style.navItem}>
+                    <Link href={cat.uri} className={style.navLink}>
+                      {cat.name}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </div>
         </nav>
@@ -173,16 +222,49 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               </button>
             </div>
             <nav className={style.drawerNav}>
-              {catItems.map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={cat.uri}
-                  className={style.drawerLink}
-                  onClick={() => setDrawerOpen(false)}
-                >
-                  {cat.name}
-                </Link>
-              ))}
+              {navItems.map((cat) =>
+                cat.children.length > 0 ? (
+                  <div key={cat.slug} className={style.drawerGroup}>
+                    <button
+                      className={style.drawerGroupToggle}
+                      onClick={() => setDrawerNewsOpen((v) => !v)}
+                    >
+                      <span>{cat.name}</span>
+                      <ChevronIcon open={drawerNewsOpen} />
+                    </button>
+                    {drawerNewsOpen && (
+                      <div className={style.drawerSublinks}>
+                        <Link
+                          href={cat.uri}
+                          className={style.drawerSublink}
+                          onClick={() => setDrawerOpen(false)}
+                        >
+                          All {cat.name}
+                        </Link>
+                        {cat.children.map((child) => (
+                          <Link
+                            key={child.slug}
+                            href={child.uri}
+                            className={style.drawerSublink}
+                            onClick={() => setDrawerOpen(false)}
+                          >
+                            {child.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={cat.slug}
+                    href={cat.uri}
+                    className={style.drawerLink}
+                    onClick={() => setDrawerOpen(false)}
+                  >
+                    {cat.name}
+                  </Link>
+                )
+              )}
             </nav>
           </div>
         </>
@@ -215,11 +297,19 @@ Header.fragments = {
           }
         }
       }
-      categories {
+      categories(first: 100) {
         nodes {
           name
           slug
           uri
+          parentId
+          children(first: 50) {
+            nodes {
+              name
+              slug
+              uri
+            }
+          }
         }
       }
     }
