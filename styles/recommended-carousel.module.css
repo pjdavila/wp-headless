@@ -1,0 +1,81 @@
+.carousel {
+  position: relative;
+  overflow: hidden;
+  margin: 0 -0.5rem;
+}
+
+.track {
+  display: flex;
+  will-change: transform;
+}
+
+.slide {
+  min-width: 0;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.slide > * {
+  height: 100%;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.9);
+  color: hsl(var(--foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.arrow:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  border-color: hsl(var(--accent));
+}
+
+.arrowLeft {
+  left: 0.25rem;
+}
+
+.arrowRight {
+  right: 0.25rem;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: hsl(var(--muted-foreground) / 0.35);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.dot:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
+}
+
+.dotActive {
+  background: hsl(var(--accent));
+  transform: scale(1.25);
+}
+

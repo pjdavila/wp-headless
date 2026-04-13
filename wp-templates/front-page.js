@@ -6,7 +6,7 @@ import { WebSiteJsonLd } from "../components/JsonLd";
 import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
-import StoryCard from "../components/StoryCard";
+import RecommendedCarousel from "../components/RecommendedCarousel";
 import MobileBanner from "../components/ads/MobileBanner";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
@@ -103,7 +103,7 @@ export default function FrontPage(props) {
     }))
     .filter((g) => g.posts.length > 0);
 
-  const { items: recItems } = useRecommendations({ type: "user", count: 4 });
+  const { items: recItems } = useRecommendations({ type: "user", count: 5 });
   const recommendedPosts = recItems.map((r) => ({
     id: r.id,
     title: r.title,
@@ -139,11 +139,7 @@ export default function FrontPage(props) {
             {recommendedPosts.length > 0 && (
               <section className={styles.recommendedSection}>
                 <h2 className={styles.recommendedTitle}>Recommended For You</h2>
-                <div className={styles.recommendedGrid}>
-                  {recommendedPosts.map((p) => (
-                    <StoryCard key={p.id} post={p} />
-                  ))}
-                </div>
+                <RecommendedCarousel posts={recommendedPosts} />
               </section>
             )}
 
