@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import AdIframe, { buildAdUrl } from "./AdIframe";
 
 const AD_CONFIG = {
-  DESKTOP: { zoneId: 921047, width: 700, height: 500 },
-  MOBILE: { zoneId: 921047, width: 320, height: 480 },
+  DESKTOP: { zoneId: 921047, width: 300, height: 600 },
+  MOBILE: { zoneId: 921047, width: 300, height: 250 },
   MAX_SHOWS_PER_SESSION: 1,
   DELAY_MS: 3000,
   COUNTDOWN_SECONDS: 5,
