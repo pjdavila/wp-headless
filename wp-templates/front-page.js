@@ -103,7 +103,7 @@ export default function FrontPage(props) {
     }))
     .filter((g) => g.posts.length > 0);
 
-  const { items: recItems } = useRecommendations({ type: "user", count: 6 });
+  const { items: recItems } = useRecommendations({ type: "user", count: 4 });
   const recommendedPosts = recItems.map((r) => ({
     id: r.id,
     title: r.title,
