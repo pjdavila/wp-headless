@@ -25,24 +25,24 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--accent) / 0.5), transparent);
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent);
 }
 
 .iconWrap {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: hsl(var(--accent) / 0.15);
-  border: 1px solid hsl(var(--accent) / 0.35);
+  background: hsl(var(--primary) / 0.15);
+  border: 1px solid hsl(var(--primary) / 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: hsl(var(--accent));
+  color: hsl(var(--primary));
   margin-bottom: 0.25rem;
 }
 
 .heading {
-  font-family: var(--font-heading);
+  font-family: var(--font-serif);
   font-size: 1.15rem;
   font-weight: 700;
   margin: 0;
@@ -71,9 +71,9 @@
   gap: 0.35rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: hsl(var(--accent));
-  background: hsl(var(--accent) / 0.1);
-  border: 1px solid hsl(var(--accent) / 0.2);
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.2);
   border-radius: 20px;
   padding: 0.25rem 0.65rem;
   align-self: flex-start;
@@ -101,7 +101,7 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  color: hsl(var(--accent));
+  color: hsl(var(--primary));
 }
 
 .form {
@@ -128,8 +128,8 @@
 }
 
 .input:focus {
-  border-color: hsl(var(--accent));
-  box-shadow: 0 0 0 3px hsl(var(--accent) / 0.12);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12);
 }
 
 .input:disabled {
@@ -143,8 +143,8 @@
   font-weight: 600;
   border: none;
   border-radius: calc(var(--radius) - 2px);
-  background: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
   cursor: pointer;
   transition: opacity 0.2s, transform 0.1s;
   display: flex;
@@ -170,8 +170,8 @@
 .spinner {
   width: 12px;
   height: 12px;
-  border: 2px solid hsl(var(--accent-foreground) / 0.3);
-  border-top-color: hsl(var(--accent-foreground));
+  border: 2px solid hsl(var(--primary-foreground) / 0.3);
+  border-top-color: hsl(var(--primary-foreground));
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   flex-shrink: 0;
@@ -207,17 +207,17 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: hsl(var(--accent) / 0.15);
-  border: 1px solid hsl(var(--accent) / 0.4);
+  background: hsl(var(--primary) / 0.15);
+  border: 1px solid hsl(var(--primary) / 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: hsl(var(--accent));
+  color: hsl(var(--primary));
   margin-bottom: 0.25rem;
 }
 
 .successHeading {
-  font-family: var(--font-heading);
+  font-family: var(--font-serif);
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0;

@@ -61,7 +61,7 @@
   left: 0;
   width: 3rem;
   height: 3px;
-  background: hsl(var(--accent));
+  background: hsl(var(--primary));
   border-radius: 2px;
 }
 

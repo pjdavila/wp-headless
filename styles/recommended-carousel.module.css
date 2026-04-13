@@ -39,9 +39,9 @@
 }
 
 .arrow:hover {
-  background: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-  border-color: hsl(var(--accent));
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
 }
 
 .arrowLeft {
@@ -75,7 +75,7 @@
 }
 
 .dotActive {
-  background: hsl(var(--accent));
+  background: hsl(var(--primary));
   transform: scale(1.25);
 }
 
