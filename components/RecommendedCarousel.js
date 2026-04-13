@@ -67,7 +67,27 @@ export default function RecommendedCarousel({ posts = [] }) {
 
   if (total === 0) return null;
 
+  const canLoop = total > visibleCount;
   const slidePercent = 100 / visibleCount;
+
+  if (!canLoop) {
+    return (
+      <div className={styles.carousel}>
+        <div className={styles.track}>
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className={styles.slide}
+              style={{ flex: `0 0 ${slidePercent}%` }}
+            >
+              <StoryCard post={post} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const translateX = (index + cloneCount) * slidePercent;
 
   return (
