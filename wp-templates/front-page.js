@@ -136,6 +136,17 @@ export default function FrontPage(props) {
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>
+            {recommendedPosts.length > 0 && (
+              <section className={styles.recommendedSection}>
+                <h2 className={styles.recommendedTitle}>Recommended For You</h2>
+                <div className={styles.recommendedGrid}>
+                  {recommendedPosts.map((p) => (
+                    <StoryCard key={p.id} post={p} />
+                  ))}
+                </div>
+              </section>
+            )}
+
             {sections.map((section, index) => (
               <React.Fragment key={section.name}>
                 <SectionBlock
@@ -152,17 +163,6 @@ export default function FrontPage(props) {
                 title="Latest News"
                 posts={allPosts.slice(5, 11)}
               />
-            )}
-
-            {recommendedPosts.length > 0 && (
-              <section className={styles.recommendedSection}>
-                <h2 className={styles.recommendedTitle}>Recommended For You</h2>
-                <div className={styles.recommendedGrid}>
-                  {recommendedPosts.map((p) => (
-                    <StoryCard key={p.id} post={p} />
-                  ))}
-                </div>
-              </section>
             )}
           </div>
 

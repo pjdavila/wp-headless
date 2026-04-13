@@ -39,9 +39,9 @@
 }
 
 .recommendedSection {
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid hsl(var(--border));
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .recommendedTitle {
