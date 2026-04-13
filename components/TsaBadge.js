@@ -28,8 +28,8 @@ export default function TsaBadge() {
     <div className={style.badge}>
       <BankIcon />
       <div className={style.info}>
-        <span className={style.label}>TSA PR</span>
-        <span className={style.value}>$10,006B</span>
+        <span className={style.label}>TSA</span>
+        <span className={style.value}>$10.0B</span>
       </div>
     </div>
   );
