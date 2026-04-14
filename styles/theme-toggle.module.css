@@ -21,4 +21,9 @@
     width: 30px;
     height: 30px;
   }
+
+  .toggle svg {
+    width: 14px;
+    height: 14px;
+  }
 }
