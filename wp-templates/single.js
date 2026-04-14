@@ -15,9 +15,6 @@ import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
 import { useFaustQuery } from "@faustwp/core";
 import { estimateReadingTime } from "../utils/readingTime";
 import { useTrackView, useRecommendations } from "../lib/useRecombee";
-import SidebarBanner from "../components/ads/SidebarBanner";
-import InterstitialAd from "../components/ads/InterstitialAd";
-import ArticleBanner from "../components/ads/ArticleBanner";
 import styles from "../styles/single.module.css";
 
 const POST_QUERY = gql`
@@ -103,7 +100,6 @@ function ArticleContent({ content }) {
   return (
     <>
       <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: before }} />
-      <ArticleBanner />
       <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: after }} />
     </>
   );
@@ -290,12 +286,10 @@ export default function Component(props) {
               ))}
             </div>
 
-            <SidebarBanner />
           </aside>
         </div>
       </main>
 
-      <InterstitialAd />
       <Footer />
     </>
   );

@@ -8,11 +8,8 @@ import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
-import MobileBanner from "../components/ads/MobileBanner";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
-import SidebarBanner from "../components/ads/SidebarBanner";
-import InterstitialAd from "../components/ads/InterstitialAd";
 import NewsletterWidget from "../components/NewsletterWidget";
 import { useRecommendations } from "../lib/useRecombee";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
@@ -171,7 +168,6 @@ export default function FrontPage(props) {
                   categoryUri={section.uri}
                   posts={section.posts}
                 />
-                {(index + 1) % 2 === 0 && <MobileBanner />}
               </React.Fragment>
             ))}
 
@@ -197,12 +193,10 @@ export default function FrontPage(props) {
 
             <MarketWatchlist />
 
-            <SidebarBanner />
           </aside>
         </div>
       </main>
 
-      <InterstitialAd />
       <Footer />
     </>
   );
