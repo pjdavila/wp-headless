@@ -183,7 +183,7 @@ export default function FrontPage(props) {
             <div className={styles.sidebarSection}>
               <h3 className={styles.sidebarTitle}>Oye Como Fue</h3>
               <div className={styles.recentList}>
-                {oyeComoFuePosts.map((post, i) => (
+                {oyeComoFuePosts.map((post) => (
                   <SidebarStoryCard key={post.id} post={post} />
                 ))}
               </div>
