@@ -15,3 +15,10 @@
   color: hsl(var(--foreground));
   background: hsl(var(--muted-foreground) / 0.15);
 }
+
+@media (max-width: 768px) {
+  .toggle {
+    width: 30px;
+    height: 30px;
+  }
+}
