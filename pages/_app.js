@@ -8,7 +8,6 @@ import { FirebaseProvider } from "../components/FirebaseProvider";
 import NotificationPrompt from "../components/NotificationPrompt";
 import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
-import StickyBottomBanner from "../components/ads/StickyBottomBanner";
 import "../styles/globals.css";
 
 const GA_ID = "G-F4RRT00M6P";
@@ -113,7 +112,6 @@ export default function MyApp({ Component, pageProps }) {
         />
         <Component {...pageProps} key={router.asPath} />
         <NotificationPrompt />
-        <StickyBottomBanner />
       </FirebaseProvider>
     </FaustProvider>
   );
