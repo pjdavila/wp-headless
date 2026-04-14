@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
+import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
 import MobileBanner from "../components/ads/MobileBanner";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
@@ -52,6 +53,9 @@ const HOMEPAGE_QUERY = gql`
     oyeComoFue: posts(first: 5, where: { categoryName: "oye-como-fue", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
+    queMiImporta: posts(first: 5, where: { categoryName: "que-mi-importa", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
   }
 `;
 
@@ -88,6 +92,7 @@ export default function FrontPage(props) {
   const featuredPosts = featuredData?.posts?.nodes || [];
   const heroPosts = allPosts.slice(0, 5);
   const oyeComoFuePosts = data?.oyeComoFue?.nodes || [];
+  const queMiImportaPosts = data?.queMiImporta?.nodes || [];
 
   const CATEGORY_MAP = [
     { key: "business", name: "Business", uri: "/category/news/cbusiness-category/" },
@@ -145,6 +150,14 @@ export default function FrontPage(props) {
                 <h2 className={styles.recommendedTitle}>Recommended For You</h2>
                 <RecommendedCarousel posts={recommendedPosts} />
               </section>
+            )}
+
+            {queMiImportaPosts.length > 0 && (
+              <FeaturedCategoryBlock
+                title="A Mi Que Me Importa"
+                categoryUri="/category/que-mi-importa/"
+                posts={queMiImportaPosts}
+              />
             )}
 
             {sections.map((section, index) => (
