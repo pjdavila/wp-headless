@@ -50,7 +50,7 @@ const HOMEPAGE_QUERY = gql`
     techAi: posts(first: 3, where: { categoryName: "cbusiness-tech-ai", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    oyeComoFue: posts(first: 5, where: { tag: "lead", orderby: { field: DATE, order: DESC } }) {
+    oyeComoFue: posts(first: 5, where: { categoryName: "oye-como-fue", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
     queMiImporta: posts(first: 5, where: { categoryName: "que-mi-importa", orderby: { field: DATE, order: DESC } }) {
