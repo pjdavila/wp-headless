@@ -440,6 +440,11 @@
     padding: 0.5rem 0;
   }
 
+  .logoBarInner {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
   .logoImage {
     max-height: 36px;
   }
