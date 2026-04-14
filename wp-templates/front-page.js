@@ -49,6 +49,9 @@ const HOMEPAGE_QUERY = gql`
     techAi: posts(first: 3, where: { categoryName: "cbusiness-tech-ai", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
+    oyeComoFue: posts(first: 5, where: { categoryName: "oye-como-fue", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
   }
 `;
 
@@ -84,7 +87,7 @@ export default function FrontPage(props) {
   const allPosts = data?.posts?.nodes || [];
   const featuredPosts = featuredData?.posts?.nodes || [];
   const heroPosts = allPosts.slice(0, 5);
-  const recentPosts = allPosts.slice(0, 8);
+  const oyeComoFuePosts = data?.oyeComoFue?.nodes || [];
 
   const CATEGORY_MAP = [
     { key: "business", name: "Business", uri: "/category/news/cbusiness-category/" },
@@ -165,9 +168,9 @@ export default function FrontPage(props) {
 
           <aside className={styles.sidebar}>
             <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarTitle}>Most Recent</h3>
+              <h3 className={styles.sidebarTitle}>Oye Como Fue</h3>
               <div className={styles.recentList}>
-                {recentPosts.map((post, i) => (
+                {oyeComoFuePosts.map((post, i) => (
                   <SidebarStoryCard key={post.id} post={post} index={i} />
                 ))}
               </div>
