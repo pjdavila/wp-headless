@@ -7,7 +7,6 @@ import { auth } from "../lib/firebase";
 import { useAuth } from "../lib/useAuth";
 import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
-import StaticBanner from "./ads/StaticBanner";
 import TsaBadge from "./TsaBadge";
 import style from "../styles/header.module.css";
 
@@ -111,7 +110,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
 
   return (
     <>
-      <StaticBanner />
       <header className={style.header}>
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
