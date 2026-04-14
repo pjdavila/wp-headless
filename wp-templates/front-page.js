@@ -56,6 +56,9 @@ const HOMEPAGE_QUERY = gql`
     queMiImporta: posts(first: 5, where: { categoryName: "que-mi-importa", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
+    leadPosts: posts(first: 4, where: { tag: "lead", orderby: { field: DATE, order: DESC } }) {
+      nodes { ...PostListFragment }
+    }
   }
 `;
 
@@ -93,6 +96,7 @@ export default function FrontPage(props) {
   const heroPosts = allPosts.slice(0, 5);
   const oyeComoFuePosts = data?.oyeComoFue?.nodes || [];
   const queMiImportaPosts = data?.queMiImporta?.nodes || [];
+  const leadPosts = data?.leadPosts?.nodes || [];
 
   const CATEGORY_MAP = [
     { key: "business", name: "Business", uri: "/category/news/cbusiness-category/" },
@@ -141,7 +145,7 @@ export default function FrontPage(props) {
       />
 
       <main className="container">
-        <FeaturedHero posts={allPosts} sliderPosts={featuredPosts} />
+        <FeaturedHero posts={allPosts} sliderPosts={featuredPosts} sideCardPosts={leadPosts} />
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>

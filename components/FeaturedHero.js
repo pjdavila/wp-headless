@@ -103,12 +103,14 @@ function Slide({ post, isActive }) {
   );
 }
 
-export default function FeaturedHero({ posts, sliderPosts }) {
+export default function FeaturedHero({ posts, sliderPosts, sideCardPosts }) {
   const hasTaggedPosts = sliderPosts && sliderPosts.length > 0;
   const slides = hasTaggedPosts ? sliderPosts : (posts || []).slice(0, 1);
-  const sideCards = hasTaggedPosts
-    ? (posts || []).slice(0, 4)
-    : (posts || []).slice(1, 5);
+  const sideCards = (sideCardPosts && sideCardPosts.length > 0)
+    ? sideCardPosts.slice(0, 4)
+    : hasTaggedPosts
+      ? (posts || []).slice(0, 4)
+      : (posts || []).slice(1, 5);
 
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
