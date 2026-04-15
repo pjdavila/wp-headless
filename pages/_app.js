@@ -9,6 +9,7 @@ import NotificationPrompt from "../components/NotificationPrompt";
 import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
 import "../styles/globals.css";
+import "video.js/dist/video-js.css";
 
 const GA_ID = "G-F4RRT00M6P";
 

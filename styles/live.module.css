@@ -1,0 +1,126 @@
+.page {
+  min-height: 100vh;
+  background: hsl(var(--background));
+}
+
+.hero {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--card)) 0%,
+    hsl(var(--background)) 100%
+  );
+  padding: 2rem 0 3rem;
+}
+
+.playerSection {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.liveHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  background: hsl(0 72% 51%);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--radius-sm);
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.streamTitle {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.playerWrapper {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.streamInfo {
+  max-width: 960px;
+  margin: 2rem auto 0;
+  padding: 1.5rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+.streamMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.channelName {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.separator {
+  width: 4px;
+  height: 4px;
+  background: hsl(var(--muted-foreground));
+  border-radius: 50%;
+}
+
+.streamDesc {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+  margin: 0.75rem 0 0;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 1rem 0 1.5rem;
+  }
+
+  .playerSection {
+    padding: 0 0.5rem;
+  }
+
+  .streamTitle {
+    font-size: 1.15rem;
+  }
+
+  .streamInfo {
+    margin: 1rem 0.5rem 0;
+    padding: 1rem;
+  }
+}
