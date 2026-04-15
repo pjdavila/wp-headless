@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
 const HLS_URL =
   "https://pvqyb68gdz24-hls-live.5centscdn.com/vnm/033977cd45e8d7a87c4fc453d18e20c3.sdp/playlist.m3u8";
@@ -8,8 +8,6 @@ const VAST_TAG =
 export default function LivePlayer() {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
-  const [ready, setReady] = useState(false);
-
   useEffect(() => {
     let player;
 
@@ -42,12 +40,9 @@ export default function LivePlayer() {
       });
 
       player.ready(() => {
-        setReady(true);
-
         if (typeof player.ima === "function") {
           player.ima({
             adTagUrl: VAST_TAG,
-            adsManagerLoadedCallback: () => {},
           });
         }
       });

@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Head from "next/head";
 import Script from "next/script";
 import dynamic from "next/dynamic";
