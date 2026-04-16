@@ -9,6 +9,7 @@ import SectionBlock from "../components/SectionBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
 import ShortVideosCarousel from "../components/ShortVideosCarousel";
+import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
@@ -161,6 +162,8 @@ export default function FrontPage(props) {
                 posts={queMiImportaPosts}
               />
             )}
+
+            <FeaturedVideosWidget />
 
             <ShortVideosCarousel />
 

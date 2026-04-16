@@ -34,7 +34,10 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **SectionBlock**: Category-grouped StoryCard grid with section title and "Ver más" link
 - **MarketWatchlist**: Placeholder financial data sidebar widget
 - **Recommended For You**: Client-side personalized section below category sections. Fetches from Recombee `RecommendItemsToUser` after page load. Hidden if no recommendations. Does not affect ISR cache.
-- **Homepage Layout**: Hero → ExploreCategories → main+sidebar grid (sidebar at 320px, collapses on mobile) → Recommended For You
+- **FeaturedVideosWidget**: 1-large + 3-small video grid (matching Business Journal Caribe screenshot layout). Large card on left with gradient overlay, play icon, title, source, date. 3 side cards on right with 16:9 thumbnails, play icon, title, source, date. "Ver todo >" link to /live. Fetches from /api/astro-playlist. Links to /video/[mediaid] detail pages.
+- **ShortVideosCarousel**: Infinite carousel of portrait video cards (4 desktop / 2 tablet / 1 mobile). Separate from FeaturedVideosWidget.
+- **Video Detail Page**: `/video/[mediaid]` — Astro VMS embed player (16:9) + title + metadata + related videos grid + sidebar with recent posts. Same 2-column layout as single.js.
+- **Homepage Layout**: Hero → ExploreCategories → main+sidebar grid (sidebar at 320px, collapses on mobile) → Recommended For You → A Mi Que Me Importa → FeaturedVideosWidget → ShortVideosCarousel → Category Sections
 - **Data**: Fetches 20 posts, groups by WordPress category (skips uncategorized)
 
 ## Article Page Components
