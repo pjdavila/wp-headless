@@ -80,15 +80,23 @@ export default function VideoDetailPage() {
     setLoading(true);
     setError(false);
 
-    fetch("/api/astro-playlist")
-      .then((r) => r.json())
-      .then((data) => {
+    Promise.all([
+      fetch("/api/astro-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
+      fetch("/api/cbtv-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
+    ])
+      .then(([metro, cbtv]) => {
         if (cancelled) return;
-        const allVideos = data.videos || [];
-        const found = allVideos.find((v) => v.mediaid === mediaid);
+        const allVideos = [...(metro.videos || []), ...(cbtv.videos || [])];
+        const seen = new Set();
+        const unique = allVideos.filter((v) => {
+          if (seen.has(v.mediaid)) return false;
+          seen.add(v.mediaid);
+          return true;
+        });
+        const found = unique.find((v) => v.mediaid === mediaid);
         if (found) {
           setVideo(found);
-          setOtherVideos(allVideos.filter((v) => v.mediaid !== mediaid).slice(0, 3));
+          setOtherVideos(unique.filter((v) => v.mediaid !== mediaid).slice(0, 3));
         } else {
           setError(true);
         }
