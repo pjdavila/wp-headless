@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import styles from "../styles/featured-videos.module.css";
 
 function formatDuration(seconds) {
@@ -36,13 +35,10 @@ function MainCard({ video }) {
     <Link href={href} className={styles.mainCard}>
       <div className={styles.mainThumbWrap}>
         {thumbSrc && (
-          <Image
+          <img
             src={thumbSrc}
             alt={video.title}
-            fill
-            sizes="(max-width: 900px) 100vw, 60vw"
             className={styles.mainThumb}
-            priority
           />
         )}
         <div className={styles.mainOverlay} />
@@ -81,12 +77,11 @@ function SideCard({ video }) {
     <Link href={href} className={styles.sideCard}>
       <div className={styles.sideThumbWrap}>
         {thumbSrc && (
-          <Image
+          <img
             src={thumbSrc}
             alt={video.title}
-            fill
-            sizes="140px"
             className={styles.sideThumb}
+            loading="lazy"
           />
         )}
         <div className={styles.sidePlayOverlay}>

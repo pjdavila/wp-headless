@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
-import Image from "next/image";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import SeoHead from "../../components/SeoHead";
@@ -207,12 +206,11 @@ export default function VideoDetailPage() {
                       >
                         <div className={styles.relatedThumbWrap}>
                           {vThumb && (
-                            <Image
+                            <img
                               src={vThumb}
                               alt={v.title}
-                              fill
-                              sizes="(max-width: 640px) 50vw, 33vw"
                               className={styles.relatedThumb}
+                              loading="lazy"
                             />
                           )}
                           <div className={styles.relatedPlayOverlay}>
