@@ -38,7 +38,7 @@ export default function ShortVideosCarousel() {
   const trackRef = useRef(null);
 
   useEffect(() => {
-    fetch("/api/astro-playlist")
+    fetch("/api/shorts-playlist")
       .then((r) => r.json())
       .then((data) => {
         setVideos((data.videos || []).slice(0, 6));

@@ -250,7 +250,7 @@ function ShortsSection({ videos }) {
   );
 }
 
-export default function VideosPage({ videos = [] }) {
+export default function VideosPage({ videos = [], shortsVideos = [] }) {
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuQuery = useQuery(HEADER_MENU_QUERY) || {};
 
@@ -258,7 +258,7 @@ export default function VideosPage({ videos = [] }) {
   const menuItems = headerMenuQuery?.data?.primaryMenuItems?.nodes || [];
   const categories = headerMenuQuery?.data?.categories?.nodes || [];
 
-  const { regular, finishline, shorts } = categorizeVideos(videos);
+  const { regular, finishline } = categorizeVideos(videos);
 
   return (
     <>
@@ -288,7 +288,7 @@ export default function VideosPage({ videos = [] }) {
           <>
             <FeaturedSection videos={regular} />
             <FinishlineSection videos={finishline} />
-            <ShortsSection videos={shorts} />
+            <ShortsSection videos={shortsVideos} />
           </>
         )}
       </main>
@@ -305,32 +305,45 @@ VideosPage.queries = [
 
 const CBTV_PLAYLIST_URL =
   "https://astrovms.com/api/v2/playlists/4f09e496-05a8-4600-acad-8ff9b7334189";
+const SHORTS_PLAYLIST_URL =
+  "https://astrovms.com/api/v2/playlists/114eca46-0831-4b00-9c14-74a99e16951d";
+
+function normalizePlaylist(data) {
+  return (data.playlist || []).map((item) => ({
+    mediaid: item.mediaid,
+    title: item.title,
+    image: item.image,
+    images: item.images || [],
+    duration: item.duration || 0,
+    link: item.link,
+    tags: item.tags || "",
+    pubDate: item.pubdate ? new Date(item.pubdate * 1000).toISOString() : null,
+    description: item.description || "",
+  }));
+}
 
 export async function getStaticProps(context) {
   const { getNextStaticProps } = await import("@faustwp/core");
 
   let videos = [];
-  try {
-    const res = await fetch(CBTV_PLAYLIST_URL, {
-      headers: { Accept: "application/json" },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      videos = (data.playlist || []).map((item) => ({
-        mediaid: item.mediaid,
-        title: item.title,
-        image: item.image,
-        images: item.images || [],
-        duration: item.duration || 0,
-        link: item.link,
-        tags: item.tags || "",
-        pubDate: item.pubdate ? new Date(item.pubdate * 1000).toISOString() : null,
-        description: item.description || "",
-      }));
-    }
-  } catch (err) {
-    console.error("CB TV playlist fetch error:", err.message);
-  }
+  let shortsVideos = [];
+
+  const fetchPlaylist = async (url) => {
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return normalizePlaylist(await res.json());
+  };
+
+  const [cbtvResult, shortsResult] = await Promise.allSettled([
+    fetchPlaylist(CBTV_PLAYLIST_URL),
+    fetchPlaylist(SHORTS_PLAYLIST_URL),
+  ]);
+
+  if (cbtvResult.status === "fulfilled") videos = cbtvResult.value;
+  else console.error("CB TV playlist fetch error:", cbtvResult.reason?.message);
+
+  if (shortsResult.status === "fulfilled") shortsVideos = shortsResult.value;
+  else console.error("Shorts playlist fetch error:", shortsResult.reason?.message);
 
   const faustProps = await getNextStaticProps(context, {
     Page: VideosPage,
@@ -342,6 +355,7 @@ export async function getStaticProps(context) {
     props: {
       ...(faustProps.props || {}),
       videos,
+      shortsVideos,
     },
     revalidate: 60,
   };
