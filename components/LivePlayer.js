@@ -135,8 +135,43 @@ export default function LivePlayer() {
 
       if (imaReady) {
         player.ready(() => {
-          if (typeof player.ima === "function") {
-            player.ima({ adTagUrl: VAST_TAG });
+          if (typeof player.ima !== "function") return;
+          try {
+            const imaSettings = { adTagUrl: VAST_TAG };
+            if (window.google?.ima?.ImaSdkSettings?.VpaidMode) {
+              imaSettings.vpaidMode =
+                window.google.ima.ImaSdkSettings.VpaidMode.ENABLED;
+            }
+            player.ima(imaSettings);
+
+            if (typeof player.ima.initializeAdDisplayContainer === "function") {
+              try {
+                player.ima.initializeAdDisplayContainer();
+              } catch (e) {
+                console.warn("IMA initializeAdDisplayContainer failed:", e);
+              }
+            }
+
+            player.one("play", () => {
+              if (typeof player.ima?.requestAds === "function") {
+                try {
+                  player.ima.requestAds();
+                  console.info("IMA: requestAds() called on first play");
+                } catch (e) {
+                  console.warn("IMA requestAds failed:", e);
+                }
+              }
+            });
+
+            player.on("ads-ad-started", () =>
+              console.info("IMA: ad started")
+            );
+            player.on("ads-ad-ended", () => console.info("IMA: ad ended"));
+            player.on("adserror", (e) =>
+              console.warn("IMA: adserror", e?.data || e)
+            );
+          } catch (e) {
+            console.warn("IMA setup failed, continuing without ads:", e);
           }
         });
       }
