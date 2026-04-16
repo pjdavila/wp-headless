@@ -16,21 +16,24 @@ function loadImaSdk() {
       resolve();
       return;
     }
-    const existing = document.querySelector(`script[src="${IMA_SDK_URL}"]`);
-    if (existing) {
-      existing.addEventListener("load", () => {
-        window.google?.ima ? resolve() : reject(new Error("IMA SDK loaded but google.ima not available"));
-      });
-      existing.addEventListener("error", () => reject(new Error("Failed to load IMA SDK")));
-      return;
-    }
+    const stale = document.querySelector(`script[src="${IMA_SDK_URL}"]`);
+    if (stale) stale.remove();
+
+    const timeout = setTimeout(() => {
+      reject(new Error("IMA SDK load timed out"));
+    }, 8000);
+
     const script = document.createElement("script");
     script.src = IMA_SDK_URL;
     script.async = true;
     script.onload = () => {
+      clearTimeout(timeout);
       window.google?.ima ? resolve() : reject(new Error("IMA SDK loaded but google.ima not available"));
     };
-    script.onerror = () => reject(new Error("Failed to load IMA SDK"));
+    script.onerror = () => {
+      clearTimeout(timeout);
+      reject(new Error("Failed to load IMA SDK"));
+    };
     document.head.appendChild(script);
   });
 
