@@ -52,7 +52,6 @@ function MainCard({ video }) {
         )}
       </div>
       <div className={styles.mainContent}>
-        <span className={styles.badge}>Video</span>
         <h3 className={styles.mainTitle}>{video.title}</h3>
         <div className={styles.mainMeta}>
           <span>Caribbean Business</span>
@@ -94,10 +93,6 @@ function SideCard({ video }) {
         )}
       </div>
       <div className={styles.sideBody}>
-        <span className={styles.sideBadge}>
-          <span className={styles.sideBadgeDot} />
-          Video
-        </span>
         <h4 className={styles.sideTitle}>{video.title}</h4>
         <div className={styles.sideMeta}>
           <span>Caribbean Business</span>
