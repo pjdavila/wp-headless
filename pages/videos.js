@@ -128,7 +128,7 @@ function FeaturedSection({ videos }) {
       </div>
 
       {rest.length > 4 && (
-        <div className={styles.videoGrid} style={{ marginTop: "1.5rem" }}>
+        <div className={`${styles.videoGrid} ${styles.videoGridSpaced}`}>
           {rest.slice(4).map((v) => {
             const thumb = getThumb(v, 480);
             return (
@@ -236,6 +236,11 @@ function ShortsSection({ videos }) {
               </div>
               <div className={styles.shortBody}>
                 <h3 className={styles.shortTitle}>{v.title}</h3>
+                {v.pubDate && (
+                  <time className={styles.shortDate} dateTime={v.pubDate}>
+                    {formatDate(v.pubDate)}
+                  </time>
+                )}
               </div>
             </Link>
           );

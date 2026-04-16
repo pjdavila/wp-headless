@@ -593,6 +593,17 @@
   overflow: hidden;
 }
 
+.shortDate {
+  font-size: 0.65rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.videoGridSpaced {
+  margin-top: 1.5rem;
+}
+
 .emptyState {
   text-align: center;
   padding: 3rem 1rem;
@@ -600,12 +611,6 @@
   font-size: 0.95rem;
 }
 
-.loading {
-  text-align: center;
-  padding: 4rem 1rem;
-  color: hsl(var(--muted-foreground));
-  font-size: 1rem;
-}
 
 @media (max-width: 1024px) {
   .videoGrid {
