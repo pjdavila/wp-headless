@@ -131,15 +131,25 @@ export default function FeaturedVideosWidget() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [main, setMain] = useState(null);
+
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/astro-playlist")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!cancelled) {
-          setVideos((data.videos || []).slice(0, 4));
-          setLoading(false);
-        }
+    Promise.all([
+      fetch("/api/featured-video-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
+      fetch("/api/astro-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
+    ])
+      .then(([featured, astro]) => {
+        if (cancelled) return;
+        const sideVideos = astro.videos || [];
+        const featuredMain = (featured.videos && featured.videos[0]) || null;
+        const chosenMain = featuredMain || sideVideos[0] || null;
+        const sideList = sideVideos
+          .filter((v) => !chosenMain || v.mediaid !== chosenMain.mediaid)
+          .slice(0, 3);
+        setMain(chosenMain);
+        setVideos(sideList);
+        setLoading(false);
       })
       .catch(() => {
         if (!cancelled) setLoading(false);
@@ -158,9 +168,9 @@ export default function FeaturedVideosWidget() {
     );
   }
 
-  if (videos.length === 0) return null;
+  if (!main && videos.length === 0) return null;
 
-  const [main, ...side] = videos;
+  const side = videos;
 
   return (
     <section className={styles.section}>
