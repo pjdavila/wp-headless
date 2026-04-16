@@ -119,10 +119,17 @@ export default function LivePlayer() {
         ],
       });
 
-      player.on("error", () => {
-        const err = player.error();
-        if (err && (err.code === 2 || err.code === 4)) {
+      const handlePlayerError = () => {
+        const err = player.error && player.error();
+        if (!err || err.code === 2 || err.code === 4) {
           setStatus("offair");
+        }
+      };
+      player.on("error", handlePlayerError);
+      player.ready(() => {
+        const tech = player.tech && player.tech({ IWillNotUseThisInPlugins: true });
+        if (tech && typeof tech.on === "function") {
+          tech.on("error", handlePlayerError);
         }
       });
 
@@ -153,11 +160,11 @@ export default function LivePlayer() {
       <div className={styles.offAirPanel}>
         <div className={styles.offAirInner}>
           <div className={styles.offAirIcon} aria-hidden="true">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
-              <polyline points="17 2 12 7 7 2" />
-              <line x1="3" y1="3" x2="21" y2="21" />
-            </svg>
+            <img
+              src="https://img.caribbean.business/Logo-CB-White.png"
+              alt="Caribbean Business"
+              className={styles.offAirLogo}
+            />
           </div>
           <h2 className={styles.offAirTitle}>
             No estamos transmitiendo en estos momentos

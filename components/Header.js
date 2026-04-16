@@ -118,7 +118,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
 
   const navItems = buildNavItems(categories);
   const { live: liveOn } = useLiveStatus();
-  const isOffAir = liveOn === false;
+  const isOffAir = liveOn !== true;
 
   return (
     <>
