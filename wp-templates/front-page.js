@@ -163,10 +163,6 @@ export default function FrontPage(props) {
               />
             )}
 
-            <FeaturedVideosWidget />
-
-            <ShortVideosCarousel />
-
             {sections.map((section, index) => (
               <React.Fragment key={section.name}>
                 <SectionBlock
@@ -174,6 +170,12 @@ export default function FrontPage(props) {
                   categoryUri={section.uri}
                   posts={section.posts}
                 />
+                {section.name === "Economy" && (
+                  <>
+                    <FeaturedVideosWidget />
+                    <ShortVideosCarousel />
+                  </>
+                )}
               </React.Fragment>
             ))}
 
