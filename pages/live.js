@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import Head from "next/head";
-import Script from "next/script";
 import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -37,11 +36,6 @@ export default function LivePage() {
         />
         <meta property="og:type" content="website" />
       </Head>
-
-      <Script
-        src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
-        strategy="beforeInteractive"
-      />
 
       <Header
         siteTitle={siteData.title}
