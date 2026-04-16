@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../styles/featured-videos.module.css";
 
+const BUNNY_LIBRARY_ID = "638514";
+
 function formatDuration(seconds) {
   if (!seconds) return "";
   const m = Math.floor(seconds / 60);
@@ -26,100 +28,25 @@ function PlayIcon({ className }) {
   );
 }
 
-function MainCard({ video }) {
-  const href = `/video/${video.mediaid}`;
-  const thumbSrc =
-    video.images?.find((img) => img.width >= 720)?.src || video.image;
-
+function VolumeIcon() {
   return (
-    <Link href={href} className={styles.mainCard}>
-      <div className={styles.mainThumbWrap}>
-        {thumbSrc && (
-          <img
-            src={thumbSrc}
-            alt={video.title}
-            className={styles.mainThumb}
-          />
-        )}
-        <div className={styles.mainOverlay} />
-        <div className={styles.playOverlay}>
-          <PlayIcon className={styles.playIcon} />
-        </div>
-        {video.duration > 0 && (
-          <span className={styles.durationBadge}>
-            {formatDuration(video.duration)}
-          </span>
-        )}
-      </div>
-      <div className={styles.mainContent}>
-        <h3 className={styles.mainTitle}>{video.title}</h3>
-        <div className={styles.mainMeta}>
-          <span>Caribbean Business</span>
-          {video.pubDate && (
-            <>
-              <span className={styles.mainMetaSep}>&bull;</span>
-              <time>{formatDate(video.pubDate)}</time>
-            </>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function SideCard({ video }) {
-  const href = `/video/${video.mediaid}`;
-  const thumbSrc =
-    video.images?.find((img) => img.width >= 320)?.src || video.image;
-
-  return (
-    <Link href={href} className={styles.sideCard}>
-      <div className={styles.sideThumbWrap}>
-        {thumbSrc && (
-          <img
-            src={thumbSrc}
-            alt={video.title}
-            className={styles.sideThumb}
-            loading="lazy"
-          />
-        )}
-        <div className={styles.sidePlayOverlay}>
-          <PlayIcon className={styles.sidePlayIcon} />
-        </div>
-        {video.duration > 0 && (
-          <span className={styles.durationBadge}>
-            {formatDuration(video.duration)}
-          </span>
-        )}
-      </div>
-      <div className={styles.sideBody}>
-        <h4 className={styles.sideTitle}>{video.title}</h4>
-        <div className={styles.sideMeta}>
-          <span>Caribbean Business</span>
-          {video.pubDate && (
-            <>
-              <span className={styles.sideMetaSep}>&bull;</span>
-              <time>{formatDate(video.pubDate)}</time>
-            </>
-          )}
-        </div>
-      </div>
-    </Link>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+    </svg>
   );
 }
 
 function LoadingSkeleton() {
   return (
     <div className={styles.skeleton}>
-      <div className={styles.skeletonMain} />
-      <div className={styles.skeletonSide}>
+      <div className={styles.skeletonPlayer} />
+      <div className={styles.skeletonTabs}>
         {[0, 1, 2].map((i) => (
-          <div key={i} className={styles.skeletonSideItem}>
-            <div className={styles.skeletonSideThumb} />
-            <div className={styles.skeletonSideText}>
-              <div className={`${styles.skeletonLine}`} />
-              <div className={`${styles.skeletonLine} ${styles.skeletonLineShort}`} />
-            </div>
+          <div key={i} className={styles.skeletonTab}>
+            <div className={styles.skeletonTabThumb} />
+            <div className={styles.skeletonLine} />
+            <div className={`${styles.skeletonLine} ${styles.skeletonLineShort}`} />
           </div>
         ))}
       </div>
@@ -130,26 +57,18 @@ function LoadingSkeleton() {
 export default function FeaturedVideosWidget() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [main, setMain] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([
-      fetch("/api/featured-video-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
-      fetch("/api/astro-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
-    ])
-      .then(([featured, astro]) => {
-        if (cancelled) return;
-        const sideVideos = astro.videos || [];
-        const featuredMain = (featured.videos && featured.videos[0]) || null;
-        const chosenMain = featuredMain || sideVideos[0] || null;
-        const sideList = sideVideos
-          .filter((v) => !chosenMain || v.mediaid !== chosenMain.mediaid)
-          .slice(0, 3);
-        setMain(chosenMain);
-        setVideos(sideList);
-        setLoading(false);
+    fetch("/api/cbtv-playlist")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) {
+          setVideos((data.videos || []).slice(0, 3));
+          setLoading(false);
+        }
       })
       .catch(() => {
         if (!cancelled) setLoading(false);
@@ -168,9 +87,18 @@ export default function FeaturedVideosWidget() {
     );
   }
 
-  if (!main && videos.length === 0) return null;
+  if (videos.length === 0) return null;
 
-  const side = videos;
+  const active = videos[activeIndex] || videos[0];
+  const muted = !hasInteracted;
+  const playerSrc = `https://player.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${active.mediaid}?autoplay=true&loop=false&muted=${muted}&preload=true&responsive=true`;
+
+  const handleSelect = (i) => {
+    setHasInteracted(true);
+    setActiveIndex(i);
+  };
+
+  const dismissHint = () => setHasInteracted(true);
 
   return (
     <section className={styles.section}>
@@ -184,13 +112,89 @@ export default function FeaturedVideosWidget() {
         </Link>
       </div>
 
-      <div className={styles.grid}>
-        <MainCard video={main} />
-        <div className={styles.sideList}>
-          {side.map((v) => (
-            <SideCard key={v.mediaid} video={v} />
-          ))}
+      <div className={styles.playerWrap}>
+        <iframe
+          key={`${active.mediaid}-${muted ? "m" : "s"}`}
+          className={styles.playerIframe}
+          src={playerSrc}
+          loading="lazy"
+          allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+          allowFullScreen
+          title={active.title}
+        />
+        <div className={styles.nowPlaying}>
+          <span className={styles.nowDot} />
+          Now Playing
         </div>
+        {muted && (
+          <button
+            type="button"
+            className={styles.soundHint}
+            onClick={dismissHint}
+            aria-label="Click for sound"
+          >
+            <VolumeIcon />
+            Click for Sound
+          </button>
+        )}
+      </div>
+
+      <div className={styles.metaStrip}>
+        <h3 className={styles.activeTitle}>{active.title}</h3>
+        <div className={styles.activeMeta}>
+          {active.pubDate && (
+            <time dateTime={active.pubDate}>{formatDate(active.pubDate)}</time>
+          )}
+          {active.duration > 0 && (
+            <>
+              <span className={styles.metaSep}>&middot;</span>
+              <span>{formatDuration(active.duration)}</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className={styles.tabsRow} role="tablist">
+        {videos.map((v, i) => {
+          const isActive = i === activeIndex;
+          const thumbSrc = v.images?.find((img) => img.width >= 480)?.src || v.image;
+          return (
+            <button
+              key={v.mediaid}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              className={`${styles.tab} ${isActive ? styles.tabActive : ""}`}
+              onClick={() => handleSelect(i)}
+            >
+              <div className={styles.tabThumbWrap}>
+                {thumbSrc && (
+                  <img
+                    src={thumbSrc}
+                    alt={v.title}
+                    className={styles.tabThumb}
+                    loading="lazy"
+                  />
+                )}
+                <div className={styles.tabPlayOverlay}>
+                  <PlayIcon className={styles.tabPlayIcon} />
+                </div>
+                {v.duration > 0 && (
+                  <span className={styles.tabDuration}>
+                    {formatDuration(v.duration)}
+                  </span>
+                )}
+                {isActive && <span className={styles.tabActiveBadge}>On Air</span>}
+              </div>
+              <div className={styles.tabBody}>
+                <span className={styles.tabTitle}>{v.title}</span>
+                {v.pubDate && (
+                  <span className={styles.tabDate}>{formatDate(v.pubDate)}</span>
+                )}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </section>
   );
