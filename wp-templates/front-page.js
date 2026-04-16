@@ -8,6 +8,7 @@ import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
+import ShortVideosCarousel from "../components/ShortVideosCarousel";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
@@ -160,6 +161,8 @@ export default function FrontPage(props) {
                 posts={queMiImportaPosts}
               />
             )}
+
+            <ShortVideosCarousel />
 
             {sections.map((section, index) => (
               <React.Fragment key={section.name}>
