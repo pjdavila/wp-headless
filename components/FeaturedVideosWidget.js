@@ -115,7 +115,7 @@ export default function FeaturedVideosWidget() {
       <div className={styles.playerWrap}>
         <iframe
           key={`${active.mediaid}-${muted ? "m" : "s"}`}
-          className={styles.playerIframe}
+          className={`${styles.playerIframe} ${styles.playerFade}`}
           src={playerSrc}
           loading="lazy"
           allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
@@ -164,6 +164,7 @@ export default function FeaturedVideosWidget() {
               type="button"
               role="tab"
               aria-selected={isActive}
+              aria-pressed={isActive}
               className={`${styles.tab} ${isActive ? styles.tabActive : ""}`}
               onClick={() => handleSelect(i)}
             >
