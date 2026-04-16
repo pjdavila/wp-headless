@@ -163,21 +163,38 @@ export default function FrontPage(props) {
               />
             )}
 
-            {sections.map((section, index) => (
-              <React.Fragment key={section.name}>
-                <SectionBlock
-                  title={section.name}
-                  categoryUri={section.uri}
-                  posts={section.posts}
-                />
-                {section.name === "Economy" && (
-                  <>
-                    <FeaturedVideosWidget />
-                    <ShortVideosCarousel />
-                  </>
-                )}
-              </React.Fragment>
-            ))}
+            {(() => {
+              const hasEconomy = sections.some((s) => s.name === "Economy");
+              return sections.map((section) => (
+                <React.Fragment key={section.name}>
+                  <SectionBlock
+                    title={section.name}
+                    categoryUri={section.uri}
+                    posts={section.posts}
+                  />
+                  {section.name === "Economy" && (
+                    <>
+                      <FeaturedVideosWidget />
+                      <ShortVideosCarousel />
+                    </>
+                  )}
+                  {!hasEconomy && section.name === "Business" && (
+                    <>
+                      <FeaturedVideosWidget />
+                      <ShortVideosCarousel />
+                    </>
+                  )}
+                </React.Fragment>
+              ));
+            })()}
+
+            {sections.length > 0 &&
+              !sections.some((s) => s.name === "Economy" || s.name === "Business") && (
+                <>
+                  <FeaturedVideosWidget />
+                  <ShortVideosCarousel />
+                </>
+              )}
 
             {sections.length === 0 && !loading && allPosts.length > 5 && (
               <SectionBlock
