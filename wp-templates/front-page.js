@@ -8,7 +8,6 @@ import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
-import ShortVideosCarousel from "../components/ShortVideosCarousel";
 import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
@@ -172,17 +171,9 @@ export default function FrontPage(props) {
                     categoryUri={section.uri}
                     posts={section.posts}
                   />
-                  {section.name === "Economy" && (
-                    <>
-                      <FeaturedVideosWidget />
-                      <ShortVideosCarousel />
-                    </>
-                  )}
+                  {section.name === "Economy" && <FeaturedVideosWidget />}
                   {!hasEconomy && section.name === "Business" && (
-                    <>
-                      <FeaturedVideosWidget />
-                      <ShortVideosCarousel />
-                    </>
+                    <FeaturedVideosWidget />
                   )}
                 </React.Fragment>
               ));
@@ -190,10 +181,7 @@ export default function FrontPage(props) {
 
             {sections.length > 0 &&
               !sections.some((s) => s.name === "Economy" || s.name === "Business") && (
-                <>
-                  <FeaturedVideosWidget />
-                  <ShortVideosCarousel />
-                </>
+                <FeaturedVideosWidget />
               )}
 
             {sections.length === 0 && !loading && allPosts.length > 5 && (
