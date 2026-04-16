@@ -106,6 +106,75 @@
   margin: 0.75rem 0 0;
 }
 
+.offAirPanel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--font-sans);
+}
+
+.offAirInner {
+  text-align: center;
+  padding: 1.5rem;
+  max-width: 32rem;
+}
+
+.offAirIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: hsl(var(--muted-foreground));
+  opacity: 0.7;
+}
+
+.offAirTitle {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: #fff;
+}
+
+.offAirSubtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+
+.offAirBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: hsl(var(--primary));
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.offAirBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.offAirBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .hero {
     padding: 1rem 0 1.5rem;

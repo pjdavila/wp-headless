@@ -9,6 +9,7 @@ import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import TsaBadge from "./TsaBadge";
 import style from "../styles/header.module.css";
+import useLiveStatus from "../lib/useLiveStatus";
 
 function MenuIcon() {
   return (
@@ -116,6 +117,8 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   };
 
   const navItems = buildNavItems(categories);
+  const { live: liveOn } = useLiveStatus();
+  const isOffAir = liveOn === false;
 
   return (
     <>
@@ -220,10 +223,15 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 </Link>
               </li>
             </ul>
-            <Link href="/live" className={style.liveBtn}>
+            <Link
+              href="/live"
+              className={`${style.liveBtn} ${isOffAir ? style.liveBtnOff : ""}`}
+            >
               <TvIcon />
-              <span>Live</span>
-              <span className={style.liveDot} />
+              <span>{isOffAir ? "Off Air" : "Live"}</span>
+              <span
+                className={`${style.liveDot} ${isOffAir ? style.liveDotOff : ""}`}
+              />
             </Link>
           </div>
         </nav>
@@ -247,12 +255,14 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
             <nav className={style.drawerNav}>
               <Link
                 href="/live"
-                className={style.drawerLiveBtn}
+                className={`${style.drawerLiveBtn} ${isOffAir ? style.drawerLiveBtnOff : ""}`}
                 onClick={() => setDrawerOpen(false)}
               >
                 <TvIcon />
-                <span>Live</span>
-                <span className={style.liveDot} />
+                <span>{isOffAir ? "Off Air" : "Live"}</span>
+                <span
+                  className={`${style.liveDot} ${isOffAir ? style.liveDotOff : ""}`}
+                />
               </Link>
               {navItems.map((cat) =>
                 cat.children.length > 0 ? (
