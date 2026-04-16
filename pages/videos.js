@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import Header from "../components/Header";
@@ -246,32 +245,13 @@ function ShortsSection({ videos }) {
   );
 }
 
-export default function VideosPage() {
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+export default function VideosPage({ videos = [] }) {
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuQuery = useQuery(HEADER_MENU_QUERY) || {};
 
   const siteData = siteDataQuery?.data?.generalSettings || {};
   const menuItems = headerMenuQuery?.data?.primaryMenuItems?.nodes || [];
   const categories = headerMenuQuery?.data?.categories?.nodes || [];
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/cbtv-playlist")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!cancelled) {
-          setVideos(data.videos || []);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, []);
 
   const { regular, finishline, shorts } = categorizeVideos(videos);
 
@@ -297,9 +277,7 @@ export default function VideosPage() {
           </p>
         </div>
 
-        {loading ? (
-          <div className={styles.loading}>Loading videos...</div>
-        ) : videos.length === 0 ? (
+        {videos.length === 0 ? (
           <div className={styles.emptyState}>No videos available at this time.</div>
         ) : (
           <>
@@ -320,10 +298,46 @@ VideosPage.queries = [
   { query: HEADER_MENU_QUERY },
 ];
 
+const CBTV_PLAYLIST_URL =
+  "https://astrovms.com/api/v2/playlists/4f09e496-05a8-4600-acad-8ff9b7334189";
+
 export async function getStaticProps(context) {
   const { getNextStaticProps } = await import("@faustwp/core");
-  return getNextStaticProps(context, {
+
+  let videos = [];
+  try {
+    const res = await fetch(CBTV_PLAYLIST_URL, {
+      headers: { Accept: "application/json" },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      videos = (data.playlist || []).map((item) => ({
+        mediaid: item.mediaid,
+        title: item.title,
+        image: item.image,
+        images: item.images || [],
+        duration: item.duration || 0,
+        link: item.link,
+        tags: item.tags || "",
+        pubDate: item.pubdate ? new Date(item.pubdate * 1000).toISOString() : null,
+        description: item.description || "",
+      }));
+    }
+  } catch (err) {
+    console.error("CB TV playlist fetch error:", err.message);
+  }
+
+  const faustProps = await getNextStaticProps(context, {
     Page: VideosPage,
     revalidate: 60,
   });
+
+  return {
+    ...faustProps,
+    props: {
+      ...(faustProps.props || {}),
+      videos,
+    },
+    revalidate: 60,
+  };
 }
