@@ -214,6 +214,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   </li>
                 )
               )}
+              <li className={style.navItem}>
+                <Link href="/videos" className={style.navLink}>
+                  Videos
+                </Link>
+              </li>
             </ul>
             <Link href="/live" className={style.liveBtn}>
               <TvIcon />
@@ -295,6 +300,13 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   </Link>
                 )
               )}
+              <Link
+                href="/videos"
+                className={style.drawerLink}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Videos
+              </Link>
             </nav>
           </div>
         </>
