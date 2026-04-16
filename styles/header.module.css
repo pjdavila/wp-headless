@@ -198,6 +198,7 @@
   align-items: center;
   justify-content: center;
   height: 42px;
+  position: relative;
 }
 
 .navList {
@@ -230,6 +231,68 @@
 .navLink:hover {
   color: hsl(var(--foreground));
   background-color: hsl(var(--muted));
+  text-decoration: none;
+}
+
+.liveBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  position: absolute;
+  right: 0;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: linear-gradient(135deg, hsl(0 72% 50%), hsl(0 72% 40%));
+  text-decoration: none;
+  border-radius: 100px;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 12px hsl(0 72% 50% / 0.35);
+}
+
+.liveBtn:hover {
+  background: linear-gradient(135deg, hsl(0 72% 55%), hsl(0 72% 45%));
+  box-shadow: 0 0 20px hsl(0 72% 50% / 0.5);
+  text-decoration: none;
+  transform: scale(1.04);
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #fff;
+  animation: livePulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.75); }
+}
+
+.drawerLiveBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin: 0 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: linear-gradient(135deg, hsl(0 72% 50%), hsl(0 72% 40%));
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all 0.25s ease;
+}
+
+.drawerLiveBtn:hover {
+  background: linear-gradient(135deg, hsl(0 72% 55%), hsl(0 72% 45%));
   text-decoration: none;
 }
 

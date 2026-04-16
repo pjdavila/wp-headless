@@ -38,6 +38,15 @@ function UserIcon() {
   );
 }
 
+function TvIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+      <polyline points="17 2 12 7 7 2" />
+    </svg>
+  );
+}
+
 function ChevronIcon({ open }) {
   return (
     <svg
@@ -206,6 +215,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 )
               )}
             </ul>
+            <Link href="/live" className={style.liveBtn}>
+              <TvIcon />
+              <span>Live</span>
+              <span className={style.liveDot} />
+            </Link>
           </div>
         </nav>
 
@@ -226,6 +240,15 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               </button>
             </div>
             <nav className={style.drawerNav}>
+              <Link
+                href="/live"
+                className={style.drawerLiveBtn}
+                onClick={() => setDrawerOpen(false)}
+              >
+                <TvIcon />
+                <span>Live</span>
+                <span className={style.liveDot} />
+              </Link>
               {navItems.map((cat) =>
                 cat.children.length > 0 ? (
                   <div key={cat.slug} className={style.drawerGroup}>
