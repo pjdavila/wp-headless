@@ -282,7 +282,7 @@ export default function VideosPage({ videos = [], shortsVideos = [] }) {
           </p>
         </div>
 
-        {videos.length === 0 ? (
+        {videos.length === 0 && shortsVideos.length === 0 ? (
           <div className={styles.emptyState}>No videos available at this time.</div>
         ) : (
           <>
