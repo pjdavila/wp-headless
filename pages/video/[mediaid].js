@@ -168,6 +168,14 @@ export default function VideoDetailPage() {
               <span className={styles.badge}>Video</span>
               <span className={styles.metaDot}>&middot;</span>
               <span className={styles.metaItem}>Caribbean Business</span>
+              {video.pubDate && (
+                <>
+                  <span className={styles.metaDot}>&middot;</span>
+                  <time className={styles.metaItem} dateTime={video.pubDate}>
+                    {formatDate(video.pubDate)}
+                  </time>
+                </>
+              )}
               {video.duration > 0 && (
                 <>
                   <span className={styles.metaDot}>&middot;</span>
