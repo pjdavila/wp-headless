@@ -181,6 +181,10 @@ export default function VideoDetailPage() {
 
             <h1 className={styles.videoTitle}>{video.title}</h1>
 
+            {video.description && (
+              <p className={styles.description}>{video.description}</p>
+            )}
+
             {otherVideos.length > 0 && (
               <section className={styles.relatedSection}>
                 <h2 className={styles.relatedTitle}>More Videos</h2>

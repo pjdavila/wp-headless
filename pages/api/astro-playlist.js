@@ -33,6 +33,8 @@ export default async function handler(req, res) {
       images: item.images || [],
       duration: item.duration || 0,
       link: item.link,
+      pubDate: item.pubdate ? new Date(item.pubdate * 1000).toISOString() : null,
+      description: item.description || "",
     }));
 
     cache = { videos };

@@ -19,6 +19,14 @@ module.exports = withAtlasConfig(
           protocol: "https",
           hostname: "img.caribbean.business",
         },
+        {
+          protocol: "https",
+          hostname: "**.b-cdn.net",
+        },
+        {
+          protocol: "https",
+          hostname: "astrovms.com",
+        },
       ],
     },
     trailingSlash: true,
