@@ -137,7 +137,13 @@ export default function LivePlayer() {
         player.ready(() => {
           if (typeof player.ima !== "function") return;
           try {
-            const imaSettings = { adTagUrl: VAST_TAG };
+            const imaSettings = {
+              adTagUrl: VAST_TAG,
+              debug: false,
+              showControlsForJSAds: true,
+              adWillAutoPlay: true,
+              adWillPlayMuted: true,
+            };
             if (window.google?.ima?.ImaSdkSettings?.VpaidMode) {
               imaSettings.vpaidMode =
                 window.google.ima.ImaSdkSettings.VpaidMode.ENABLED;
