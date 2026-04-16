@@ -41,7 +41,7 @@ function categorizeVideos(videos) {
   const shorts = [];
 
   for (const v of videos) {
-    const tag = (v.tags || "").toLowerCase();
+    const tag = (v.tags || "").toLowerCase().trim();
     if (tag.includes("shorts") || tag.includes("short")) {
       shorts.push(v);
     } else if (tag.includes("thefinishline") || tag.includes("finishline")) {
