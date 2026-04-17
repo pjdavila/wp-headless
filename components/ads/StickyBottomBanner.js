@@ -4,9 +4,21 @@ import styles from "../../styles/stickyBottom.module.css";
 
 const STORAGE_KEY = "bj-sticky-bottom-dismissed";
 
+const ZONES = {
+  desktop: { zone: "161517", width: 970, height: 90 },
+  tablet: { zone: "161716", width: 728, height: 90 },
+  mobile: { zone: "161713", width: 320, height: 100 },
+};
+
+function pickBreakpoint(width) {
+  if (width >= 1024) return "desktop";
+  if (width >= 768) return "tablet";
+  return "mobile";
+}
+
 export default function StickyBottomBanner() {
   const [dismissed, setDismissed] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [breakpoint, setBreakpoint] = useState(null);
 
   useEffect(() => {
     try {
@@ -14,7 +26,11 @@ export default function StickyBottomBanner() {
         setDismissed(true);
       }
     } catch (e) {}
-    setMounted(true);
+
+    const update = () => setBreakpoint(pickBreakpoint(window.innerWidth));
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   const handleClose = () => {
@@ -24,7 +40,9 @@ export default function StickyBottomBanner() {
     setDismissed(true);
   };
 
-  if (!mounted || dismissed) return null;
+  if (dismissed || !breakpoint) return null;
+
+  const { zone, width, height } = ZONES[breakpoint];
 
   return (
     <div className={styles.bar}>
@@ -36,15 +54,7 @@ export default function StickyBottomBanner() {
       >
         ×
       </button>
-      <div className={styles.desktop}>
-        <AdServerSlot zone="161517" width={970} height={90} />
-      </div>
-      <div className={styles.tablet}>
-        <AdServerSlot zone="161716" width={728} height={90} />
-      </div>
-      <div className={styles.mobile}>
-        <AdServerSlot zone="161713" width={320} height={100} />
-      </div>
+      <AdServerSlot key={breakpoint} zone={zone} width={width} height={height} />
     </div>
   );
 }
