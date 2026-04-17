@@ -74,9 +74,11 @@ export default function LatestNewsPage() {
   const categories = headerMenuDataQuery?.data?.categories?.nodes || [];
   const { title: siteTitle, description: siteDescription } = siteData;
 
-  const posts = data?.posts?.nodes || [];
+  const allPosts = data?.posts?.nodes || [];
   const pageInfo = data?.posts?.pageInfo;
-  const recentPosts = posts.slice(0, 6);
+  const showSidebar = view !== "magazine";
+  const recentPosts = showSidebar ? allPosts.slice(0, 6) : [];
+  const posts = showSidebar ? allPosts.slice(6) : allPosts;
 
   const loadMore = async () => {
     if (!pageInfo?.endCursor) return;
@@ -94,12 +96,10 @@ export default function LatestNewsPage() {
     });
   };
 
-  const showSidebar = view !== "magazine";
-
   return (
     <>
       <SeoHead
-        title="Latest News"
+        title="Latest News — Caribbean Business"
         description="All the latest business, economy, and tech news from the Caribbean, in chronological order."
         url="/latest-news"
       />
@@ -128,7 +128,7 @@ export default function LatestNewsPage() {
 
         <div className={styles.toolbar}>
           <span className={styles.toolbarMeta}>
-            {posts.length} article{posts.length !== 1 ? "s" : ""}
+            {allPosts.length} article{allPosts.length !== 1 ? "s" : ""}
           </span>
           <LatestNewsToolbar view={view} onChange={handleViewChange} />
         </div>
