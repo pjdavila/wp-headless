@@ -60,18 +60,14 @@ export default function LivePage() {
             </div>
           </div>
 
-          <div className={`container ${styles.streamInfo}`}>
-            <div className={styles.streamMeta}>
-              <span className={styles.channelName}>VNM Media Group</span>
-              <span className={styles.separator} />
-              <span className={styles.liveBadge} style={{ fontSize: "0.6rem", padding: "0.2rem 0.5rem" }}>
-                <span className={styles.liveDot} />
-                En Vivo
-              </span>
+          <div className={`container ${styles.adSlotWrap}`}>
+            <div
+              className={styles.adSlot}
+              data-ad-slot="live-top"
+              aria-label="Advertisement"
+            >
+              <span className={styles.adSlotLabel}>Advertisement</span>
             </div>
-            <p className={styles.streamDesc}>
-              Transmisión en vivo de Caribbean Business — noticias de negocios, economía, tecnología y análisis del mercado caribeño. Sintoniza para mantenerte informado con las últimas actualizaciones.
-            </p>
           </div>
         </div>
       </main>
