@@ -7,6 +7,7 @@ import { getNextStaticProps } from "@faustwp/core";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import styles from "../styles/live.module.css";
+import AdServerSlot from "../components/AdServerSlot";
 
 const LivePlayer = dynamic(() => import("../components/LivePlayer"), {
   ssr: false,
@@ -61,12 +62,11 @@ export default function LivePage() {
           </div>
 
           <div className={`container ${styles.adSlotWrap}`}>
-            <div
-              className={styles.adSlot}
-              data-ad-slot="live-top"
-              aria-label="Advertisement"
-            >
-              <span className={styles.adSlotLabel}>Advertisement</span>
+            <div className={styles.adSlotDesktop}>
+              <AdServerSlot zone="161517" width={970} height={90} />
+            </div>
+            <div className={styles.adSlotMobile}>
+              <AdServerSlot zone="161713" width={320} height={100} />
             </div>
           </div>
         </div>

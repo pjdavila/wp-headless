@@ -75,31 +75,20 @@
   justify-content: center;
 }
 
-.adSlot {
-  position: relative;
-  width: 300px;
-  height: 250px;
-  background: hsl(var(--card));
-  border: 1px dashed hsl(var(--border));
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.adSlotDesktop {
+  display: none;
 }
 
-.adSlotLabel {
-  font-family: var(--font-sans);
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: hsl(var(--muted-foreground));
+.adSlotMobile {
+  display: block;
 }
 
-@media (min-width: 768px) {
-  .adSlot {
-    width: 728px;
-    height: 90px;
+@media (min-width: 970px) {
+  .adSlotDesktop {
+    display: block;
+  }
+  .adSlotMobile {
+    display: none;
   }
 }
 

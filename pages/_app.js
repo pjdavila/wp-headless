@@ -111,6 +111,12 @@ export default function MyApp({ Component, pageProps }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: GA_INIT_SCRIPT }}
         />
+        <Script
+          id="aso-loader"
+          strategy="afterInteractive"
+          src="https://media.aso1.net/js/code.min.js"
+          data-cfasync="false"
+        />
         <Component {...pageProps} key={router.asPath} />
         <NotificationPrompt />
       </FirebaseProvider>
