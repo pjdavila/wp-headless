@@ -18,48 +18,42 @@ export default function PostListRow({ post }) {
 
   return (
     <article className={styles.row}>
-      {imgSrc && (
-        <Link href={uri} className={styles.thumbWrap} aria-label={title}>
-          <Image
-            src={imgSrc}
-            alt={imgAlt}
-            fill
-            sizes="(max-width: 640px) 100vw, 200px"
-            className={styles.thumb}
-          />
-        </Link>
-      )}
-      <div className={styles.body}>
-        {category && (
-          <Link href={category.uri} className={styles.badge}>
-            {category.name}
-          </Link>
+      <Link href={uri} className={styles.rowLink} aria-label={title}>
+        {imgSrc && (
+          <span className={styles.thumbWrap}>
+            <Image
+              src={imgSrc}
+              alt={imgAlt}
+              fill
+              sizes="(max-width: 640px) 100vw, 200px"
+              className={styles.thumb}
+            />
+          </span>
         )}
-        <h3 className={styles.title}>
-          <Link href={uri} className={styles.titleLink}>
-            {title}
-          </Link>
-        </h3>
-        {excerpt && (
-          <div
-            className={styles.excerpt}
-            dangerouslySetInnerHTML={{ __html: excerpt }}
-          />
-        )}
-        <div className={styles.meta}>
-          {date && (
-            <time dateTime={date} suppressHydrationWarning>
-              {formatDate(date)}
-            </time>
+        <span className={styles.body}>
+          {category && <span className={styles.badge}>{category.name}</span>}
+          <h3 className={styles.title}>{title}</h3>
+          {excerpt && (
+            <span
+              className={styles.excerpt}
+              dangerouslySetInnerHTML={{ __html: excerpt }}
+            />
           )}
-          {author?.node?.name && (
-            <>
-              <span className={styles.dot}>·</span>
-              <span>{author.node.name}</span>
-            </>
-          )}
-        </div>
-      </div>
+          <span className={styles.meta}>
+            {date && (
+              <time dateTime={date} suppressHydrationWarning>
+                {formatDate(date)}
+              </time>
+            )}
+            {author?.node?.name && (
+              <>
+                <span className={styles.dot}>·</span>
+                <span>{author.node.name}</span>
+              </>
+            )}
+          </span>
+        </span>
+      </Link>
     </article>
   );
 }
