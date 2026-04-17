@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "../styles/featured-videos.module.css";
 
 const BUNNY_LIBRARY_ID = "638514";
@@ -80,7 +81,16 @@ export default function FeaturedVideosWidget() {
     return (
       <section className={styles.section}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Videos</h2>
+          <h2 className={styles.title}>
+            <Image
+              src="/cb-videos-logo.webp"
+              alt="CB Videos"
+              width={180}
+              height={42}
+              className={styles.titleLogo}
+              priority
+            />
+          </h2>
         </div>
         <LoadingSkeleton />
       </section>
@@ -103,7 +113,16 @@ export default function FeaturedVideosWidget() {
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Videos</h2>
+        <h2 className={styles.title}>
+          <Image
+            src="/cb-videos-logo.webp"
+            alt="CB Videos"
+            width={180}
+            height={42}
+            className={styles.titleLogo}
+            priority
+          />
+        </h2>
         <Link href="/live" className={styles.viewAll}>
           Ver todo
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

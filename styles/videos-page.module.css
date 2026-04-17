@@ -47,6 +47,21 @@
   position: relative;
   color: hsl(var(--foreground));
   font-family: var(--font-serif);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.sectionTitleLogo {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .sectionTitleLogo {
+    height: 32px;
+  }
 }
 
 .sectionTitle::before {

@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
@@ -63,7 +64,16 @@ function FeaturedSection({ videos }) {
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h2 className={styles.sectionTitle}>Videos</h2>
+        <h2 className={styles.sectionTitle}>
+          <Image
+            src="/cb-videos-logo.webp"
+            alt="CB Videos"
+            width={240}
+            height={56}
+            className={styles.sectionTitleLogo}
+            priority
+          />
+        </h2>
       </div>
       <div className={styles.featuredGrid}>
         <Link href={`/video/${hero.mediaid}`} className={styles.featuredMain}>
