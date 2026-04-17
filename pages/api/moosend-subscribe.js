@@ -52,29 +52,29 @@ export default async function handler(req, res) {
     `Moosend subscribe → status=${moosendRes.status} body=${bodyText.slice(0, 500)}`
   );
 
-  if (!moosendRes.ok) {
-    return res
-      .status(502)
-      .json({ error: "Newsletter service rejected the request." });
-  }
-
   let data = null;
   try {
     data = JSON.parse(bodyText);
   } catch {
-    // Non-JSON response from Moosend, treat as success since HTTP was 2xx.
-    return res.status(200).json({ ok: true });
+    // Non-JSON body — fall through with data = null.
+  }
+
+  if (!moosendRes.ok) {
+    const message =
+      (data && (data.Error || data.Message)) ||
+      "Newsletter service rejected the request.";
+    return res.status(502).json({ error: message });
   }
 
   // Moosend wraps everything in {Code, Error, Context}. Code 0 = success.
-  // Non-zero codes (e.g. already subscribed, invalid email) come back HTTP 200.
+  // Non-zero codes (e.g. already subscribed, invalid email) come back HTTP 200
+  // and are treated as soft outcomes so the UI shows success consistently.
   if (data && typeof data.Code === "number" && data.Code !== 0) {
-    const message = data.Error || "Subscription could not be completed.";
-    // Treat "already subscribed" as a soft success for the user.
-    if (/already/i.test(message) || /exists/i.test(message)) {
-      return res.status(200).json({ ok: true, code: data.Code, message });
-    }
-    return res.status(400).json({ error: message, code: data.Code });
+    return res.status(200).json({
+      ok: true,
+      code: data.Code,
+      message: data.Error || "Subscription processed.",
+    });
   }
 
   return res.status(200).json({ ok: true });
