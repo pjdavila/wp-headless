@@ -74,11 +74,10 @@ export default function LatestNewsPage() {
   const categories = headerMenuDataQuery?.data?.categories?.nodes || [];
   const { title: siteTitle, description: siteDescription } = siteData;
 
-  const allPosts = data?.posts?.nodes || [];
+  const posts = data?.posts?.nodes || [];
   const pageInfo = data?.posts?.pageInfo;
   const showSidebar = view !== "magazine";
-  const recentPosts = showSidebar ? allPosts.slice(0, 6) : [];
-  const posts = showSidebar ? allPosts.slice(6) : allPosts;
+  const recentPosts = posts.slice(0, 6);
 
   const loadMore = async () => {
     if (!pageInfo?.endCursor) return;
@@ -128,7 +127,7 @@ export default function LatestNewsPage() {
 
         <div className={styles.toolbar}>
           <span className={styles.toolbarMeta}>
-            {allPosts.length} article{allPosts.length !== 1 ? "s" : ""}
+            {posts.length} article{posts.length !== 1 ? "s" : ""}
           </span>
           <LatestNewsToolbar view={view} onChange={handleViewChange} />
         </div>
