@@ -285,13 +285,6 @@ export default function VideosPage({ videos = [], shortsVideos = [] }) {
       />
 
       <main className={`container ${styles.page}`}>
-        <div className={styles.heroSection}>
-          <h1 className={styles.pageTitle}>CB TV</h1>
-          <p className={styles.pageSubtitle}>
-            Watch the latest business videos, podcasts, and short clips from Caribbean Business.
-          </p>
-        </div>
-
         {videos.length === 0 && shortsVideos.length === 0 ? (
           <div className={styles.emptyState}>No videos available at this time.</div>
         ) : (
