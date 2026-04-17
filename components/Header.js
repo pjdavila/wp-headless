@@ -218,6 +218,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 )
               )}
               <li className={style.navItem}>
+                <Link href="/latest-news" className={style.navLink}>
+                  Latest News
+                </Link>
+              </li>
+              <li className={style.navItem}>
                 <Link href="/videos" className={style.navLink}>
                   Videos
                 </Link>
@@ -310,6 +315,13 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   </Link>
                 )
               )}
+              <Link
+                href="/latest-news"
+                className={style.drawerLink}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Latest News
+              </Link>
               <Link
                 href="/videos"
                 className={style.drawerLink}
