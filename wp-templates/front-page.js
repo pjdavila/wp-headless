@@ -12,6 +12,7 @@ import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
+import AdServerSlot from "../components/AdServerSlot";
 import { useRecommendations } from "../lib/useRecombee";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -200,6 +201,10 @@ export default function FrontPage(props) {
                   <SidebarStoryCard key={post.id} post={post} />
                 ))}
               </div>
+            </div>
+
+            <div className={styles.sidebarAdSlot}>
+              <AdServerSlot zone="161655" width={300} height={250} />
             </div>
 
             <NewsletterWidget />
