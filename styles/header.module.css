@@ -234,33 +234,6 @@
   text-decoration: none;
 }
 
-.navLinkLogo {
-  padding: 0.35rem 0.75rem;
-}
-
-.videosLogoImg {
-  display: block;
-  height: 22px;
-  width: auto;
-  object-fit: contain;
-  transition: opacity 0.2s ease;
-}
-
-.navLinkLogo:hover .videosLogoImg {
-  opacity: 0.8;
-}
-
-.drawerLinkLogo {
-  padding: 0.5rem 1rem;
-}
-
-.videosLogoImgDrawer {
-  display: block;
-  height: 30px;
-  width: auto;
-  object-fit: contain;
-}
-
 .liveBtn {
   display: flex;
   align-items: center;

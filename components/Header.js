@@ -223,15 +223,8 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 </Link>
               </li>
               <li className={style.navItem}>
-                <Link href="/videos" className={`${style.navLink} ${style.navLinkLogo}`} aria-label="CB Videos">
-                  <Image
-                    src="/cb-videos-logo.webp"
-                    alt="CB Videos"
-                    width={600}
-                    height={129}
-                    className={style.videosLogoImg}
-                    priority={false}
-                  />
+                <Link href="/videos" className={style.navLink}>
+                  Videos
                 </Link>
               </li>
             </ul>
@@ -331,17 +324,10 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               </Link>
               <Link
                 href="/videos"
-                className={`${style.drawerLink} ${style.drawerLinkLogo}`}
+                className={style.drawerLink}
                 onClick={() => setDrawerOpen(false)}
-                aria-label="CB Videos"
               >
-                <Image
-                  src="/cb-videos-logo.webp"
-                  alt="CB Videos"
-                  width={600}
-                  height={129}
-                  className={style.videosLogoImgDrawer}
-                />
+                Videos
               </Link>
             </nav>
           </div>
