@@ -137,40 +137,50 @@ function FeaturedSection({ videos }) {
         )}
       </div>
 
-      {rest.length > 4 && (
-        <div className={`${styles.videoGrid} ${styles.videoGridSpaced}`}>
-          {rest.slice(4).map((v) => {
-            const thumb = getThumb(v, 480);
-            return (
-              <Link key={v.mediaid} href={`/video/${v.mediaid}`} className={styles.gridCard}>
-                <div className={styles.gridThumbWrap}>
-                  {thumb && (
-                    <img src={thumb} alt={v.title} className={styles.gridThumb} loading="lazy" />
-                  )}
-                  <div className={styles.gridPlayOverlay}>
-                    <PlayIcon className={styles.gridPlayIcon} />
-                  </div>
+    </section>
+  );
+}
+
+function MoreVideosSection({ videos }) {
+  if (videos.length === 0) return null;
+
+  return (
+    <section className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>More Videos</h2>
+      </div>
+      <div className={styles.videoGrid}>
+        {videos.map((v) => {
+          const thumb = getThumb(v, 480);
+          return (
+            <Link key={v.mediaid} href={`/video/${v.mediaid}`} className={styles.gridCard}>
+              <div className={styles.gridThumbWrap}>
+                {thumb && (
+                  <img src={thumb} alt={v.title} className={styles.gridThumb} loading="lazy" />
+                )}
+                <div className={styles.gridPlayOverlay}>
+                  <PlayIcon className={styles.gridPlayIcon} />
+                </div>
+                {v.duration > 0 && (
+                  <span className={styles.durationBadge}>{formatDuration(v.duration)}</span>
+                )}
+              </div>
+              <div className={styles.gridBody}>
+                <h3 className={styles.gridTitle}>{v.title}</h3>
+                <div className={styles.gridMeta}>
+                  {v.pubDate && <time dateTime={v.pubDate}>{formatDate(v.pubDate)}</time>}
                   {v.duration > 0 && (
-                    <span className={styles.durationBadge}>{formatDuration(v.duration)}</span>
+                    <>
+                      <span className={styles.gridMetaSep}>&middot;</span>
+                      <span>{formatDuration(v.duration)}</span>
+                    </>
                   )}
                 </div>
-                <div className={styles.gridBody}>
-                  <h3 className={styles.gridTitle}>{v.title}</h3>
-                  <div className={styles.gridMeta}>
-                    {v.pubDate && <time dateTime={v.pubDate}>{formatDate(v.pubDate)}</time>}
-                    {v.duration > 0 && (
-                      <>
-                        <span className={styles.gridMetaSep}>&middot;</span>
-                        <span>{formatDuration(v.duration)}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </section>
   );
 }
@@ -269,6 +279,8 @@ export default function VideosPage({ videos = [], shortsVideos = [] }) {
   const categories = headerMenuQuery?.data?.categories?.nodes || [];
 
   const { regular, finishline } = categorizeVideos(videos);
+  const heroVideos = regular.slice(0, 5);
+  const moreVideos = regular.slice(5);
 
   return (
     <>
@@ -289,9 +301,10 @@ export default function VideosPage({ videos = [], shortsVideos = [] }) {
           <div className={styles.emptyState}>No videos available at this time.</div>
         ) : (
           <>
-            <FeaturedSection videos={regular} />
+            <FeaturedSection videos={heroVideos} />
             <FinishlineSection videos={finishline} />
             <ShortsSection videos={shortsVideos} />
+            <MoreVideosSection videos={moreVideos} />
           </>
         )}
       </main>
