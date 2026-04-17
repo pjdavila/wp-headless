@@ -83,7 +83,7 @@
   display: block;
 }
 
-@media (min-width: 970px) {
+@media (min-width: 1024px) {
   .adSlotDesktop {
     display: block;
   }

@@ -17,9 +17,11 @@ export default function AdServerSlot({ zone, width, height, className, style }) 
     const ins = insRef.current;
     if (!ins) return;
 
+    let cancelled = false;
+    let timeoutId = null;
     let attempts = 0;
     const tryLoad = () => {
-      if (typeof window === "undefined") return;
+      if (cancelled || typeof window === "undefined") return;
       if (window._ASO && typeof window._ASO.loadAd === "function") {
         try {
           window._ASO.loadAd(idRef.current, Number(zone));
@@ -31,10 +33,15 @@ export default function AdServerSlot({ zone, width, height, className, style }) 
       }
       attempts += 1;
       if (attempts < 40) {
-        setTimeout(tryLoad, 250);
+        timeoutId = setTimeout(tryLoad, 250);
       }
     };
     tryLoad();
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [zone]);
 
   const wrapperStyle = {
