@@ -1,0 +1,62 @@
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 0.25rem 0;
+  background: hsl(var(--card));
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.close {
+  position: absolute;
+  top: -12px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+}
+
+.close:hover {
+  background: hsl(var(--muted));
+}
+
+.mobile {
+  display: block;
+}
+
+.tablet,
+.desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile {
+    display: none;
+  }
+  .tablet {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tablet {
+    display: none;
+  }
+  .desktop {
+    display: block;
+  }
+}

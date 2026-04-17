@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { FaustProvider } from "@faustwp/core";
 import { FirebaseProvider } from "../components/FirebaseProvider";
 import NotificationPrompt from "../components/NotificationPrompt";
+import StickyBottomBanner from "../components/ads/StickyBottomBanner";
 import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
 import "../styles/globals.css";
@@ -119,6 +120,7 @@ export default function MyApp({ Component, pageProps }) {
         />
         <Component {...pageProps} key={router.asPath} />
         <NotificationPrompt />
+        <StickyBottomBanner />
       </FirebaseProvider>
     </FaustProvider>
   );
