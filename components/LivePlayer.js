@@ -65,22 +65,39 @@ export default function LivePlayer() {
       e.stopPropagation();
       e.preventDefault();
       const player = playerRef.current;
-      if (!player || player.isDisposed()) return;
+      if (!player || player.isDisposed()) {
+        console.warn("Ad toggle: no player available");
+        return;
+      }
       const ima = player.ima;
       const wasPaused = adPausedRef.current;
+      console.info(
+        "Ad toggle clicked. wasPaused:",
+        wasPaused,
+        "ima available:",
+        Boolean(ima),
+        "pauseAd:",
+        typeof ima?.pauseAd,
+        "resumeAd:",
+        typeof ima?.resumeAd
+      );
       try {
         if (wasPaused) {
           if (ima && typeof ima.resumeAd === "function") {
             ima.resumeAd();
+            console.info("Ad toggle: called ima.resumeAd()");
           } else {
             const p = player.play();
             if (p && typeof p.catch === "function") p.catch(() => {});
+            console.info("Ad toggle: called player.play() fallback");
           }
         } else {
           if (ima && typeof ima.pauseAd === "function") {
             ima.pauseAd();
+            console.info("Ad toggle: called ima.pauseAd()");
           } else {
             player.pause();
+            console.info("Ad toggle: called player.pause() fallback");
           }
         }
         // Optimistic flip; the IMA AdEvent listener will reconcile.
@@ -359,15 +376,16 @@ export default function LivePlayer() {
           type="button"
           className={styles.adPlayPauseBtn}
           onClick={handleAdToggle}
+          onMouseDown={(e) => e.stopPropagation()}
           aria-label={adPaused ? "Reanudar anuncio" : "Pausar anuncio"}
           title={adPaused ? "Reanudar anuncio" : "Pausar anuncio"}
         >
           {adPaused ? (
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <path fill="currentColor" d="M8 5v14l11-7z" />
             </svg>
           ) : (
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z" />
             </svg>
           )}

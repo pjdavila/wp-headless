@@ -74,44 +74,58 @@
 
 .adPlayPauseBtn {
   position: absolute;
-  bottom: 14px;
-  left: 14px;
-  z-index: 5;
-  width: 48px;
-  height: 48px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 72px;
+  height: 72px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: hsl(var(--primary) / 0.92);
   color: #fff;
   cursor: pointer;
   pointer-events: auto;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-  transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+  box-shadow:
+    0 0 0 6px rgba(0, 0, 0, 0.25),
+    0 12px 32px rgba(0, 0, 0, 0.55);
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.adPlayPauseBtn svg {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 
 .adPlayPauseBtn:hover {
   background: hsl(var(--primary));
-  border-color: hsl(var(--primary));
-  transform: scale(1.06);
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow:
+    0 0 0 8px rgba(0, 0, 0, 0.3),
+    0 16px 38px rgba(0, 0, 0, 0.6);
 }
 
 .adPlayPauseBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.55), 0 6px 18px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.85),
+    0 0 0 10px hsl(var(--primary) / 0.55),
+    0 12px 32px rgba(0, 0, 0, 0.55);
 }
 
 @media (max-width: 640px) {
   .adPlayPauseBtn {
-    width: 42px;
-    height: 42px;
-    bottom: 10px;
-    left: 10px;
+    width: 60px;
+    height: 60px;
+  }
+  .adPlayPauseBtn svg {
+    width: 26px;
+    height: 26px;
   }
 }
 
