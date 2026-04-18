@@ -218,11 +218,37 @@ export default function LivePlayer() {
             }
           });
 
+          // After an ad break, force the live HLS to resume playing and
+          // jump to the live edge. Browsers can silently reject the
+          // automatic play() that videojs-contrib-ads issues, leaving the
+          // viewer staring at a paused player.
+          const resumeLiveContent = () => {
+            if (!player || player.isDisposed()) return;
+            try {
+              player.muted(true);
+              const p = player.play();
+              if (p && typeof p.catch === "function") p.catch(() => {});
+              const tracker = player.liveTracker;
+              if (tracker && typeof tracker.seekToLiveEdge === "function") {
+                try {
+                  tracker.seekToLiveEdge();
+                } catch {
+                  /* noop */
+                }
+              }
+            } catch {
+              /* noop */
+            }
+          };
+
           // videojs-ima only emits one ads-* player event ('ads-ad-started').
           // Use videojs-contrib-ads events for reliable lifecycle tracking.
           const clearAd = () => {
             setAdActive(false);
             updateAdPaused(false);
+            // Defer to the next tick so videojs-contrib-ads finishes
+            // swapping the source back to the live HLS before we play.
+            setTimeout(resumeLiveContent, 0);
           };
           player.on("adstart", () => {
             setAdActive(true);
