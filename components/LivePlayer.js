@@ -112,6 +112,10 @@ export default function LivePlayer() {
         preload: "auto",
         fluid: true,
         liveui: true,
+        userActions: {
+          click: false,
+          doubleClick: false,
+        },
         html5: {
           vhs: {
             overrideNative: true,
