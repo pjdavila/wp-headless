@@ -51,6 +51,21 @@ export default function LivePlayer() {
   const playerRef = useRef(null);
   const [status, setStatus] = useState("loading"); // loading | live | offair
   const [checking, setChecking] = useState(false);
+  const [adActive, setAdActive] = useState(false);
+  const [adPaused, setAdPaused] = useState(false);
+
+  const handleAdToggle = useCallback((e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const player = playerRef.current;
+    if (!player || player.isDisposed()) return;
+    if (player.paused()) {
+      const p = player.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } else {
+      player.pause();
+    }
+  }, []);
 
   const checkStatus = useCallback(async () => {
     setChecking(true);
@@ -187,13 +202,27 @@ export default function LivePlayer() {
               }
             });
 
-            player.on("ads-ad-started", () =>
-              console.info("IMA: ad started")
-            );
-            player.on("ads-ad-ended", () => console.info("IMA: ad ended"));
-            player.on("adserror", (e) =>
-              console.warn("IMA: adserror", e?.data || e)
-            );
+            player.on("ads-ad-started", () => {
+              console.info("IMA: ad started");
+              setAdActive(true);
+              setAdPaused(player.paused());
+            });
+            const clearAd = () => {
+              setAdActive(false);
+              setAdPaused(false);
+            };
+            player.on("ads-ad-ended", () => {
+              console.info("IMA: ad ended");
+              clearAd();
+            });
+            player.on("ads-ad-skipped", clearAd);
+            player.on("ads-content-resumed", clearAd);
+            player.on("adserror", (e) => {
+              console.warn("IMA: adserror", e?.data || e);
+              clearAd();
+            });
+            player.on("pause", () => setAdPaused(true));
+            player.on("play", () => setAdPaused(false));
           } catch (e) {
             console.warn("IMA setup failed, continuing without ads:", e);
           }
@@ -255,12 +284,31 @@ export default function LivePlayer() {
   }
 
   return (
-    <div data-vjs-player>
+    <div data-vjs-player className={styles.vjsHost}>
       <video
         ref={videoRef}
         className="video-js vjs-big-play-centered vjs-theme-cb"
         playsInline
       />
+      {adActive && (
+        <button
+          type="button"
+          className={styles.adPlayPauseBtn}
+          onClick={handleAdToggle}
+          aria-label={adPaused ? "Reanudar anuncio" : "Pausar anuncio"}
+          title={adPaused ? "Reanudar anuncio" : "Pausar anuncio"}
+        >
+          {adPaused ? (
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path fill="currentColor" d="M8 5v14l11-7z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z" />
+            </svg>
+          )}
+        </button>
+      )}
     </div>
   );
 }
