@@ -247,6 +247,26 @@ export default function LivePlayer() {
               clearAd();
             });
 
+            // Fallback sync from player events for edge cases where IMA
+            // events arrive out of order (e.g., during ad/content transition).
+            const isInAd = () => {
+              try {
+                return Boolean(
+                  player.ads &&
+                    player.ads.isInAdMode &&
+                    player.ads.isInAdMode()
+                );
+              } catch {
+                return false;
+              }
+            };
+            player.on("pause", () => {
+              if (isInAd()) updateAdPaused(true);
+            });
+            player.on("play", () => {
+              if (isInAd()) updateAdPaused(false);
+            });
+
             // IMA SDK fires PAUSED/RESUMED on its adsManager but does not
             // re-broadcast them as player events. Hook them via 'ads-manager'.
             player.on("ads-manager", (evt) => {
