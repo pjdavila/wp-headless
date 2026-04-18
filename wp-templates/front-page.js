@@ -13,7 +13,6 @@ import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
 import AdServerSlot from "../components/AdServerSlot";
-import { useRecommendations } from "../lib/useRecombee";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -115,16 +114,7 @@ export default function FrontPage(props) {
     }))
     .filter((g) => g.posts.length > 0);
 
-  const { items: recItems } = useRecommendations({ type: "user", count: 5 });
-  const recommendedPosts = recItems.map((r) => ({
-    id: r.id,
-    title: r.title,
-    excerpt: r.excerpt,
-    uri: r.uri,
-    date: r.date,
-    featuredImage: r.imageUrl ? { node: { sourceUrl: r.imageUrl, altText: r.title } } : null,
-    categories: r.category ? { nodes: [{ name: r.category, uri: r.categoryUri }] } : { nodes: [] },
-  }));
+  const latestNewsPosts = allPosts.slice(5, 11);
 
   return (
     <>
@@ -148,10 +138,10 @@ export default function FrontPage(props) {
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>
-            {recommendedPosts.length > 0 && (
+            {latestNewsPosts.length > 0 && (
               <section className={styles.recommendedSection}>
-                <h2 className={styles.recommendedTitle}>Recommended For You</h2>
-                <RecommendedCarousel posts={recommendedPosts} />
+                <h2 className={styles.recommendedTitle}>Latest News</h2>
+                <RecommendedCarousel posts={latestNewsPosts} />
               </section>
             )}
 
