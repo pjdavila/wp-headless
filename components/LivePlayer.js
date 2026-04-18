@@ -221,8 +221,19 @@ export default function LivePlayer() {
               console.warn("IMA: adserror", e?.data || e);
               clearAd();
             });
-            player.on("pause", () => setAdPaused(true));
-            player.on("play", () => setAdPaused(false));
+            const isInAd = () => {
+              try {
+                return Boolean(player.ads && player.ads.isInAdMode && player.ads.isInAdMode());
+              } catch {
+                return false;
+              }
+            };
+            player.on("pause", () => {
+              if (isInAd()) setAdPaused(true);
+            });
+            player.on("play", () => {
+              if (isInAd()) setAdPaused(false);
+            });
           } catch (e) {
             console.warn("IMA setup failed, continuing without ads:", e);
           }
