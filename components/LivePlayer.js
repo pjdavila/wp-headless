@@ -65,42 +65,36 @@ export default function LivePlayer() {
       e.stopPropagation();
       e.preventDefault();
       const player = playerRef.current;
-      if (!player || player.isDisposed()) {
-        console.warn("Ad toggle: no player available");
-        return;
+      if (!player || player.isDisposed()) return;
+      // Only act while we are actually inside an IMA ad break.
+      let inAd = false;
+      try {
+        inAd = Boolean(
+          player.ads && player.ads.isInAdMode && player.ads.isInAdMode()
+        );
+      } catch {
+        inAd = false;
       }
+      if (!inAd) return;
+
       const ima = player.ima;
       const wasPaused = adPausedRef.current;
-      console.info(
-        "Ad toggle clicked. wasPaused:",
-        wasPaused,
-        "ima available:",
-        Boolean(ima),
-        "pauseAd:",
-        typeof ima?.pauseAd,
-        "resumeAd:",
-        typeof ima?.resumeAd
-      );
       try {
         if (wasPaused) {
           if (ima && typeof ima.resumeAd === "function") {
             ima.resumeAd();
-            console.info("Ad toggle: called ima.resumeAd()");
           } else {
             const p = player.play();
             if (p && typeof p.catch === "function") p.catch(() => {});
-            console.info("Ad toggle: called player.play() fallback");
           }
         } else {
           if (ima && typeof ima.pauseAd === "function") {
             ima.pauseAd();
-            console.info("Ad toggle: called ima.pauseAd()");
           } else {
             player.pause();
-            console.info("Ad toggle: called player.pause() fallback");
           }
         }
-        // Optimistic flip; the IMA AdEvent listener will reconcile.
+        // Optimistic flip; the IMA AdEvent listener reconciles after.
         updateAdPaused(!wasPaused);
       } catch (err) {
         console.warn("Ad toggle failed:", err);
@@ -187,6 +181,102 @@ export default function LivePlayer() {
         ],
       });
 
+      // CRITICAL: videojs-contrib-ads requires its plugin (player.ima)
+      // to be initialized in the SAME synchronous tick as videojs(...)
+      // -- otherwise it never sees the loadstart event and ad controls
+      // (pauseAd/resumeAd) are silently ignored.
+      if (imaReady && typeof player.ima === "function") {
+        try {
+          const imaSettings = {
+            adTagUrl: VAST_TAG,
+            debug: false,
+            showControlsForJSAds: true,
+            adWillAutoPlay: true,
+            adWillPlayMuted: true,
+          };
+          if (window.google?.ima?.ImaSdkSettings?.VpaidMode) {
+            imaSettings.vpaidMode =
+              window.google.ima.ImaSdkSettings.VpaidMode.ENABLED;
+          }
+          player.ima(imaSettings);
+
+          if (typeof player.ima.initializeAdDisplayContainer === "function") {
+            try {
+              player.ima.initializeAdDisplayContainer();
+            } catch (e) {
+              console.warn("IMA initializeAdDisplayContainer failed:", e);
+            }
+          }
+
+          player.one("play", () => {
+            if (typeof player.ima?.requestAds === "function") {
+              try {
+                player.ima.requestAds();
+              } catch (e) {
+                console.warn("IMA requestAds failed:", e);
+              }
+            }
+          });
+
+          // videojs-ima only emits one ads-* player event ('ads-ad-started').
+          // Use videojs-contrib-ads events for reliable lifecycle tracking.
+          const clearAd = () => {
+            setAdActive(false);
+            updateAdPaused(false);
+          };
+          player.on("adstart", () => {
+            setAdActive(true);
+            updateAdPaused(false);
+          });
+          player.on("adend", clearAd);
+          player.on("adskip", clearAd);
+          player.on("adtimeout", clearAd);
+          player.on("nopreroll", clearAd);
+          player.on("adserror", (e) => {
+            console.warn("IMA: adserror", e?.data || e);
+            clearAd();
+          });
+          // Belt-and-suspenders for stuck ad mode after content resumes.
+          player.on("contentresumed", clearAd);
+
+          // IMA SDK fires PAUSED/RESUMED/COMPLETE/etc. on its adsManager
+          // but videojs-ima does not re-broadcast them as player events.
+          // Hook them via 'ads-manager' for accurate icon sync and as a
+          // safety net for ad-end events.
+          player.on("ads-manager", (evt) => {
+            const adsManager = evt?.adsManager;
+            const AdEventType = window.google?.ima?.AdEvent?.Type;
+            if (!adsManager || !AdEventType) return;
+            try {
+              adsManager.addEventListener(AdEventType.PAUSED, () =>
+                updateAdPaused(true)
+              );
+              adsManager.addEventListener(AdEventType.RESUMED, () =>
+                updateAdPaused(false)
+              );
+              adsManager.addEventListener(AdEventType.STARTED, () => {
+                setAdActive(true);
+                updateAdPaused(false);
+              });
+              adsManager.addEventListener(AdEventType.COMPLETE, clearAd);
+              adsManager.addEventListener(AdEventType.SKIPPED, clearAd);
+              adsManager.addEventListener(
+                AdEventType.ALL_ADS_COMPLETED,
+                clearAd
+              );
+              adsManager.addEventListener(
+                AdEventType.CONTENT_RESUME_REQUESTED,
+                clearAd
+              );
+            } catch (err) {
+              console.warn("IMA adsManager listener attach failed:", err);
+            }
+          });
+        } catch (e) {
+          console.warn("IMA setup failed, continuing without ads:", e);
+        }
+      }
+
       const handlePlayerError = () => {
         const err = player.error && player.error();
         if (!err || err.code === 2 || err.code === 4) {
@@ -207,108 +297,6 @@ export default function LivePlayer() {
           }
         }
       });
-
-      if (imaReady) {
-        player.ready(() => {
-          if (typeof player.ima !== "function") return;
-          try {
-            const imaSettings = {
-              adTagUrl: VAST_TAG,
-              debug: false,
-              showControlsForJSAds: true,
-              adWillAutoPlay: true,
-              adWillPlayMuted: true,
-            };
-            if (window.google?.ima?.ImaSdkSettings?.VpaidMode) {
-              imaSettings.vpaidMode =
-                window.google.ima.ImaSdkSettings.VpaidMode.ENABLED;
-            }
-            player.ima(imaSettings);
-
-            if (typeof player.ima.initializeAdDisplayContainer === "function") {
-              try {
-                player.ima.initializeAdDisplayContainer();
-              } catch (e) {
-                console.warn("IMA initializeAdDisplayContainer failed:", e);
-              }
-            }
-
-            player.one("play", () => {
-              if (typeof player.ima?.requestAds === "function") {
-                try {
-                  player.ima.requestAds();
-                  console.info("IMA: requestAds() called on first play");
-                } catch (e) {
-                  console.warn("IMA requestAds failed:", e);
-                }
-              }
-            });
-
-            player.on("ads-ad-started", () => {
-              console.info("IMA: ad started");
-              setAdActive(true);
-              updateAdPaused(false);
-            });
-            const clearAd = () => {
-              setAdActive(false);
-              updateAdPaused(false);
-            };
-            player.on("ads-ad-ended", () => {
-              console.info("IMA: ad ended");
-              clearAd();
-            });
-            player.on("ads-ad-skipped", clearAd);
-            player.on("ads-content-resumed", clearAd);
-            player.on("adserror", (e) => {
-              console.warn("IMA: adserror", e?.data || e);
-              clearAd();
-            });
-
-            // Fallback sync from player events for edge cases where IMA
-            // events arrive out of order (e.g., during ad/content transition).
-            const isInAd = () => {
-              try {
-                return Boolean(
-                  player.ads &&
-                    player.ads.isInAdMode &&
-                    player.ads.isInAdMode()
-                );
-              } catch {
-                return false;
-              }
-            };
-            player.on("pause", () => {
-              if (isInAd()) updateAdPaused(true);
-            });
-            player.on("play", () => {
-              if (isInAd()) updateAdPaused(false);
-            });
-
-            // IMA SDK fires PAUSED/RESUMED on its adsManager but does not
-            // re-broadcast them as player events. Hook them via 'ads-manager'.
-            player.on("ads-manager", (evt) => {
-              const adsManager = evt?.adsManager;
-              const AdEventType = window.google?.ima?.AdEvent?.Type;
-              if (!adsManager || !AdEventType) return;
-              try {
-                adsManager.addEventListener(AdEventType.PAUSED, () =>
-                  updateAdPaused(true)
-                );
-                adsManager.addEventListener(AdEventType.RESUMED, () =>
-                  updateAdPaused(false)
-                );
-                adsManager.addEventListener(AdEventType.STARTED, () =>
-                  updateAdPaused(false)
-                );
-              } catch (err) {
-                console.warn("IMA adsManager listener attach failed:", err);
-              }
-            });
-          } catch (e) {
-            console.warn("IMA setup failed, continuing without ads:", e);
-          }
-        });
-      }
 
       playerRef.current = player;
     }
