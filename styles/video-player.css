@@ -14,9 +14,9 @@
 
 /* ===== Control bar ===== */
 .video-js.vjs-theme-cb .vjs-control-bar {
-  height: 4.25em;
-  padding: 0 0.85em;
-  font-size: 1.05em;
+  height: 3em;
+  padding: 0 0.5em;
+  font-size: 1em;
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0%,
@@ -50,13 +50,13 @@
 
 /* ===== Buttons ===== */
 .video-js.vjs-theme-cb .vjs-button > .vjs-icon-placeholder:before {
-  font-size: 2.1em;
-  line-height: 2.05;
+  font-size: 1.8em;
+  line-height: 1.67;
   transition: color 180ms ease, transform 180ms ease;
 }
 
 .video-js.vjs-theme-cb .vjs-button {
-  width: 3.4em;
+  width: 3em;
   outline: none;
 }
 
@@ -115,18 +115,18 @@
 /* ===== Progress / seek bar ===== */
 .video-js.vjs-theme-cb .vjs-progress-control {
   position: absolute;
-  top: -14px;
+  top: -8px;
   left: 0;
   right: 0;
   width: 100%;
-  height: 14px;
-  padding: 0 0.75em;
+  height: 8px;
+  padding: 0 0.5em;
   background: transparent;
 }
 
 .video-js.vjs-theme-cb .vjs-progress-control .vjs-progress-holder {
   margin: 0;
-  height: 5px;
+  height: 3px;
   background: rgba(255, 255, 255, 0.18);
   border-radius: 999px;
   transition: height 160ms ease;
@@ -134,7 +134,7 @@
 
 .video-js.vjs-theme-cb .vjs-progress-control:hover .vjs-progress-holder,
 .video-js.vjs-theme-cb .vjs-progress-control:focus-within .vjs-progress-holder {
-  height: 8px;
+  height: 6px;
 }
 
 .video-js.vjs-theme-cb .vjs-play-progress {
@@ -185,11 +185,11 @@
 
 /* ===== Time display ===== */
 .video-js.vjs-theme-cb .vjs-time-control {
-  font-size: 1em;
+  font-size: 0.9em;
   font-weight: 600;
   letter-spacing: 0.02em;
-  line-height: 4.25em;
-  padding: 0 0.6em;
+  line-height: 3em;
+  padding: 0 0.4em;
   min-width: auto;
 }
 
@@ -197,6 +197,16 @@
 .video-js.vjs-theme-cb .vjs-duration,
 .video-js.vjs-theme-cb .vjs-time-divider {
   display: block;
+}
+
+/* Hide duration / divider when stream is live (no meaningful total time) */
+.video-js.vjs-theme-cb.vjs-live .vjs-duration,
+.video-js.vjs-theme-cb.vjs-live .vjs-time-divider,
+.video-js.vjs-theme-cb.vjs-live .vjs-remaining-time,
+.video-js.vjs-theme-cb.vjs-liveui .vjs-duration,
+.video-js.vjs-theme-cb.vjs-liveui .vjs-time-divider,
+.video-js.vjs-theme-cb.vjs-liveui .vjs-remaining-time {
+  display: none;
 }
 
 /* ===== Volume ===== */
@@ -207,8 +217,8 @@
 .video-js.vjs-theme-cb .vjs-volume-bar {
   background: rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  margin: 1.85em 0.45em;
-  height: 0.4em;
+  margin: 1.35em 0.45em;
+  height: 0.3em;
 }
 
 .video-js.vjs-theme-cb .vjs-volume-panel.vjs-volume-panel-horizontal:hover
@@ -387,20 +397,20 @@
 /* ===== Mobile adjustments ===== */
 @media (max-width: 640px) {
   .video-js.vjs-theme-cb .vjs-control-bar {
-    height: 3.6em;
-    font-size: 1em;
+    height: 2.75em;
+    font-size: 0.95em;
   }
   .video-js.vjs-theme-cb .vjs-button {
-    width: 3em;
+    width: 2.6em;
   }
   .video-js.vjs-theme-cb .vjs-button > .vjs-icon-placeholder:before {
-    font-size: 1.85em;
-    line-height: 2.05;
+    font-size: 1.6em;
+    line-height: 1.72;
   }
   .video-js.vjs-theme-cb .vjs-time-control {
-    font-size: 0.9em;
-    line-height: 3.6em;
-    padding: 0 0.35em;
+    font-size: 0.85em;
+    line-height: 2.75em;
+    padding: 0 0.3em;
   }
   .video-js.vjs-theme-cb .vjs-big-play-button {
     width: 72px;
