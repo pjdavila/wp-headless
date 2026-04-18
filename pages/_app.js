@@ -11,6 +11,7 @@ import ComingSoon from "../components/ComingSoon";
 import { OrganizationJsonLd } from "../components/JsonLd";
 import "../styles/globals.css";
 import "video.js/dist/video-js.css";
+import "../styles/video-player.css";
 
 const GA_ID = "G-F4RRT00M6P";
 

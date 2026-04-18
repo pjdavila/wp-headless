@@ -86,6 +86,13 @@ export default function LivePlayer() {
     async function init() {
       const videojs = (await import("video.js")).default;
 
+      try {
+        await import("videojs-contrib-quality-levels");
+        await import("videojs-hls-quality-selector");
+      } catch (e) {
+        console.warn("Quality selector unavailable:", e.message);
+      }
+
       let imaReady = false;
       try {
         await loadImaSdk();
@@ -130,6 +137,13 @@ export default function LivePlayer() {
         const tech = player.tech && player.tech({ IWillNotUseThisInPlugins: true });
         if (tech && typeof tech.on === "function") {
           tech.on("error", handlePlayerError);
+        }
+        if (typeof player.hlsQualitySelector === "function") {
+          try {
+            player.hlsQualitySelector({ displayCurrentQuality: true });
+          } catch (e) {
+            console.warn("hlsQualitySelector init failed:", e);
+          }
         }
       });
 
