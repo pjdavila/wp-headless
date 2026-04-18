@@ -49,23 +49,48 @@ function loadImaSdk() {
 export default function LivePlayer() {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const adPausedRef = useRef(false);
   const [status, setStatus] = useState("loading"); // loading | live | offair
   const [checking, setChecking] = useState(false);
   const [adActive, setAdActive] = useState(false);
   const [adPaused, setAdPaused] = useState(false);
 
-  const handleAdToggle = useCallback((e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const player = playerRef.current;
-    if (!player || player.isDisposed()) return;
-    if (player.paused()) {
-      const p = player.play();
-      if (p && typeof p.catch === "function") p.catch(() => {});
-    } else {
-      player.pause();
-    }
+  const updateAdPaused = useCallback((value) => {
+    adPausedRef.current = value;
+    setAdPaused(value);
   }, []);
+
+  const handleAdToggle = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const player = playerRef.current;
+      if (!player || player.isDisposed()) return;
+      const ima = player.ima;
+      const wasPaused = adPausedRef.current;
+      try {
+        if (wasPaused) {
+          if (ima && typeof ima.resumeAd === "function") {
+            ima.resumeAd();
+          } else {
+            const p = player.play();
+            if (p && typeof p.catch === "function") p.catch(() => {});
+          }
+        } else {
+          if (ima && typeof ima.pauseAd === "function") {
+            ima.pauseAd();
+          } else {
+            player.pause();
+          }
+        }
+        // Optimistic flip; the IMA AdEvent listener will reconcile.
+        updateAdPaused(!wasPaused);
+      } catch (err) {
+        console.warn("Ad toggle failed:", err);
+      }
+    },
+    [updateAdPaused]
+  );
 
   const checkStatus = useCallback(async () => {
     setChecking(true);
@@ -205,11 +230,11 @@ export default function LivePlayer() {
             player.on("ads-ad-started", () => {
               console.info("IMA: ad started");
               setAdActive(true);
-              setAdPaused(player.paused());
+              updateAdPaused(false);
             });
             const clearAd = () => {
               setAdActive(false);
-              setAdPaused(false);
+              updateAdPaused(false);
             };
             player.on("ads-ad-ended", () => {
               console.info("IMA: ad ended");
@@ -221,18 +246,26 @@ export default function LivePlayer() {
               console.warn("IMA: adserror", e?.data || e);
               clearAd();
             });
-            const isInAd = () => {
+
+            // IMA SDK fires PAUSED/RESUMED on its adsManager but does not
+            // re-broadcast them as player events. Hook them via 'ads-manager'.
+            player.on("ads-manager", (evt) => {
+              const adsManager = evt?.adsManager;
+              const AdEventType = window.google?.ima?.AdEvent?.Type;
+              if (!adsManager || !AdEventType) return;
               try {
-                return Boolean(player.ads && player.ads.isInAdMode && player.ads.isInAdMode());
-              } catch {
-                return false;
+                adsManager.addEventListener(AdEventType.PAUSED, () =>
+                  updateAdPaused(true)
+                );
+                adsManager.addEventListener(AdEventType.RESUMED, () =>
+                  updateAdPaused(false)
+                );
+                adsManager.addEventListener(AdEventType.STARTED, () =>
+                  updateAdPaused(false)
+                );
+              } catch (err) {
+                console.warn("IMA adsManager listener attach failed:", err);
               }
-            };
-            player.on("pause", () => {
-              if (isInAd()) setAdPaused(true);
-            });
-            player.on("play", () => {
-              if (isInAd()) setAdPaused(false);
             });
           } catch (e) {
             console.warn("IMA setup failed, continuing without ads:", e);
