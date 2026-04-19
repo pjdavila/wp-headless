@@ -14,6 +14,9 @@ function formatDate(dateStr) {
   }
 }
 
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function VideoModal({
   videos,
   startIndex = 0,
@@ -37,6 +40,10 @@ export default function VideoModal({
   const total = list.length;
   const active = list[index];
 
+  const overlayRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
   const goTo = useCallback(
     (next) => {
       if (total === 0) return;
@@ -51,41 +58,78 @@ export default function VideoModal({
 
   const handleKeyDown = useCallback(
     (e) => {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault();
         next();
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        return;
+      }
+      if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         e.preventDefault();
         prev();
+        return;
+      }
+      if (e.key === "Tab" && overlayRef.current) {
+        const focusables = overlayRef.current.querySelectorAll(FOCUSABLE_SELECTOR);
+        if (focusables.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const activeEl = document.activeElement;
+        if (e.shiftKey && activeEl === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && activeEl === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     },
     [onClose, next, prev]
   );
 
   useEffect(() => {
+    previousFocusRef.current = document.activeElement;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
+    const focusTimer = window.setTimeout(() => {
+      closeBtnRef.current?.focus();
+    }, 0);
     return () => {
+      window.clearTimeout(focusTimer);
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", handleKeyDown);
+      const prev = previousFocusRef.current;
+      if (prev && typeof prev.focus === "function") {
+        try { prev.focus(); } catch { /* noop */ }
+      }
     };
   }, [handleKeyDown]);
 
-  const touchStartY = useRef(null);
+  const touchStart = useRef(null);
   const onTouchStart = (e) => {
-    touchStartY.current = e.touches[0]?.clientY ?? null;
+    const t = e.touches[0];
+    if (!t) return;
+    touchStart.current = { y: t.clientY, x: t.clientX };
   };
   const onTouchEnd = (e) => {
-    if (touchStartY.current == null) return;
-    const endY = e.changedTouches[0]?.clientY ?? touchStartY.current;
-    const delta = endY - touchStartY.current;
-    if (Math.abs(delta) > 50) {
-      if (delta < 0) next();
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    if (!t) { touchStart.current = null; return; }
+    const dy = t.clientY - touchStart.current.y;
+    const dx = t.clientX - touchStart.current.x;
+    if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx)) {
+      if (dy < 0) next();
       else prev();
     }
-    touchStartY.current = null;
+    touchStart.current = null;
   };
 
   const handleOverlayClick = (e) => {
@@ -98,13 +142,15 @@ export default function VideoModal({
 
   return (
     <div
+      ref={overlayRef}
       className={styles.overlay}
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
-      aria-label="Video player"
+      aria-label={active.title || "Video player"}
     >
       <button
+        ref={closeBtnRef}
         className={styles.close}
         onClick={onClose}
         aria-label="Cerrar"
@@ -115,7 +161,7 @@ export default function VideoModal({
         </svg>
       </button>
 
-      <div className={styles.stage} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className={styles.stage}>
         {total > 1 && (
           <button
             className={`${styles.navBtn} ${styles.navUp}`}
@@ -151,6 +197,12 @@ export default function VideoModal({
               Activar sonido
             </button>
           )}
+          <div
+            className={styles.swipeArea}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+            aria-hidden="true"
+          />
         </div>
 
         {total > 1 && (
