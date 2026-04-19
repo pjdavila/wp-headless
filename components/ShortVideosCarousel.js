@@ -28,7 +28,7 @@ function formatDuration(seconds) {
 export default function ShortVideosCarousel() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeVideo, setActiveVideo] = useState(null);
+  const [activeIndex, setActiveIndexModal] = useState(null);
 
   const total = videos.length;
   const visibleCount = useVisibleCount();
@@ -140,7 +140,7 @@ export default function ShortVideosCarousel() {
             >
               <div
                 className={styles.card}
-                onClick={() => setActiveVideo(video.mediaid)}
+                onClick={() => setActiveIndexModal(videos.findIndex((v) => v.mediaid === video.mediaid))}
               >
                 <div className={styles.thumbWrap}>
                   <img
@@ -204,10 +204,11 @@ export default function ShortVideosCarousel() {
         )}
       </div>
 
-      {activeVideo && (
+      {activeIndex !== null && activeIndex >= 0 && (
         <VideoModal
-          mediaid={activeVideo}
-          onClose={() => setActiveVideo(null)}
+          videos={videos}
+          startIndex={activeIndex}
+          onClose={() => setActiveIndexModal(null)}
         />
       )}
     </section>
