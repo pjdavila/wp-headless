@@ -3,15 +3,11 @@ import styles from "../styles/video-modal.module.css";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
-  try {
-    return new Date(dateStr).toLocaleDateString("es-PR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  } catch {
-    return "";
-  }
+  return new Date(dateStr).toLocaleDateString("es-PR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 const FOCUSABLE_SELECTOR =
@@ -112,9 +108,9 @@ export default function VideoModal({
       window.clearTimeout(focusTimer);
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", handleKeyDown);
-      const prev = previousFocusRef.current;
-      if (prev && typeof prev.focus === "function") {
-        try { prev.focus(); } catch { /* noop */ }
+      const prevFocus = previousFocusRef.current;
+      if (prevFocus && typeof prevFocus.focus === "function") {
+        prevFocus.focus();
       }
     };
   }, [handleKeyDown]);
@@ -144,7 +140,6 @@ export default function VideoModal({
 
   if (!active) return null;
 
-  // ─── Default (landscape 16:9) layout — backward-compatible ──────────────
   if (!isShorts) {
     return (
       <div
@@ -179,7 +174,6 @@ export default function VideoModal({
     );
   }
 
-  // ─── Shorts (Reels-style portrait) layout ────────────────────────────────
   const playerSrc = `https://astrovms.com/embed/${active.mediaid}?autoplay=1&muted=${muted ? 1 : 0}`;
 
   return (
@@ -203,7 +197,7 @@ export default function VideoModal({
         </svg>
       </button>
 
-      <div className={styles.stage}>
+      <div className={styles.stage} onClick={handleOverlayClick}>
         {total > 1 && (
           <button
             className={`${styles.navBtn} ${styles.navUp}`}
