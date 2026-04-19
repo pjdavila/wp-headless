@@ -206,6 +206,7 @@ export default function ShortVideosCarousel() {
 
       {activeIndex !== null && activeIndex >= 0 && (
         <VideoModal
+          variant="shorts"
           videos={videos}
           startIndex={activeIndex}
           onClose={() => setActiveIndexModal(null)}

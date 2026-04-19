@@ -21,8 +21,12 @@ export default function VideoModal({
   videos,
   startIndex = 0,
   mediaid,
+  variant,
   onClose,
 }) {
+  const isShorts =
+    variant === "shorts" || (variant !== "default" && Array.isArray(videos) && videos.length > 0);
+
   const list = Array.isArray(videos) && videos.length
     ? videos
     : mediaid
@@ -63,15 +67,17 @@ export default function VideoModal({
         onClose();
         return;
       }
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-        e.preventDefault();
-        next();
-        return;
-      }
-      if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        prev();
-        return;
+      if (isShorts && total > 1) {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+          e.preventDefault();
+          next();
+          return;
+        }
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          prev();
+          return;
+        }
       }
       if (e.key === "Tab" && overlayRef.current) {
         const focusables = overlayRef.current.querySelectorAll(FOCUSABLE_SELECTOR);
@@ -91,7 +97,7 @@ export default function VideoModal({
         }
       }
     },
-    [onClose, next, prev]
+    [onClose, next, prev, isShorts, total]
   );
 
   useEffect(() => {
@@ -138,6 +144,42 @@ export default function VideoModal({
 
   if (!active) return null;
 
+  // ─── Default (landscape 16:9) layout — backward-compatible ──────────────
+  if (!isShorts) {
+    return (
+      <div
+        ref={overlayRef}
+        className={styles.defaultOverlay}
+        onClick={handleOverlayClick}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Video player"
+      >
+        <div className={styles.defaultContainer}>
+          <button
+            ref={closeBtnRef}
+            className={styles.defaultClose}
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+          <iframe
+            className={styles.defaultIframe}
+            src={`https://astrovms.com/embed/${active.mediaid}`}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+            title="Video Player"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Shorts (Reels-style portrait) layout ────────────────────────────────
   const playerSrc = `https://astrovms.com/embed/${active.mediaid}?autoplay=1&muted=${muted ? 1 : 0}`;
 
   return (
