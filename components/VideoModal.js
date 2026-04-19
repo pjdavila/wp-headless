@@ -10,6 +10,21 @@ function formatDate(dateStr) {
   });
 }
 
+function pickSources(item) {
+  const list = Array.isArray(item?.sources) ? item.sources : [];
+  if (list.length === 0) return [];
+  const out = [];
+  const hls = list.find(
+    (s) => s && s.file && s.type === "application/vnd.apple.mpegurl"
+  );
+  if (hls) out.push({ src: hls.file, type: "application/x-mpegURL" });
+  const mp4s = list
+    .filter((s) => s && s.file && s.type === "video/mp4")
+    .sort((a, b) => (b.height || 0) - (a.height || 0));
+  for (const s of mp4s) out.push({ src: s.file, type: "video/mp4" });
+  return out;
+}
+
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -43,6 +58,11 @@ export default function VideoModal({
   const overlayRef = useRef(null);
   const closeBtnRef = useRef(null);
   const previousFocusRef = useRef(null);
+  const videoElRef = useRef(null);
+  const playerRef = useRef(null);
+
+  const activeSources = isShorts ? pickSources(active) : [];
+  const useVideoJs = isShorts && activeSources.length > 0;
 
   const goTo = useCallback(
     (next) => {
@@ -115,6 +135,56 @@ export default function VideoModal({
     };
   }, [handleKeyDown]);
 
+  // Initialize video.js when the shorts variant has direct sources.
+  useEffect(() => {
+    if (!useVideoJs) return;
+    let cancelled = false;
+    let player;
+
+    (async () => {
+      const videojs = (await import("video.js")).default;
+      if (cancelled || !videoElRef.current) return;
+
+      player = videojs(videoElRef.current, {
+        controls: true,
+        autoplay: true,
+        muted: true,
+        loop: true,
+        playsinline: true,
+        preload: "auto",
+        fill: true,
+        userActions: { doubleClick: false },
+        sources: pickSources(active),
+      });
+
+      player.on("volumechange", () => {
+        if (!player.isDisposed()) setMuted(player.muted());
+      });
+
+      playerRef.current = player;
+    })();
+
+    return () => {
+      cancelled = true;
+      if (playerRef.current && !playerRef.current.isDisposed()) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useVideoJs]);
+
+  // Swap source when navigating between clips (no remount).
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player || player.isDisposed()) return;
+    const sources = pickSources(active);
+    if (sources.length === 0) return;
+    player.src(sources);
+    const p = player.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  }, [active]);
+
   const touchStart = useRef(null);
   const onTouchStart = (e) => {
     const t = e.touches[0];
@@ -136,6 +206,16 @@ export default function VideoModal({
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
+  };
+
+  const handleSoundOn = () => {
+    const player = playerRef.current;
+    if (player && !player.isDisposed()) {
+      player.muted(false);
+      const p = player.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    }
+    setMuted(false);
   };
 
   if (!active) return null;
@@ -174,7 +254,7 @@ export default function VideoModal({
     );
   }
 
-  const playerSrc = `https://astrovms.com/embed/${active.mediaid}?autoplay=1&muted=${muted ? 1 : 0}`;
+  const fallbackSrc = `https://astrovms.com/embed/${active.mediaid}?autoplay=1&muted=${muted ? 1 : 0}`;
 
   return (
     <div
@@ -210,20 +290,28 @@ export default function VideoModal({
           </button>
         )}
 
-        <div className={styles.player}>
-          <iframe
-            key={`${active.mediaid}-${muted ? "m" : "u"}`}
-            className={styles.iframe}
-            src={playerSrc}
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            allowFullScreen
-            title={active.title || "Video"}
-          />
+        <div className={styles.player} data-vjs-player={useVideoJs ? "" : undefined}>
+          {useVideoJs ? (
+            <video
+              ref={videoElRef}
+              className={`video-js vjs-fill ${styles.videoEl}`}
+              playsInline
+            />
+          ) : (
+            <iframe
+              key={`${active.mediaid}-${muted ? "m" : "u"}`}
+              className={styles.iframe}
+              src={fallbackSrc}
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowFullScreen
+              title={active.title || "Video"}
+            />
+          )}
           {muted && (
             <button
               type="button"
               className={styles.soundHint}
-              onClick={() => setMuted(false)}
+              onClick={handleSoundOn}
               aria-label="Activar sonido"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
