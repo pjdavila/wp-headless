@@ -354,6 +354,7 @@ function normalizePlaylist(data) {
     tags: item.tags || "",
     pubDate: item.pubdate ? new Date(item.pubdate * 1000).toISOString() : null,
     description: item.description || "",
+    sources: Array.isArray(item.sources) ? item.sources : [],
   }));
 }
 
