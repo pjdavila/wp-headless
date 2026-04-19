@@ -54,7 +54,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Template**: `wp-templates/archive.js` renders category and tag archives
 - **Grid**: 3-column StoryCard grid (responsive: 3→2→1)
 - **Pagination**: Load-more button with fetchMore (BATCH_SIZE=9)
-- **Sidebar**: Recent posts from other categories + SidebarBanner ad
+- **Sidebar**: Recent posts from other categories + SidebarHalfPage ad (300x600)
 - **Route**: `/blog/category/{slug}/` (mapped via Faust.js catch-all)
 
 ## SEO & Analytics (2026 Optimization)
@@ -127,18 +127,14 @@ npm run build    # Build for production
 npm run start    # Start production server (Atlas uses port 8080)
 ```
 
-## AdButler Ad Units
+## Ad Units (Vnmedia / ASO loader)
 
-- **Account ID**: 188652
-- **Ad Components**: All in `components/ads/`
-  - `AdIframe.js` — shared base iframe component
-  - `StaticBanner.js` — responsive header banner (desktop 970x90 zone 909696, tablet 728x90 zone 921050, mobile 320x100 zone 921049)
-  - `StickyBottomBanner.js` — fixed bottom banner (same zones as StaticBanner)
-  - `SidebarBanner.js` — 300x250 sidebar ad (zone 921047)
-  - `ArticleBanner.js` — in-article 300x250 ad wrapper
-  - `MobileBanner.js` — 320x100 mobile-only ad (zone 909696)
-  - `InterstitialAd.js` — modal overlay ad, max 1/session, 3s delay, 5s countdown (desktop 700x500, mobile 320x480)
-- **Placements**: StaticBanner in Header, StickyBottomBanner in _app.js, SidebarBanner in front-page/single/archive sidebars, ArticleBanner in single post content, MobileBanner in SectionBlock, InterstitialAd in front-page/single
+- **Loader**: `media.aso1.net/js/code.min.js` injected via `<Script>` in `pages/_app.js`. Slots use `<ins class="ins-zone" data-zone>` and `window._ASO.loadAd`.
+- **Base component**: `components/AdServerSlot.js` — wraps the `<ins>` tag and polls until `_ASO.loadAd` is ready.
+- **Wrappers in `components/ads/`**:
+  - `StickyBottomBanner.js` — fixed bottom banner with dismiss (desktop 970x90 zone 161517, tablet 728x90 zone 161716, mobile 320x100 zone 161713). Mounted in `pages/_app.js`.
+  - `SidebarHalfPage.js` — 300x600 sidebar ad (zone 161724). Used in `wp-templates/single.js`, `wp-templates/archive.js`, `pages/latest-news.js`, `pages/video/[mediaid].js`.
+- **Direct usage**: `pages/latest-news.js` also renders an `AdServerSlot zone="161655" 300x250` in the sidebar.
 
 ## Tailwind CSS
 
