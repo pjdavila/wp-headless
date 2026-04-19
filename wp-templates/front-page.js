@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
+import ShortStoriesRow from "../components/ShortStoriesRow";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
 import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
 import SidebarStoryCard from "../components/SidebarStoryCard";
@@ -138,6 +139,8 @@ export default function FrontPage(props) {
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>
+            <ShortStoriesRow />
+
             {latestNewsPosts.length > 0 && (
               <section className={styles.recommendedSection}>
                 <h2 className={styles.recommendedTitle}>Latest News</h2>
