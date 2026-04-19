@@ -13,6 +13,10 @@ module.exports = withAtlasConfig(
       remotePatterns: [
         {
           protocol: "https",
+          hostname: "cms.vnmedia.co",
+        },
+        {
+          protocol: "https",
           hostname: "vnmcms.wpenginepowered.com",
         },
         {

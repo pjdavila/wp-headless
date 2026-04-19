@@ -2,7 +2,7 @@ const { getClient, rqs } = require("../../lib/recombee");
 
 const MAX_LEN = 256;
 const ID_RE = /^[a-zA-Z0-9_\-/.]+$/;
-const WP_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://vnmcms.wpenginepowered.com/cbusiness";
+const WP_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://cms.vnmedia.co/cbusiness";
 
 function isValidId(val) {
   return typeof val === "string" && val.length > 0 && val.length <= MAX_LEN && ID_RE.test(val);

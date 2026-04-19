@@ -4,7 +4,7 @@ const SITE_NAME = "Caribbean Business";
 const TWITTER_HANDLE = "@cbusinesspr";
 const DEFAULT_DESCRIPTION =
   "Business, technology, marketing, and finance news from the Caribbean. Your premium source for business insights.";
-const DEFAULT_OG_IMAGE = "https://vnmcms.wpenginepowered.com/wp-content/uploads/2026/03/bj-caribe-og-default.png";
+const DEFAULT_OG_IMAGE = "https://cms.vnmedia.co/cbusiness/wp-content/uploads/2026/03/bj-caribe-og-default.png";
 
 export default function SeoHead({
   title,

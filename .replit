@@ -8,8 +8,8 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-NEXT_PUBLIC_WORDPRESS_URL = "https://vnmcms.wpenginepowered.com/cbusiness"
-NEXT_PUBLIC_SITE_URL = "https://vnmcms.wpenginepowered.com"
+NEXT_PUBLIC_WORDPRESS_URL = "https://cms.vnmedia.co/cbusiness"
+NEXT_PUBLIC_SITE_URL = "https://cms.vnmedia.co/cbusiness"
 COMING_SOON = "true"
 NEXT_PUBLIC_COMING_SOON = "true"
 RECOMBEE_REGION = "ca-east"
