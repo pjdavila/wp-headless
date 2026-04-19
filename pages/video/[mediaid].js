@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import SeoHead from "../../components/SeoHead";
 import SidebarStoryCard from "../../components/SidebarStoryCard";
+import SidebarHalfPage from "../../components/ads/SidebarHalfPage";
 import { SITE_DATA_QUERY } from "../../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../../fragments/PostListFragment";
@@ -251,6 +252,7 @@ export default function VideoDetailPage() {
                 ))}
               </div>
             )}
+            <SidebarHalfPage />
           </aside>
         </div>
       </main>
