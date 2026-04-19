@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState, useRef } from "react";
+import AdServerSlot from "./AdServerSlot";
 import styles from "../styles/video-modal.module.css";
 
 function formatDate(dateStr) {
@@ -467,6 +468,9 @@ export default function VideoModal({
         {active.description && (
           <p className={styles.metaDescription}>{active.description}</p>
         )}
+        <div className={styles.metaAd}>
+          <AdServerSlot zone="161655" width={300} height={250} />
+        </div>
         {total > 1 && (
           <div className={styles.counter}>
             {index + 1} / {total}
