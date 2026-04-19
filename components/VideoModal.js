@@ -70,6 +70,8 @@ export default function VideoModal({
     return Math.min(Math.max(0, startIndex), Math.max(0, list.length - 1));
   });
   const [muted, setMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showBigBtn, setShowBigBtn] = useState(true);
   const total = list.length;
   const active = list[index];
 
@@ -78,6 +80,7 @@ export default function VideoModal({
   const previousFocusRef = useRef(null);
   const videoElRef = useRef(null);
   const playerRef = useRef(null);
+  const hideBtnTimerRef = useRef(null);
 
   const activeSources = isShorts ? pickSources(active) : [];
   const useVideoJs = isShorts && activeSources.length > 0;
@@ -179,11 +182,48 @@ export default function VideoModal({
         if (!player.isDisposed()) setMuted(player.muted());
       });
 
+      const scheduleHide = () => {
+        if (hideBtnTimerRef.current) clearTimeout(hideBtnTimerRef.current);
+        hideBtnTimerRef.current = setTimeout(() => setShowBigBtn(false), 600);
+      };
+      const cancelHide = () => {
+        if (hideBtnTimerRef.current) {
+          clearTimeout(hideBtnTimerRef.current);
+          hideBtnTimerRef.current = null;
+        }
+      };
+
+      player.on("play", () => {
+        setIsPlaying(true);
+        scheduleHide();
+      });
+      player.on("playing", () => {
+        setIsPlaying(true);
+        scheduleHide();
+      });
+      player.on("pause", () => {
+        setIsPlaying(false);
+        cancelHide();
+        setShowBigBtn(true);
+      });
+      player.on("waiting", () => {
+        cancelHide();
+        setShowBigBtn(true);
+      });
+      player.on("ended", () => {
+        setIsPlaying(false);
+        setShowBigBtn(true);
+      });
+
       playerRef.current = player;
     })();
 
     return () => {
       cancelled = true;
+      if (hideBtnTimerRef.current) {
+        clearTimeout(hideBtnTimerRef.current);
+        hideBtnTimerRef.current = null;
+      }
       if (playerRef.current && !playerRef.current.isDisposed()) {
         playerRef.current.dispose();
         playerRef.current = null;
@@ -229,6 +269,31 @@ export default function VideoModal({
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
+  };
+
+  const togglePlay = () => {
+    const player = playerRef.current;
+    if (!player || player.isDisposed()) return;
+    setShowBigBtn(true);
+    if (hideBtnTimerRef.current) {
+      clearTimeout(hideBtnTimerRef.current);
+      hideBtnTimerRef.current = null;
+    }
+    if (player.paused()) {
+      const p = player.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } else {
+      player.pause();
+    }
+  };
+
+  const handlePlayerClick = (e) => {
+    if (!useVideoJs) return;
+    if (e.target && typeof e.target.closest === "function" &&
+        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.soundHint + ", ." + styles.bigPlayBtn)) {
+      return;
+    }
+    togglePlay();
   };
 
   const handleSoundOn = () => {
@@ -318,13 +383,33 @@ export default function VideoModal({
           data-vjs-player={useVideoJs ? "" : undefined}
           onTouchStart={useVideoJs ? onTouchStart : undefined}
           onTouchEnd={useVideoJs ? onTouchEnd : undefined}
+          onClick={useVideoJs ? handlePlayerClick : undefined}
         >
           {useVideoJs ? (
-            <video
-              ref={videoElRef}
-              className={`video-js vjs-fill ${styles.videoEl}`}
-              playsInline
-            />
+            <>
+              <video
+                ref={videoElRef}
+                className={`video-js vjs-fill ${styles.videoEl}`}
+                playsInline
+              />
+              <button
+                type="button"
+                className={`${styles.bigPlayBtn} ${isPlaying && !showBigBtn ? styles.bigPlayBtnHidden : ""}`}
+                onClick={(e) => { e.stopPropagation(); togglePlay(); }}
+                aria-label={isPlaying ? "Pausar" : "Reproducir"}
+              >
+                {isPlaying ? (
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <rect x="6" y="5" width="4" height="14" rx="1" />
+                    <rect x="14" y="5" width="4" height="14" rx="1" />
+                  </svg>
+                ) : (
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                )}
+              </button>
+            </>
           ) : (
             <iframe
               key={`${active.mediaid}-${muted ? "m" : "u"}`}
