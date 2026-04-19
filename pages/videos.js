@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
+import VideoModal from "../components/VideoModal";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import styles from "../styles/videos-page.module.css";
@@ -231,6 +233,8 @@ function FinishlineSection({ videos }) {
 }
 
 function ShortsSection({ videos }) {
+  const [activeIndex, setActiveIndex] = useState(null);
+
   if (videos.length === 0) return null;
 
   return (
@@ -239,10 +243,16 @@ function ShortsSection({ videos }) {
         <h2 className={styles.sectionTitle}>Short Videos</h2>
       </div>
       <div className={styles.shortsRow}>
-        {videos.map((v) => {
+        {videos.map((v, i) => {
           const thumb = getThumb(v, 480);
           return (
-            <Link key={v.mediaid} href={`/video/${v.mediaid}`} className={styles.shortCard}>
+            <button
+              key={v.mediaid}
+              type="button"
+              className={styles.shortCard}
+              onClick={() => setActiveIndex(i)}
+              aria-label={`Reproducir ${v.title}`}
+            >
               <div className={styles.shortThumbWrap}>
                 {thumb && (
                   <img src={thumb} alt={v.title} className={styles.shortThumb} loading="lazy" />
@@ -262,10 +272,19 @@ function ShortsSection({ videos }) {
                   </time>
                 )}
               </div>
-            </Link>
+            </button>
           );
         })}
       </div>
+
+      {activeIndex !== null && (
+        <VideoModal
+          variant="shorts"
+          videos={videos}
+          startIndex={activeIndex}
+          onClose={() => setActiveIndex(null)}
+        />
+      )}
     </section>
   );
 }
