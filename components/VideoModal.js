@@ -10,19 +10,36 @@ function formatDate(dateStr) {
   });
 }
 
+const HLS_MIMES = new Set([
+  "application/vnd.apple.mpegurl",
+  "application/x-mpegurl",
+  "application/x-mpegURL",
+  "vnd.apple.mpegurl",
+]);
+
 function pickSources(item) {
   const list = Array.isArray(item?.sources) ? item.sources : [];
   if (list.length === 0) return [];
   const out = [];
+  const seen = new Set();
+  const push = (src, type) => {
+    if (!src || seen.has(src)) return;
+    seen.add(src);
+    out.push({ src, type });
+  };
+
   const mp4s = list.filter((s) => s && s.file && s.type === "video/mp4");
   const mp4_720 = mp4s.find((s) => (s.height || 0) === 720 || s.label === "720p");
-  if (mp4_720) out.push({ src: mp4_720.file, type: "video/mp4" });
+  if (mp4_720) push(mp4_720.file, "video/mp4");
   const mp4_360 = mp4s.find((s) => (s.height || 0) === 360 || s.label === "360p");
-  if (mp4_360 && mp4_360 !== mp4_720) out.push({ src: mp4_360.file, type: "video/mp4" });
+  if (mp4_360) push(mp4_360.file, "video/mp4");
+  for (const s of mp4s) push(s.file, "video/mp4");
+
   const hls = list.find(
-    (s) => s && s.file && s.type === "application/vnd.apple.mpegurl"
+    (s) => s && s.file && typeof s.type === "string" && HLS_MIMES.has(s.type.toLowerCase())
   );
-  if (hls) out.push({ src: hls.file, type: "application/x-mpegURL" });
+  if (hls) push(hls.file, "application/x-mpegURL");
+
   return out;
 }
 
