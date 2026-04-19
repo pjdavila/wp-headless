@@ -14,6 +14,20 @@ import "video.js/dist/video-js.css";
 import "../styles/video-player.css";
 
 const GA_ID = "G-F4RRT00M6P";
+const QUANTCAST_QACCT = "p-SQPESTjuEeY-e";
+
+const QUANTCAST_INIT_SCRIPT = `
+window._qevents = window._qevents || [];
+(function() {
+  var elem = document.createElement('script');
+  elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
+  elem.async = true;
+  elem.type = "text/javascript";
+  var scpt = document.getElementsByTagName('script')[0];
+  scpt.parentNode.insertBefore(elem, scpt);
+})();
+window._qevents.push({ qacct: "${QUANTCAST_QACCT}", labels: "_fp.event.PageView" });
+`;
 
 const THEME_INIT_SCRIPT = `
 (function(){
@@ -78,6 +92,18 @@ export default function MyApp({ Component, pageProps }) {
     setGateOpen(true);
   };
 
+  useEffect(() => {
+    if (!gateOpen) return;
+    const fireQuantcast = () => {
+      if (typeof window === "undefined" || !window._qevents) return;
+      window._qevents.push({ qacct: QUANTCAST_QACCT, labels: "_fp.event.PageView" });
+    };
+    router.events.on("routeChangeComplete", fireQuantcast);
+    return () => {
+      router.events.off("routeChangeComplete", fireQuantcast);
+    };
+  }, [gateOpen, router.events]);
+
   if (!checked || !gateOpen) {
     return (
       <>
@@ -119,6 +145,23 @@ export default function MyApp({ Component, pageProps }) {
           src="https://media.aso1.net/js/code.min.js"
           data-cfasync="false"
         />
+        <Script
+          id="quantcast-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{ __html: QUANTCAST_INIT_SCRIPT }}
+        />
+        <noscript>
+          <div style={{ display: "none" }}>
+            <img
+              src={`//pixel.quantserve.com/pixel/${QUANTCAST_QACCT}.gif`}
+              style={{ display: "none" }}
+              border="0"
+              height="1"
+              width="1"
+              alt="Quantcast"
+            />
+          </div>
+        </noscript>
         <Component {...pageProps} key={router.asPath} />
         <NotificationPrompt />
         <StickyBottomBanner />
