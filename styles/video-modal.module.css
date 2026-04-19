@@ -187,6 +187,10 @@
   height: 88px;
   border-radius: 50%;
   border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  box-sizing: border-box;
   background: rgba(0, 0, 0, 0.55);
   color: #fff;
   display: flex;
@@ -199,6 +203,13 @@
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   pointer-events: auto;
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.bigPlayBtn svg {
+  display: block;
 }
 
 .bigPlayBtn:hover {
