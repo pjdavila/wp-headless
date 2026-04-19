@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import VideoModal from "./VideoModal";
 import styles from "../styles/featured-videos.module.css";
 
 const BUNNY_LIBRARY_ID = "638514";
@@ -58,8 +59,8 @@ function LoadingSkeleton() {
 export default function FeaturedVideosWidget() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [modalMediaId, setModalMediaId] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -99,14 +100,9 @@ export default function FeaturedVideosWidget() {
 
   if (videos.length === 0) return null;
 
-  const active = videos[activeIndex] || videos[0];
+  const active = videos[0];
   const muted = !hasInteracted;
   const playerSrc = `https://player.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${active.mediaid}?autoplay=true&loop=false&muted=${muted}&preload=true&responsive=true`;
-
-  const handleSelect = (i) => {
-    setHasInteracted(true);
-    setActiveIndex(i);
-  };
 
   const dismissHint = () => setHasInteracted(true);
 
@@ -173,19 +169,16 @@ export default function FeaturedVideosWidget() {
         </div>
       </div>
 
-      <div className={styles.tabsRow} role="tablist">
-        {videos.map((v, i) => {
-          const isActive = i === activeIndex;
+      <div className={styles.tabsRow}>
+        {videos.map((v) => {
           const thumbSrc = v.images?.find((img) => img.width >= 480)?.src || v.image;
           return (
             <button
               key={v.mediaid}
               type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-pressed={isActive}
-              className={`${styles.tab} ${isActive ? styles.tabActive : ""}`}
-              onClick={() => handleSelect(i)}
+              className={styles.tab}
+              onClick={() => setModalMediaId(v.mediaid)}
+              aria-label={`Reproducir ${v.title}`}
             >
               <div className={styles.tabThumbWrap}>
                 {thumbSrc && (
@@ -204,7 +197,6 @@ export default function FeaturedVideosWidget() {
                     {formatDuration(v.duration)}
                   </span>
                 )}
-                {isActive && <span className={styles.tabActiveBadge}>On Air</span>}
               </div>
               <div className={styles.tabBody}>
                 <span className={styles.tabTitle}>{v.title}</span>
@@ -216,6 +208,14 @@ export default function FeaturedVideosWidget() {
           );
         })}
       </div>
+
+      {modalMediaId && (
+        <VideoModal
+          variant="default"
+          mediaid={modalMediaId}
+          onClose={() => setModalMediaId(null)}
+        />
+      )}
     </section>
   );
 }
