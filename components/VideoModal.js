@@ -14,14 +14,15 @@ function pickSources(item) {
   const list = Array.isArray(item?.sources) ? item.sources : [];
   if (list.length === 0) return [];
   const out = [];
+  const mp4s = list.filter((s) => s && s.file && s.type === "video/mp4");
+  const mp4_720 = mp4s.find((s) => (s.height || 0) === 720 || s.label === "720p");
+  if (mp4_720) out.push({ src: mp4_720.file, type: "video/mp4" });
+  const mp4_360 = mp4s.find((s) => (s.height || 0) === 360 || s.label === "360p");
+  if (mp4_360 && mp4_360 !== mp4_720) out.push({ src: mp4_360.file, type: "video/mp4" });
   const hls = list.find(
     (s) => s && s.file && s.type === "application/vnd.apple.mpegurl"
   );
   if (hls) out.push({ src: hls.file, type: "application/x-mpegURL" });
-  const mp4s = list
-    .filter((s) => s && s.file && s.type === "video/mp4")
-    .sort((a, b) => (b.height || 0) - (a.height || 0));
-  for (const s of mp4s) out.push({ src: s.file, type: "video/mp4" });
   return out;
 }
 
