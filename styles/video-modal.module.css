@@ -317,6 +317,12 @@
   margin: 0 0 1rem 0;
 }
 
+.metaAd {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0;
+}
+
 .counter {
   font-family: var(--font-sans);
   font-size: 0.8rem;
@@ -416,5 +422,9 @@
     top: 0.85rem;
     left: 0.75rem;
     z-index: 3;
+  }
+
+  .metaAd {
+    display: none;
   }
 }

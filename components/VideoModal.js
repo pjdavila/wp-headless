@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState, useRef } from "react";
 import styles from "../styles/video-modal.module.css";
+import SidebarBanner from "./ads/SidebarBanner";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -467,6 +468,9 @@ export default function VideoModal({
         {active.description && (
           <p className={styles.metaDescription}>{active.description}</p>
         )}
+        <div className={styles.metaAd}>
+          <SidebarBanner />
+        </div>
         {total > 1 && (
           <div className={styles.counter}>
             {index + 1} / {total}
