@@ -137,7 +137,7 @@ export default function Component(props) {
 
   const post = contentQuery?.post || {};
   const { title, content, date, modified, uri, featuredImage, author, categories } = post;
-  const audioUrl = post?.articulos?.audioUrl;
+  const audioUrl = post?.articulos?.audioUrl?.trim();
   const category = categories?.nodes?.find((c) => c.slug !== "uncategorized") || categories?.nodes?.[0];
   const readTime = estimateReadingTime(content);
   const imgSrc = featuredImage?.node?.sourceUrl;
