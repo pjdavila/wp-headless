@@ -188,6 +188,11 @@ export default function VideoModal({
 
   const touchStart = useRef(null);
   const onTouchStart = (e) => {
+    if (e.target && typeof e.target.closest === "function" &&
+        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button")) {
+      touchStart.current = null;
+      return;
+    }
     const t = e.touches[0];
     if (!t) return;
     touchStart.current = { y: t.clientY, x: t.clientX };
@@ -291,7 +296,12 @@ export default function VideoModal({
           </button>
         )}
 
-        <div className={styles.player} data-vjs-player={useVideoJs ? "" : undefined}>
+        <div
+          className={styles.player}
+          data-vjs-player={useVideoJs ? "" : undefined}
+          onTouchStart={useVideoJs ? onTouchStart : undefined}
+          onTouchEnd={useVideoJs ? onTouchEnd : undefined}
+        >
           {useVideoJs ? (
             <video
               ref={videoElRef}
@@ -322,12 +332,14 @@ export default function VideoModal({
               Activar sonido
             </button>
           )}
-          <div
-            className={styles.swipeArea}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            aria-hidden="true"
-          />
+          {!useVideoJs && (
+            <div
+              className={styles.swipeArea}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              aria-hidden="true"
+            />
+          )}
         </div>
 
         {total > 1 && (
