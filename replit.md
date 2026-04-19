@@ -48,6 +48,7 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Related Posts**: AI-powered via Recombee (item-to-item recommendations). Falls back to same-category posts if Recombee returns empty or errors.
 - **View Tracking**: Fires `AddDetailView` to Recombee on article load (fire-and-forget)
 - **Sidebar**: "Lo Más Reciente" with 6 numbered recent posts
+- **Audio Player**: `components/ArticleAudioPlayer.js` + `styles/articleAudioPlayer.module.css` — HTML5 audio player rendered just below the `<h1>` title in `wp-templates/single.js` when the post has the ACF field `articulos.audioUrl` (group "Articulos", field `audio_url`, exposed via WPGraphQL for ACF). Play/pause, seek, mm:ss timer and 1x/1.25x/1.5x/2x speed cycle. `preload="metadata"`, no autoplay.
 
 ## Category/Archive Pages
 

@@ -10,6 +10,7 @@ import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import SidebarHalfPage from "../components/ads/SidebarHalfPage";
+import ArticleAudioPlayer from "../components/ArticleAudioPlayer";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -54,6 +55,9 @@ const POST_QUERY = gql`
             }
           }
         }
+      }
+      articulos {
+        audioUrl
       }
     }
   }
@@ -133,6 +137,7 @@ export default function Component(props) {
 
   const post = contentQuery?.post || {};
   const { title, content, date, modified, uri, featuredImage, author, categories } = post;
+  const audioUrl = post?.articulos?.audioUrl;
   const category = categories?.nodes?.find((c) => c.slug !== "uncategorized") || categories?.nodes?.[0];
   const readTime = estimateReadingTime(content);
   const imgSrc = featuredImage?.node?.sourceUrl;
@@ -258,6 +263,8 @@ export default function Component(props) {
             </div>
 
             <h1 className={styles.articleTitle}>{title}</h1>
+
+            {audioUrl && <ArticleAudioPlayer src={audioUrl} title={title} />}
 
             <ArticleContent content={content} />
 
