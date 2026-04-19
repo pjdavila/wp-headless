@@ -9,6 +9,7 @@ import ShareMenu from "../components/ShareMenu";
 import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
+import SidebarHalfPage from "../components/ads/SidebarHalfPage";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -285,7 +286,7 @@ export default function Component(props) {
                 <SidebarStoryCard key={p.id} post={p} index={i} />
               ))}
             </div>
-
+            <SidebarHalfPage />
           </aside>
         </div>
       </main>

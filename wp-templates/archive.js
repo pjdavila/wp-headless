@@ -5,6 +5,7 @@ import { BreadcrumbJsonLd } from "../components/JsonLd";
 import Footer from "../components/Footer";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
+import SidebarHalfPage from "../components/ads/SidebarHalfPage";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -203,7 +204,7 @@ export default function ArchivePage(props) {
                 ))}
               </div>
             </div>
-
+            <SidebarHalfPage />
           </aside>
         </div>
       </main>

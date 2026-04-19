@@ -7,6 +7,7 @@ import SeoHead from "../components/SeoHead";
 import { BreadcrumbJsonLd } from "../components/JsonLd";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
+import SidebarHalfPage from "../components/ads/SidebarHalfPage";
 import PostListRow from "../components/PostListRow";
 import MagazineRow from "../components/MagazineRow";
 import LatestNewsToolbar from "../components/LatestNewsToolbar";
@@ -185,6 +186,8 @@ export default function LatestNewsPage() {
                     ))}
                   </div>
                 </div>
+
+                <SidebarHalfPage />
 
                 <div className={styles.sidebarAdSlot}>
                   <AdServerSlot zone="161655" width={300} height={250} />
