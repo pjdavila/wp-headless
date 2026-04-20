@@ -115,7 +115,7 @@ export default function FrontPage(props) {
     }))
     .filter((g) => g.posts.length > 0);
 
-  const latestNewsPosts = allPosts.slice(5, 11);
+  const latestNewsPosts = allPosts.slice(0, 6);
 
   return (
     <>
