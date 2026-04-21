@@ -1,5 +1,5 @@
 const HLS_URL =
-  "https://pvqyb68gdz24-hls-live.5centscdn.com/vnm/033977cd45e8d7a87c4fc453d18e20c3.sdp/playlist.m3u8";
+  "https://customer-26ivmji06nmjnfeb.cloudflarestream.com/46a6931105cfccff2208744b4917b222/manifest/video.m3u8";
 
 async function fetchWithTimeout(url, ms) {
   const controller = new AbortController();

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import styles from "../styles/live.module.css";
 
 const HLS_URL =
-  "https://pvqyb68gdz24-hls-live.5centscdn.com/vnm/033977cd45e8d7a87c4fc453d18e20c3.sdp/playlist.m3u8";
+  "https://customer-26ivmji06nmjnfeb.cloudflarestream.com/46a6931105cfccff2208744b4917b222/manifest/video.m3u8";
 const VAST_TAG =
   "https://astrovms.com/api/vast/e707df66-f0cb-468f-be7b-eed24400f467";
 const IMA_SDK_URL = "https://imasdk.googleapis.com/js/sdkloader/ima3.js";
