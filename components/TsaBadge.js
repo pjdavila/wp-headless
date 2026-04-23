@@ -27,7 +27,6 @@ export default function TsaBadge() {
   return (
     <div
       className={style.badge}
-      role="img"
       aria-label="Treasury Single Account"
       title="Treasury Single Account"
       tabIndex={0}
