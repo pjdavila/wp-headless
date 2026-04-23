@@ -25,12 +25,21 @@ function BankIcon() {
 
 export default function TsaBadge() {
   return (
-    <div className={style.badge}>
+    <div
+      className={style.badge}
+      role="img"
+      aria-label="Treasury Single Account"
+      title="Treasury Single Account"
+      tabIndex={0}
+    >
       <BankIcon />
       <div className={style.info}>
         <span className={style.label}>TSA</span>
         <span className={style.value}>$10.0B</span>
       </div>
+      <span className={style.tooltip} aria-hidden="true">
+        Treasury Single Account
+      </span>
     </div>
   );
 }

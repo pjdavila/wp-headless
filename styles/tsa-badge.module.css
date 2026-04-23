@@ -1,4 +1,5 @@
 .badge {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -8,6 +9,53 @@
   border-radius: 100px;
   cursor: default;
   white-space: nowrap;
+}
+
+.badge:focus-visible {
+  outline: 2px solid hsl(152 56% 45%);
+  outline-offset: 2px;
+}
+
+.tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-2px);
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: hsl(225 12% 12%);
+  color: hsl(0 0% 96%);
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  border: 1px solid hsl(225 10% 20%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 50;
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  background: hsl(225 12% 12%);
+  border-left: 1px solid hsl(225 10% 20%);
+  border-top: 1px solid hsl(225 10% 20%);
+}
+
+.badge:hover .tooltip,
+.badge:focus-visible .tooltip,
+.badge:focus-within .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .icon {
