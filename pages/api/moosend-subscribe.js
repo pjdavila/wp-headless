@@ -1,3 +1,22 @@
+import { sendWelcomeEmail } from "../../lib/welcomeEmail";
+
+function parseMoosendDate(value) {
+  if (typeof value !== "string") return null;
+  const match = value.match(/\/Date\((\d+)\)\//);
+  return match ? Number(match[1]) : null;
+}
+
+function isNewSubscriber(context) {
+  if (!context) return false;
+  const createdMs = parseMoosendDate(context.CreatedOn);
+  if (createdMs == null) return false;
+  // Moosend returns UpdatedOn === null only for brand-new subscribers.
+  // Any later re-subscribe sets UpdatedOn to a real timestamp, even if it
+  // happens seconds after creation. We use UpdatedOn as the single source
+  // of truth to avoid double-sending the welcome email.
+  return context.UpdatedOn == null;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -75,6 +94,17 @@ export default async function handler(req, res) {
       code: data.Code,
       message: data.Error || "Subscription processed.",
     });
+  }
+
+  // Welcome email: only on first-time subscription, never block the response.
+  if (data && data.Code === 0 && isNewSubscriber(data.Context)) {
+    try {
+      await sendWelcomeEmail({ email, name, variant: "newsletter" });
+    } catch (err) {
+      console.error("Moosend → welcome email failed:", err.message);
+    }
+  } else if (data && data.Code === 0) {
+    console.info("Moosend: skipping welcome (existing subscriber)");
   }
 
   return res.status(200).json({ ok: true });
