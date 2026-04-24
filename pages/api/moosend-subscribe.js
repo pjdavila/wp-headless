@@ -1,5 +1,3 @@
-import { sendWelcomeEmail } from "../../lib/welcomeEmail";
-
 function parseMoosendDate(value) {
   if (typeof value !== "string") return null;
   const match = value.match(/\/Date\((\d+)\)\//);
@@ -10,11 +8,22 @@ function isNewSubscriber(context) {
   if (!context) return false;
   const createdMs = parseMoosendDate(context.CreatedOn);
   if (createdMs == null) return false;
-  // Moosend returns UpdatedOn === null only for brand-new subscribers.
-  // Any later re-subscribe sets UpdatedOn to a real timestamp, even if it
-  // happens seconds after creation. We use UpdatedOn as the single source
-  // of truth to avoid double-sending the welcome email.
-  return context.UpdatedOn == null;
+  const updatedMs = parseMoosendDate(context.UpdatedOn);
+
+  // Primary signal: Moosend leaves UpdatedOn=null only on first creation.
+  // Any later re-subscribe sets UpdatedOn (verified empirically: it can
+  // happen within seconds of CreatedOn for rapid re-submits), so we treat
+  // a non-null UpdatedOn as a re-subscription.
+  if (context.UpdatedOn != null) {
+    // Tight safety net: if Moosend ever sets UpdatedOn at creation time
+    // (millisecond-level delta), still treat as new.
+    if (updatedMs != null && Math.abs(createdMs - updatedMs) < 100) return true;
+    return false;
+  }
+
+  // UpdatedOn is null → brand-new. Recency check (per task spec)
+  // guards against stale/replayed responses.
+  return Date.now() - createdMs < 60_000;
 }
 
 export default async function handler(req, res) {
@@ -99,6 +108,7 @@ export default async function handler(req, res) {
   // Welcome email: only on first-time subscription, never block the response.
   if (data && data.Code === 0 && isNewSubscriber(data.Context)) {
     try {
+      const { sendWelcomeEmail } = await import("../../lib/welcomeEmail");
       await sendWelcomeEmail({ email, name, variant: "newsletter" });
     } catch (err) {
       console.error("Moosend → welcome email failed:", err.message);
