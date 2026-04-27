@@ -3,6 +3,7 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LiveStreamHeader from "../components/LiveStreamHeader";
 import { getNextStaticProps } from "@faustwp/core";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -48,20 +49,20 @@ export default function LivePage() {
       <main className={styles.page}>
         <div className={styles.hero}>
           <div className={`container ${styles.playerSection}`}>
-            <div className={styles.liveHeader}>
-              <span className={styles.liveBadge}>
-                <span className={styles.liveDot} />
-                Live
-              </span>
-              <h1 className={styles.streamTitle}>Caribbean Business Live</h1>
-            </div>
+            <LiveStreamHeader
+              title="Caribbean Business Live"
+              subtitle="Broadcasting from Puerto Rico"
+            />
 
-            <div className={styles.playerWrapper}>
-              <LivePlayer />
+            <div className={styles.playerFrame}>
+              <div className={styles.playerWrapper}>
+                <LivePlayer />
+              </div>
             </div>
           </div>
 
-          <div className={`container ${styles.adSlotWrap}`}>
+          <div className={styles.adSlotWrap}>
+            <p className={styles.adSlotLabel}>Anuncio</p>
             <div className={styles.adSlotDesktop}>
               <AdServerSlot zone="161517" width={970} height={90} />
             </div>

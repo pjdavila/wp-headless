@@ -350,10 +350,11 @@ export default function LivePlayer() {
             />
           </div>
           <h2 className={styles.offAirTitle}>
-            No estamos transmitiendo en estos momentos
+            No estamos transmitiendo en este momento
           </h2>
           <p className={styles.offAirSubtitle}>
-            Vuelve pronto. Estamos preparando la próxima transmisión.
+            Estamos preparando nuestra próxima transmisión en vivo. Vuelve
+            pronto o explora nuestros videos bajo demanda.
           </p>
           <button
             type="button"
@@ -363,6 +364,37 @@ export default function LivePlayer() {
           >
             {checking ? "Comprobando…" : "Reintentar"}
           </button>
+
+          <div className={styles.upcoming}>
+            <p className={styles.upcomingLabel}>Próximamente</p>
+            <div className={styles.upcomingCards}>
+              <div className={styles.upcomingCard}>
+                <span className={styles.upcomingTime}>Lun – Vie · 9:00 AM</span>
+                <span className={styles.upcomingTitle}>
+                  Caribbean Business Morning
+                </span>
+              </div>
+              <div className={styles.upcomingCard}>
+                <span className={styles.upcomingTime}>Lun – Vie · 5:30 PM</span>
+                <span className={styles.upcomingTitle}>
+                  Mercados al Cierre
+                </span>
+              </div>
+            </div>
+            <a href="/videos/" className={styles.videosLink}>
+              Ver videos bajo demanda
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M13.3 17.7 19 12l-5.7-5.7-1.4 1.4 3.3 3.3H5v2h10.2l-3.3 3.3z"
+                />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -370,10 +402,11 @@ export default function LivePlayer() {
 
   if (status === "loading") {
     return (
-      <div className={styles.offAirPanel}>
-        <div className={styles.offAirInner}>
-          <p className={styles.offAirSubtitle}>Cargando transmisión…</p>
-        </div>
+      <div className={styles.loadingSkeleton}>
+        <div className={styles.loadingSpinner} aria-hidden="true" />
+        <span className={styles.loadingText} role="status">
+          Cargando transmisión…
+        </span>
       </div>
     );
   }

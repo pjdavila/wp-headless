@@ -51,6 +51,14 @@ A headless WordPress frontend built with [Faust.js](https://faustjs.org/) and Ne
 - **Sidebar**: "Lo Más Reciente" with 6 numbered recent posts
 - **Audio Player**: `components/ArticleAudioPlayer.js` + `styles/articleAudioPlayer.module.css` — HTML5 audio player rendered just below the `<h1>` title in `wp-templates/single.js` when the post has the ACF field `articulos.audioUrl` (group "Articulos", field `audio_url`, exposed via WPGraphQL for ACF). Play/pause, seek, mm:ss timer and 1x/1.25x/1.5x/2x speed cycle. `preload="metadata"`, no autoplay.
 
+## Live Stream Page (`/live`)
+
+- **`pages/live.js`**: Hero section with `LiveStreamHeader` (glass bar) + premium framed `LivePlayer` + ad slot ("Anuncio" microtitle above zone 161517 desktop / 161713 mobile).
+- **`components/LiveStreamHeader.js`**: Client component. Glass header with red animated LIVE pill, serif title, "Broadcasting from Puerto Rico" subtitle, plus right meta-row showing "On Air Now • HH:MM AST" (Intl.DateTimeFormat with `America/Puerto_Rico` timezone, ticks every 30s, hydration-safe via `suppressHydrationWarning`) and a Web Share API button (falls back to `navigator.clipboard.writeText` with a "Copiado" toast state).
+- **`components/LivePlayer.js`**: Three states. `loading` shows a shimmering 16:9 skeleton with green spinner. `live` mounts video.js with the `vjs-theme-cb` skin (HLS via Cloudflare Stream + IMA/VAST pre-roll + HLS quality selector). `offair` shows a cinematic gradient panel (radial green halo + SVG noise) with pulsing CB logo, copy, animated "Reintentar" CTA (pulse ring), and a "Próximamente" placeholder block with 2 program cards + link to `/videos/`.
+- **`styles/live.module.css`**: All live-page chrome — glass header, player frame with green halo + ambient shadow, off-air panel, loading skeleton, ad slot label. Mobile breakpoints collapse the meta-row under the title; `prefers-reduced-motion` disables pulses/shimmer.
+- **`styles/video-player.css`**: Global video.js skin `vjs-theme-cb`. Includes pulsing ring + "WATCH LIVE" caption under the big play button (only before first play), green scrubber/volume, glass quality menu, custom green spinner, red LIVE pill, and `prefers-reduced-motion` overrides. Loaded once globally in `pages/_app.js`.
+
 ## Category/Archive Pages
 
 - **Template**: `wp-templates/archive.js` renders category and tag archives
