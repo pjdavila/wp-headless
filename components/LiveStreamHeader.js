@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../styles/live.module.css";
 
 function ShareIcon() {
@@ -24,6 +24,19 @@ export default function LiveStreamHeader({
 }) {
   const [time, setTime] = useState("");
   const [shareState, setShareState] = useState("idle");
+  const copiedTimerRef = useRef(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (copiedTimerRef.current) {
+        clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     let formatter;
@@ -72,8 +85,13 @@ export default function LiveStreamHeader({
       }
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(data.url);
+        if (!mountedRef.current) return;
         setShareState("copied");
-        setTimeout(() => setShareState("idle"), 2200);
+        if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = setTimeout(() => {
+          if (mountedRef.current) setShareState("idle");
+          copiedTimerRef.current = null;
+        }, 2200);
       }
     } catch {
       /* user cancelled or blocked */
