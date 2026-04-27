@@ -22,7 +22,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 480px;
+  max-width: 640px;
   padding: 1.5rem;
 }
 
@@ -165,9 +165,207 @@
   color: hsl(220 8% 35%);
 }
 
+.summitSection {
+  position: relative;
+  margin-top: 2rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: var(--radius-lg, 16px);
+  background: linear-gradient(180deg, hsl(225 12% 11% / 0.7), hsl(225 12% 7% / 0.5));
+  border: 1px solid hsl(152 56% 45% / 0.18);
+  text-align: center;
+  overflow: hidden;
+}
+
+.summitSection::before {
+  content: "";
+  position: absolute;
+  top: -45%;
+  right: -25%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, hsl(152 56% 45% / 0.18), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.summitSection > * {
+  position: relative;
+  z-index: 1;
+}
+
+.summitLogo {
+  display: block;
+  margin: 0 auto 1rem;
+  height: 56px;
+  width: auto;
+  max-width: 100%;
+  filter: drop-shadow(0 4px 18px hsl(152 56% 45% / 0.35));
+}
+
+.summitTitle {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.summitMeta {
+  font-size: 0.85rem;
+  color: hsl(220 8% 60%);
+  margin: 0 0 1.25rem;
+  line-height: 1.55;
+}
+
+.summitMeta strong {
+  color: hsl(152 56% 60%);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 0 auto 1.25rem;
+  min-height: 80px;
+  max-width: 360px;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.digitGroup {
+  display: flex;
+  gap: 3px;
+}
+
+.digitCell {
+  position: relative;
+  width: 28px;
+  height: 44px;
+  background: linear-gradient(180deg, hsl(225 12% 15%), hsl(225 12% 8%));
+  border: 1px solid hsl(225 10% 22%);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  box-shadow:
+    inset 0 1px 0 hsl(225 12% 26% / 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.digitCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  top: 50%;
+  background: linear-gradient(180deg, transparent, hsl(225 12% 4% / 0.35));
+  pointer-events: none;
+}
+
+.unit:hover .digitCell {
+  transform: translateY(-2px);
+  border-color: hsl(152 56% 45% / 0.5);
+  box-shadow:
+    inset 0 1px 0 hsl(225 12% 26% / 0.6),
+    0 6px 16px hsl(152 56% 45% / 0.22);
+}
+
+.digitInner {
+  display: inline-block;
+  animation: digitSlide 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes digitSlide {
+  0%   { transform: translateY(-110%); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.unitLabel {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: hsl(220 8% 55%);
+  font-weight: 600;
+}
+
+.countdownDone {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: hsl(152 56% 60%);
+  text-align: center;
+  margin: 0 auto 1.25rem;
+  padding: 1.5rem 0;
+  letter-spacing: -0.02em;
+  animation: pulseGlow 2s ease-in-out infinite;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { text-shadow: 0 0 20px hsl(152 56% 45% / 0.4); }
+  50%      { text-shadow: 0 0 32px hsl(152 56% 45% / 0.75); }
+}
+
+.summitCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: hsl(152 56% 65%);
+  text-decoration: none;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid hsl(152 56% 45% / 0.45);
+  background: hsl(152 56% 45% / 0.08);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.summitCta:hover {
+  background: hsl(152 56% 45% / 0.18);
+  border-color: hsl(152 56% 45% / 0.75);
+  color: hsl(152 56% 75%);
+  transform: translateY(-1px);
+}
+
+.summitCta:focus-visible {
+  outline: 2px solid hsl(152 56% 55%);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .digitInner { animation: none; }
+  .countdownDone { animation: none; }
+  .unit:hover .digitCell { transform: none; }
+  .summitCta:hover { transform: none; }
+}
+
 @media (max-width: 480px) {
   .card {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
   }
 
   .title {
@@ -176,5 +374,55 @@
 
   .logo {
     height: 36px;
+  }
+
+  .summitSection {
+    padding: 1.4rem 1rem 1.25rem;
+  }
+
+  .summitTitle {
+    font-size: 1.1rem;
+  }
+
+  .summitLogo {
+    height: 44px;
+  }
+
+  .summitMeta {
+    font-size: 0.8rem;
+  }
+
+  .countdown {
+    gap: 0.35rem;
+    min-height: 72px;
+  }
+
+  .digitCell {
+    width: 24px;
+    height: 38px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+  }
+
+  .digitGroup {
+    gap: 2px;
+  }
+
+  .unitLabel {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+
+  .countdownDone {
+    font-size: 1.2rem;
+    min-height: 72px;
+  }
+}
+
+@media (max-width: 360px) {
+  .digitCell {
+    width: 22px;
+    height: 34px;
+    font-size: 1.05rem;
   }
 }
