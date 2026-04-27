@@ -6,6 +6,7 @@ import { WebSiteJsonLd } from "../components/JsonLd";
 import Footer from "../components/Footer";
 import FeaturedHero from "../components/FeaturedHero";
 import SectionBlock from "../components/SectionBlock";
+import FeaturedListBlock from "../components/FeaturedListBlock";
 import RecommendedCarousel from "../components/RecommendedCarousel";
 import ShortStoriesRow from "../components/ShortStoriesRow";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
@@ -28,25 +29,25 @@ const HOMEPAGE_QUERY = gql`
         ...PostListFragment
       }
     }
-    business: posts(first: 3, where: { categoryName: "cbusiness-category", orderby: { field: DATE, order: DESC } }) {
+    business: posts(first: 4, where: { categoryName: "cbusiness-category", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    economy: posts(first: 3, where: { categoryName: "cbusiness-economy", orderby: { field: DATE, order: DESC } }) {
+    economy: posts(first: 4, where: { categoryName: "cbusiness-economy", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    energyOil: posts(first: 3, where: { categoryName: "cbusiness-energy-oil", orderby: { field: DATE, order: DESC } }) {
+    energyOil: posts(first: 4, where: { categoryName: "cbusiness-energy-oil", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    jobsLabor: posts(first: 3, where: { categoryName: "cbusiness-jobs-labor", orderby: { field: DATE, order: DESC } }) {
+    jobsLabor: posts(first: 4, where: { categoryName: "cbusiness-jobs-labor", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    crypto: posts(first: 3, where: { categoryName: "crypto", orderby: { field: DATE, order: DESC } }) {
+    crypto: posts(first: 4, where: { categoryName: "crypto", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    mediaEntertainment: posts(first: 3, where: { categoryName: "cbusiness-media-entertainment", orderby: { field: DATE, order: DESC } }) {
+    mediaEntertainment: posts(first: 4, where: { categoryName: "cbusiness-media-entertainment", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
-    techAi: posts(first: 3, where: { categoryName: "cbusiness-tech-ai", orderby: { field: DATE, order: DESC } }) {
+    techAi: posts(first: 4, where: { categoryName: "cbusiness-tech-ai", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
     oyeComoFue: posts(first: 5, where: { categoryName: "oye-como-fue", orderby: { field: DATE, order: DESC } }) {
@@ -158,19 +159,23 @@ export default function FrontPage(props) {
 
             {(() => {
               const hasEconomy = sections.some((s) => s.name === "Economy");
-              return sections.map((section) => (
-                <React.Fragment key={section.name}>
-                  <SectionBlock
-                    title={section.name}
-                    categoryUri={section.uri}
-                    posts={section.posts}
-                  />
-                  {section.name === "Economy" && <FeaturedVideosWidget />}
-                  {!hasEconomy && section.name === "Business" && (
-                    <FeaturedVideosWidget />
-                  )}
-                </React.Fragment>
-              ));
+              return sections.map((section, index) => {
+                const LayoutComponent =
+                  index % 2 === 0 ? SectionBlock : FeaturedListBlock;
+                return (
+                  <React.Fragment key={section.name}>
+                    <LayoutComponent
+                      title={section.name}
+                      categoryUri={section.uri}
+                      posts={section.posts}
+                    />
+                    {section.name === "Economy" && <FeaturedVideosWidget />}
+                    {!hasEconomy && section.name === "Business" && (
+                      <FeaturedVideosWidget />
+                    )}
+                  </React.Fragment>
+                );
+              });
             })()}
 
             {sections.length > 0 &&
