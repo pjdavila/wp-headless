@@ -728,6 +728,20 @@
   .upcoming {
     max-width: 100%;
   }
+
+  /* Off-air panel grows to fit content on mobile so the title and logo
+     are not clipped above the centered subtitle/button. The 16:9 ratio
+     only matters when a real video is playing — the live frame still
+     keeps it via .playerWrapper / .loadingSkeleton. */
+  .offAirPanel {
+    aspect-ratio: auto;
+    overflow: visible;
+  }
+
+  .offAirInner {
+    padding-top: clamp(1.75rem, 6vw, 2.5rem);
+    padding-bottom: clamp(1.75rem, 6vw, 2.5rem);
+  }
 }
 
 @media (max-width: 480px) {
