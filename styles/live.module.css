@@ -499,62 +499,14 @@
   100% { box-shadow: 0 6px 18px hsl(var(--primary) / 0.35), 0 0 0 0 hsl(var(--primary) / 0); }
 }
 
-/* Próximamente */
+/* Wrapper around the "Ver videos bajo demanda" CTA below the
+   REINTENTAR button — keeps the subtle top divider/spacing. */
 .upcoming {
   margin-top: 1.6rem;
   padding-top: 1.4rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   width: 100%;
   max-width: 30rem;
-}
-
-.upcomingLabel {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: rgba(255, 255, 255, 0.55);
-  margin: 0 0 0.7rem;
-}
-
-.upcomingCards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
-  margin-bottom: 0.95rem;
-}
-
-.upcomingCard {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  padding: 0.65rem 0.8rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-  transition: background 200ms ease, border-color 200ms ease;
-}
-
-.upcomingCard:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: hsl(var(--primary) / 0.35);
-}
-
-.upcomingTime {
-  font-size: 0.62rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: hsl(var(--primary));
-  margin-bottom: 0.2rem;
-}
-
-.upcomingTitle {
-  font-family: var(--font-serif);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-  line-height: 1.25;
 }
 
 .videosLink {
@@ -663,7 +615,6 @@
   }
   .playerFrame,
   .shareBtn,
-  .upcomingCard,
   .videosLink,
   .offAirBtn {
     transition: none !important;
@@ -736,7 +687,7 @@
   .offAirPanel {
     aspect-ratio: auto;
     overflow: visible;
-    min-height: 32rem;
+    min-height: 22rem;
   }
 
   .offAirInner {
@@ -752,10 +703,6 @@
 
   .shareBtn {
     padding: 0.42rem 0.55rem;
-  }
-
-  .upcomingCards {
-    grid-template-columns: 1fr;
   }
 
   .streamTitle {

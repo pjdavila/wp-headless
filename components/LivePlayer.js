@@ -366,21 +366,6 @@ export default function LivePlayer() {
           </button>
 
           <div className={styles.upcoming}>
-            <p className={styles.upcomingLabel}>Próximamente</p>
-            <div className={styles.upcomingCards}>
-              <div className={styles.upcomingCard}>
-                <span className={styles.upcomingTime}>Lun – Vie · 9:00 AM</span>
-                <span className={styles.upcomingTitle}>
-                  Caribbean Business Morning
-                </span>
-              </div>
-              <div className={styles.upcomingCard}>
-                <span className={styles.upcomingTime}>Lun – Vie · 5:30 PM</span>
-                <span className={styles.upcomingTitle}>
-                  Mercados al Cierre
-                </span>
-              </div>
-            </div>
             <a href="/videos/" className={styles.videosLink}>
               Ver videos bajo demanda
               <svg
