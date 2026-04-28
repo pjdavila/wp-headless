@@ -60,6 +60,19 @@ export default function FeaturedVideosWidget() {
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const cbVideosLogo = isDark ? "/cb-videos-logo-dark.webp" : "/cb-videos-logo.webp";
 
   useEffect(() => {
     let cancelled = false;
@@ -83,7 +96,7 @@ export default function FeaturedVideosWidget() {
         <div className={styles.header}>
           <h2 className={styles.title}>
             <Image
-              src="/cb-videos-logo.webp"
+              src={cbVideosLogo}
               alt="CB Videos"
               width={180}
               height={42}
@@ -115,7 +128,7 @@ export default function FeaturedVideosWidget() {
       <div className={styles.header}>
         <h2 className={styles.title}>
           <Image
-            src="/cb-videos-logo.webp"
+            src={cbVideosLogo}
             alt="CB Videos"
             width={180}
             height={42}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import Image from "next/image";
@@ -58,6 +58,18 @@ function categorizeVideos(videos) {
 }
 
 function FeaturedSection({ videos }) {
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
   if (videos.length === 0) return null;
 
   const [hero, ...rest] = videos;
@@ -68,7 +80,7 @@ function FeaturedSection({ videos }) {
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>
           <Image
-            src="/cb-videos-logo.webp"
+            src={isDark ? "/cb-videos-logo-dark.webp" : "/cb-videos-logo.webp"}
             alt="CB Videos"
             width={240}
             height={56}
