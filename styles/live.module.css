@@ -736,6 +736,7 @@
   .offAirPanel {
     aspect-ratio: auto;
     overflow: visible;
+    min-height: 32rem;
   }
 
   .offAirInner {
