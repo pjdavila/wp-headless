@@ -133,78 +133,6 @@
   margin: 0.2rem 0 0;
 }
 
-.headerMeta {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex-shrink: 0;
-}
-
-.onAirTime {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.42rem 0.75rem;
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: hsl(var(--foreground));
-  background: hsl(var(--background) / 0.55);
-  border: 1px solid hsl(var(--border) / 0.5);
-  border-radius: 999px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.onAirGlyph {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: hsl(var(--primary));
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.18);
-  animation: onAirGlow 2.2s ease-in-out infinite;
-}
-
-@keyframes onAirGlow {
-  0%, 100% { box-shadow: 0 0 0 2px hsl(var(--primary) / 0.18); }
-  50% { box-shadow: 0 0 0 5px hsl(var(--primary) / 0.05); }
-}
-
-.shareBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.42rem 0.85rem;
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: hsl(var(--foreground));
-  background: hsl(var(--background) / 0.55);
-  border: 1px solid hsl(var(--border) / 0.5);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 180ms ease, border-color 180ms ease,
-    color 180ms ease, transform 180ms ease;
-}
-
-.shareBtn:hover {
-  color: hsl(var(--primary));
-  border-color: hsl(var(--primary) / 0.55);
-  background: hsl(var(--primary) / 0.08);
-  transform: translateY(-1px);
-}
-
-.shareBtn:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-.shareLabel {
-  display: inline;
-}
-
 /* ===== Player frame with halo ===== */
 .playerFrame {
   position: relative;
@@ -605,7 +533,6 @@
 @media (prefers-reduced-motion: reduce) {
   .liveDot,
   .liveBadge,
-  .onAirGlyph,
   .offAirIcon::before,
   .offAirLogo,
   .offAirBtn,
@@ -614,7 +541,6 @@
     animation: none !important;
   }
   .playerFrame,
-  .shareBtn,
   .videosLink,
   .offAirBtn {
     transition: none !important;
@@ -648,19 +574,6 @@
 
   .streamSubtitle {
     font-size: 0.62rem;
-  }
-
-  .headerMeta {
-    width: 100%;
-    justify-content: space-between;
-    padding-top: 0.65rem;
-    border-top: 1px solid hsl(var(--border) / 0.5);
-  }
-
-  .onAirTime,
-  .shareBtn {
-    font-size: 0.68rem;
-    padding: 0.38rem 0.7rem;
   }
 
   .playerFrame {
@@ -697,14 +610,6 @@
 }
 
 @media (max-width: 480px) {
-  .shareLabel {
-    display: none;
-  }
-
-  .shareBtn {
-    padding: 0.42rem 0.55rem;
-  }
-
   .streamTitle {
     font-size: 1.1rem;
     white-space: normal;
