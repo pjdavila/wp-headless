@@ -14,6 +14,7 @@ import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
+import PrintEditionWidget from "../components/PrintEditionWidget";
 import AdServerSlot from "../components/AdServerSlot";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -206,6 +207,8 @@ export default function FrontPage(props) {
             </div>
 
             <NewsletterWidget />
+
+            <PrintEditionWidget />
 
             <MarketWatchlist />
 

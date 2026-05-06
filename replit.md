@@ -20,6 +20,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **Optional Env Vars**:
     - `RECOMBEE_REGION`
     - `NEXT_PUBLIC_FIREBASE_VAPID_KEY`
+    - `PRINT_EDITION_NOTIFY_EMAIL` (internal address for new print-edition interest notifications)
 
 ## Stack
 
@@ -48,6 +49,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **Dark Mode First**: Default dark mode with `localStorage` persistence and FOUC prevention in `_app.js`.
 - **Firebase Integration**: Comprehensive Firebase services (Auth, Firestore, FCM) integrated via context providers and hooks for modularity and reusability.
 - **Transactional Email with Resend**: Server-side Resend API for welcome emails, with internal logging of message IDs for deliverability tracking.
+- **Print Edition Waitlist**: `/edicion-impresa/` collects interest in the future printed edition. Submissions are stored in Firestore collection `printEditionInterest` (status, town, address, IP prefix), trigger a Spanish confirmation email via Resend, and optionally notify a team inbox (`PRINT_EDITION_NOTIFY_EMAIL`).
 
 ## Product
 

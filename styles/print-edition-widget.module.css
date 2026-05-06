@@ -1,0 +1,97 @@
+.card {
+  background-color: hsl(var(--card));
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid hsl(var(--border) / 0.6);
+}
+
+.header {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, hsl(152 50% 18% / 0.35), transparent 70%),
+    linear-gradient(160deg, hsl(152 45% 11%), hsl(152 30% 7%) 60%, hsl(var(--card)));
+  padding: 1.6rem 1.25rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.55), transparent);
+}
+
+.iconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.18);
+  border: 1px solid hsl(var(--primary) / 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary));
+  margin-bottom: 0.2rem;
+}
+
+.heading {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: hsl(0 0% 100%);
+  letter-spacing: 0.01em;
+}
+
+.subheading {
+  font-size: 0.72rem;
+  color: hsl(0 0% 100% / 0.65);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.body {
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.copy {
+  font-size: 0.82rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.55;
+  margin: 0;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  cursor: pointer;
+  transition: opacity 0.2s;
+  letter-spacing: 0.02em;
+  box-sizing: border-box;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
