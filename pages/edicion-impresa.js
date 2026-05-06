@@ -1,11 +1,46 @@
+import Head from "next/head";
 import { useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
+import { BreadcrumbJsonLd } from "../components/JsonLd";
 import PrintEditionForm from "../components/PrintEditionForm";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import styles from "../styles/edicion-impresa.module.css";
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://caribbean.business").replace(/\/+$/, "");
+const PAGE_URL = `${SITE_URL}/edicion-impresa/`;
+
+const PAGE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": PAGE_URL,
+  url: PAGE_URL,
+  name: "Edición impresa — Lista de espera | Caribbean Business",
+  inLanguage: "es",
+  description:
+    "Anótate para recibir la edición impresa de Caribbean Business en tu casa cuando arranque nuestro programa de distribución en Puerto Rico.",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Caribbean Business",
+    url: SITE_URL,
+  },
+  publisher: {
+    "@type": "NewsMediaOrganization",
+    name: "Caribbean Business",
+    url: SITE_URL,
+  },
+  potentialAction: {
+    "@type": "SubscribeAction",
+    target: PAGE_URL,
+    name: "Anotarme en la lista de espera",
+  },
+};
+
+function safeJsonLd(obj) {
+  return JSON.stringify(obj).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
+}
 
 export default function PrintEditionPage() {
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
@@ -21,6 +56,20 @@ export default function PrintEditionPage() {
         title="Edición impresa — Lista de espera"
         description="Anótate para recibir la edición impresa de Caribbean Business en tu casa cuando arranque nuestro programa de distribución en Puerto Rico."
         url="/edicion-impresa/"
+      />
+
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(PAGE_JSON_LD) }}
+        />
+      </Head>
+
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Inicio", url: "/" },
+          { name: "Edición impresa", url: "/edicion-impresa/" },
+        ]}
       />
 
       <Header
