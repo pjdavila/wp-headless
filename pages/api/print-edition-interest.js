@@ -1,7 +1,6 @@
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../lib/firebase";
 import { isValidMunicipality } from "../../lib/puertoRicoMunicipalities";
 import { sendWelcomeEmail } from "../../lib/welcomeEmail";
+import { appendInterest } from "../../lib/printEditionStore";
 
 // Best-effort, in-memory rate limit. Per-process only — does not coordinate
 // across serverless instances. Acceptable as a basic abuse deterrent given
@@ -62,7 +61,17 @@ function isValidZip(value) {
   return /^\d{5}(-\d{4})?$/.test(value);
 }
 
-async function notifyTeam({ fullName, email, phone, addressLine1, addressLine2, town, zip }) {
+async function notifyTeam({
+  fullName,
+  email,
+  phone,
+  addressLine1,
+  addressLine2,
+  town,
+  zip,
+  userAgent,
+  ipPrefix,
+}) {
   const notifyEmail = process.env.PRINT_EDITION_NOTIFY_EMAIL;
   const apiKey = process.env.RESEND_API_KEY;
   if (!notifyEmail || !apiKey) return;
@@ -74,6 +83,8 @@ async function notifyTeam({ fullName, email, phone, addressLine1, addressLine2, 
   const eAddr2 = addressLine2 ? escapeHtml(addressLine2) : "";
   const eTown = escapeHtml(town);
   const eZip = escapeHtml(zip);
+  const eUA = escapeHtml(userAgent || "");
+  const eIp = escapeHtml(ipPrefix || "");
 
   const html = `
 <!DOCTYPE html><html><body style="font-family:Helvetica,Arial,sans-serif;background:#0d0e12;color:#e6e7eb;padding:24px;">
@@ -82,9 +93,12 @@ async function notifyTeam({ fullName, email, phone, addressLine1, addressLine2, 
     <tr><td><strong>Nombre:</strong></td><td>${eFullName}</td></tr>
     <tr><td><strong>Email:</strong></td><td>${eEmail}</td></tr>
     <tr><td><strong>Teléfono:</strong></td><td>${ePhone}</td></tr>
-    <tr><td><strong>Dirección:</strong></td><td>${eAddr1}${eAddr2 ? `, ${eAddr2}` : ""}</td></tr>
+    <tr><td><strong>Dirección 1:</strong></td><td>${eAddr1}</td></tr>
+    <tr><td><strong>Dirección 2:</strong></td><td>${eAddr2}</td></tr>
     <tr><td><strong>Pueblo:</strong></td><td>${eTown}</td></tr>
     <tr><td><strong>Código postal:</strong></td><td>${eZip}</td></tr>
+    <tr><td><strong>IP (prefijo):</strong></td><td>${eIp}</td></tr>
+    <tr><td><strong>User-Agent:</strong></td><td>${eUA}</td></tr>
   </table>
 </body></html>`.trim();
 
@@ -149,8 +163,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Revisa los campos del formulario.", fields: errors });
   }
 
+  const ipPrefix = truncateIp(ip);
+  const userAgent = sanitize(req.headers["user-agent"] || "", 300);
+
   try {
-    await addDoc(collection(db, "printEditionInterest"), {
+    await appendInterest({
       fullName,
       email,
       phone,
@@ -161,12 +178,12 @@ export default async function handler(req, res) {
       country: "PR",
       status: "pending",
       consent: true,
-      ipPrefix: truncateIp(ip),
-      userAgent: sanitize(req.headers["user-agent"] || "", 300),
-      createdAt: serverTimestamp(),
+      ipPrefix,
+      userAgent,
+      createdAt: new Date().toISOString(),
     });
   } catch (err) {
-    console.error("Firestore write failed (printEditionInterest):", err.message);
+    console.error("Local store write failed (printEditionInterest):", err.message);
     return res.status(500).json({ error: "No pudimos guardar tu registro. Intenta de nuevo en unos minutos." });
   }
 
@@ -176,7 +193,17 @@ export default async function handler(req, res) {
     console.error("Print interest welcome email failed:", err.message);
   }
 
-  notifyTeam({ fullName, email, phone, addressLine1, addressLine2, town, zip }).catch(() => {});
+  notifyTeam({
+    fullName,
+    email,
+    phone,
+    addressLine1,
+    addressLine2,
+    town,
+    zip,
+    userAgent,
+    ipPrefix,
+  }).catch(() => {});
 
   return res.status(200).json({ ok: true });
 }

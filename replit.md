@@ -21,6 +21,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
     - `RECOMBEE_REGION`
     - `NEXT_PUBLIC_FIREBASE_VAPID_KEY`
     - `PRINT_EDITION_NOTIFY_EMAIL` (internal address for new print-edition interest notifications)
+    - `ADMIN_EXPORT_TOKEN` (token to authorize `/api/print-edition-export` CSV download)
 
 ## Stack
 
@@ -49,7 +50,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **Dark Mode First**: Default dark mode with `localStorage` persistence and FOUC prevention in `_app.js`.
 - **Firebase Integration**: Comprehensive Firebase services (Auth, Firestore, FCM) integrated via context providers and hooks for modularity and reusability.
 - **Transactional Email with Resend**: Server-side Resend API for welcome emails, with internal logging of message IDs for deliverability tracking.
-- **Print Edition Waitlist**: `/edicion-impresa/` collects interest in the future printed edition. Submissions are stored in Firestore collection `printEditionInterest` (status, town, address, IP prefix), trigger a Spanish confirmation email via Resend, and optionally notify a team inbox (`PRINT_EDITION_NOTIFY_EMAIL`).
+- **Print Edition Waitlist**: `/edicion-impresa/` collects interest in the future printed edition. Submissions are appended as JSON lines to a local file (`data/print-edition-interest.jsonl`) by `lib/printEditionStore.js`, trigger a Spanish confirmation email via Resend, and send a full-detail backup notification to the team inbox (`PRINT_EDITION_NOTIFY_EMAIL`). Admins can download a CSV via `/api/print-edition-export` using `ADMIN_EXPORT_TOKEN`. The team email is the durable source of truth (the local file may not survive multi-instance/ephemeral deploys).
 
 ## Product
 
@@ -81,6 +82,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **Firebase Service Worker**: `public/firebase-messaging-sw.js` is generated at build time and should not be manually edited or committed.
 - **Moosend Welcome Email**: Logic prevents re-sending welcome emails on subsequent newsletter subscriptions if the contact already exists.
 - **WPE Atlas Deployment**: Requires Node.js v20 and uses `wpe-build` and `faust start` scripts.
+- **Print Edition Local Storage**: `data/print-edition-interest.jsonl` is per-container and not synced across instances; on WPE Atlas it may be wiped on redeploys. Treat the team notification email as the authoritative record.
 - **Coming Soon Gate Disabled**: The password gate in `pages/_app.js` is hard-coded off (`isComingSoonEnabled = false`). To re-enable it, restore the original env-var check (`COMING_SOON === "true"` / `NEXT_PUBLIC_COMING_SOON === "true"`) and ensure `SITE_PASSWORD` is set. The `ComingSoon` component and `/api/check-access`, `/api/verify-access` endpoints are kept for that purpose.
 
 ## Pointers
