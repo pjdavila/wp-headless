@@ -65,9 +65,12 @@ const GA_INIT_SCRIPT = `
 })();
 `;
 
-const isComingSoonEnabled =
-  process.env.COMING_SOON === "true" ||
-  process.env.NEXT_PUBLIC_COMING_SOON === "true";
+// Coming Soon gate is currently DISABLED.
+// To re-enable, set this back to:
+//   process.env.COMING_SOON === "true" ||
+//   process.env.NEXT_PUBLIC_COMING_SOON === "true";
+// (and ensure SITE_PASSWORD is set in the environment).
+const isComingSoonEnabled = false;
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();

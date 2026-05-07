@@ -81,6 +81,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **Firebase Service Worker**: `public/firebase-messaging-sw.js` is generated at build time and should not be manually edited or committed.
 - **Moosend Welcome Email**: Logic prevents re-sending welcome emails on subsequent newsletter subscriptions if the contact already exists.
 - **WPE Atlas Deployment**: Requires Node.js v20 and uses `wpe-build` and `faust start` scripts.
+- **Coming Soon Gate Disabled**: The password gate in `pages/_app.js` is hard-coded off (`isComingSoonEnabled = false`). To re-enable it, restore the original env-var check (`COMING_SOON === "true"` / `NEXT_PUBLIC_COMING_SOON === "true"`) and ensure `SITE_PASSWORD` is set. The `ComingSoon` component and `/api/check-access`, `/api/verify-access` endpoints are kept for that purpose.
 
 ## Pointers
 
