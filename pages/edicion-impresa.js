@@ -90,7 +90,7 @@ export default function PrintEditionPage() {
             <ul className={styles.benefits}>
               <li>Análisis exclusivos de los protagonistas del negocio caribeño.</li>
               <li>Reportajes en profundidad que no encontrarás en línea.</li>
-              <li>Entrega directa a tu dirección, sin costo durante el lanzamiento.</li>
+              <li>Entrega directa a tu dirección, pagando solo el costo de envio.</li>
             </ul>
           </section>
 
