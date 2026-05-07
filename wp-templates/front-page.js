@@ -11,7 +11,6 @@ import RecommendedCarousel from "../components/RecommendedCarousel";
 import ShortStoriesRow from "../components/ShortStoriesRow";
 import FeaturedCategoryBlock from "../components/FeaturedCategoryBlock";
 import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
-import SidebarStoryCard from "../components/SidebarStoryCard";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
 import PrintEditionWidget from "../components/PrintEditionWidget";
@@ -49,9 +48,6 @@ const HOMEPAGE_QUERY = gql`
       nodes { ...PostListFragment }
     }
     techAi: posts(first: 4, where: { categoryName: "cbusiness-tech-ai", orderby: { field: DATE, order: DESC } }) {
-      nodes { ...PostListFragment }
-    }
-    oyeComoFue: posts(first: 5, where: { categoryName: "oye-como-fue", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
     queMiImporta: posts(first: 5, where: { categoryName: "que-mi-importa", orderby: { field: DATE, order: DESC } }) {
@@ -95,7 +91,6 @@ export default function FrontPage(props) {
   const allPosts = data?.posts?.nodes || [];
   const featuredPosts = featuredData?.posts?.nodes || [];
   const heroPosts = allPosts.slice(0, 5);
-  const oyeComoFuePosts = data?.oyeComoFue?.nodes || [];
   const queMiImportaPosts = data?.queMiImporta?.nodes || [];
   const leadPosts = data?.leadPosts?.nodes || [];
 
@@ -193,15 +188,6 @@ export default function FrontPage(props) {
           </div>
 
           <aside className={styles.sidebar}>
-            <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarTitle}>Oye Como Fue</h3>
-              <div className={styles.recentList}>
-                {oyeComoFuePosts.map((post) => (
-                  <SidebarStoryCard key={post.id} post={post} />
-                ))}
-              </div>
-            </div>
-
             <div className={styles.sidebarAdSlot}>
               <AdServerSlot zone="161655" width={300} height={250} />
             </div>
