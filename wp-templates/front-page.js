@@ -14,6 +14,7 @@ import FeaturedVideosWidget from "../components/FeaturedVideosWidget";
 import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
 import PrintEditionWidget from "../components/PrintEditionWidget";
+import EpaperBanner from "../components/EpaperBanner";
 import AdServerSlot from "../components/AdServerSlot";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -133,6 +134,8 @@ export default function FrontPage(props) {
 
       <main className="container">
         <FeaturedHero posts={allPosts} sliderPosts={featuredPosts} sideCardPosts={leadPosts} />
+
+        <EpaperBanner />
 
         <div className={styles.layout}>
           <div className={styles.mainContent}>
