@@ -7,20 +7,20 @@ import SeoHead from "../components/SeoHead";
 import { BreadcrumbJsonLd } from "../components/JsonLd";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
-import styles from "../styles/edicion-actual.module.css";
+import styles from "../styles/magazine.module.css";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://caribbean.business").replace(/\/+$/, "");
-const PAGE_URL = `${SITE_URL}/edicion-actual/`;
+const PAGE_URL = `${SITE_URL}/magazine/`;
 
 const PAGE_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "@id": PAGE_URL,
   url: PAGE_URL,
-  name: "Edición Actual — Caribbean Business",
-  inLanguage: "es",
+  name: "Current Edition — Caribbean Business",
+  inLanguage: "en",
   description:
-    "Lee la edición más reciente de la revista Caribbean Business directamente desde tu navegador.",
+    "Read the latest issue of Caribbean Business magazine directly from your browser.",
   isPartOf: {
     "@type": "WebSite",
     name: "Caribbean Business",
@@ -48,13 +48,13 @@ export default function CurrentEditionPage() {
   return (
     <>
       <SeoHead
-        title="Edición Actual"
-        description="Lee la edición más reciente de la revista Caribbean Business directamente desde tu navegador."
-        url="/edicion-actual/"
+        title="Current Edition"
+        description="Read the latest issue of Caribbean Business magazine directly from your browser."
+        url="/magazine/"
       />
 
       <Head>
-        <title>Edición Actual — Caribbean Business</title>
+        <title>Current Edition — Caribbean Business</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonLd(PAGE_JSON_LD) }}
@@ -63,8 +63,8 @@ export default function CurrentEditionPage() {
 
       <BreadcrumbJsonLd
         items={[
-          { name: "Inicio", url: "/" },
-          { name: "Edición Actual", url: "/edicion-actual/" },
+          { name: "Home", url: "/" },
+          { name: "Current Edition", url: "/magazine/" },
         ]}
       />
 
@@ -77,22 +77,22 @@ export default function CurrentEditionPage() {
       <main className="container">
         <div className={styles.wrapper}>
           <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-            <Link href="/">Inicio</Link>
+            <Link href="/">Home</Link>
             <span aria-hidden="true" className={styles.breadcrumbSep}>›</span>
-            <span aria-current="page">Edición Actual</span>
+            <span aria-current="page">Current Edition</span>
           </nav>
 
           <header className={styles.header}>
-            <h1 className={styles.title}>Edición Actual</h1>
+            <h1 className={styles.title}>Current Edition</h1>
             <p className={styles.subtitle}>
-              Lee la edición más reciente de la revista Caribbean Business directamente desde tu navegador.
+              Read the latest issue of Caribbean Business magazine directly from your browser.
             </p>
           </header>
 
           <div className={styles.viewer}>
             <iframe
               src="https://www.pdf-flip.com/viewers/379264/k1crph.html"
-              title="Edición actual de Caribbean Business"
+              title="Caribbean Business — Current Edition"
               className={styles.iframe}
               loading="lazy"
               allowFullScreen
@@ -100,8 +100,8 @@ export default function CurrentEditionPage() {
           </div>
 
           <p className={styles.cta}>
-            ¿Quieres recibir la edición impresa en tu casa?{" "}
-            <Link href="/edicion-impresa/">Anótate en la lista de espera.</Link>
+            Want to receive the print edition at home?{" "}
+            <Link href="/edicion-impresa/">Join the waitlist.</Link>
           </p>
         </div>
       </main>

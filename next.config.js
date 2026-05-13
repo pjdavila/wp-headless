@@ -41,6 +41,16 @@ module.exports = withAtlasConfig(
           destination: "https://summit.caribbean.business/",
           permanent: true,
         },
+        {
+          source: "/edicion-actual",
+          destination: "/magazine",
+          permanent: true,
+        },
+        {
+          source: "/edicion-actual/",
+          destination: "/magazine/",
+          permanent: true,
+        },
       ];
     },
   })
