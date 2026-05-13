@@ -1,44 +1,13 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/epaper-banner.module.css";
 
-function formatDate(date) {
-  const formatted = new Intl.DateTimeFormat("es-PR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "America/Puerto_Rico",
-  }).format(date);
-  return formatted.toLowerCase();
-}
-
-function isoDate(date) {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    timeZone: "America/Puerto_Rico",
-  }).format(date);
-  return parts;
-}
-
 export default function EpaperBanner() {
-  const [dateLabel, setDateLabel] = useState("");
-  const [dateIso, setDateIso] = useState("");
-
-  useEffect(() => {
-    const now = new Date();
-    setDateLabel(formatDate(now));
-    setDateIso(isoDate(now));
-  }, []);
-
   return (
     <Link
-      href="/edicion-impresa/"
+      href="/magazine/"
       className={styles.banner}
-      aria-label="Última edición de Caribbean Business: ver edición impresa"
+      aria-label="Latest edition of Caribbean Business: open the magazine"
     >
       <div className={styles.coversWrap} aria-hidden="true">
         <div className={`${styles.cover} ${styles.coverBack}`} />
@@ -46,7 +15,7 @@ export default function EpaperBanner() {
         <div className={`${styles.cover} ${styles.coverFront}`}>
           <Image
             src="/epaper/portada-actual.webp"
-            alt="Portada del día de Caribbean Business"
+            alt="Caribbean Business latest edition cover"
             fill
             sizes="(max-width: 640px) 90px, 130px"
             className={styles.coverImg}
@@ -55,16 +24,7 @@ export default function EpaperBanner() {
       </div>
 
       <div className={styles.text}>
-        <span className={styles.title}>Última Edición</span>
-        {dateLabel ? (
-          <time className={styles.date} dateTime={dateIso}>
-            {dateLabel}
-          </time>
-        ) : (
-          <span className={styles.date} aria-hidden="true">
-            &nbsp;
-          </span>
-        )}
+        <span className={styles.title}>Latest Edition</span>
       </div>
 
       <span className={styles.arrow} aria-hidden="true">
