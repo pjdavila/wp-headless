@@ -24,7 +24,7 @@ export default function EpaperBanner() {
       </div>
 
       <div className={styles.text}>
-        <span className={styles.title}>Latest Edition</span>
+        <span className={`${styles.title} text-[20px]`}>Latest Edition</span>
       </div>
 
       <span className={styles.arrow} aria-hidden="true">
