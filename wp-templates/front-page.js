@@ -135,8 +135,6 @@ export default function FrontPage(props) {
       <main className="container">
         <FeaturedHero posts={allPosts} sliderPosts={featuredPosts} sideCardPosts={leadPosts} />
 
-        <EpaperBanner />
-
         <div className={styles.layout}>
           <div className={styles.mainContent}>
             <ShortStoriesRow />
@@ -191,6 +189,8 @@ export default function FrontPage(props) {
           </div>
 
           <aside className={styles.sidebar}>
+            <EpaperBanner />
+
             <div className={styles.sidebarAdSlot}>
               <AdServerSlot zone="161655" width={300} height={250} />
             </div>
