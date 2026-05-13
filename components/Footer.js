@@ -14,6 +14,7 @@ const COMPANY = [
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Advertise", href: "/advertise" },
+  { label: "Edición Actual", href: "/edicion-actual/" },
   { label: "Edición impresa", href: "/edicion-impresa/" },
   { label: "Terms of Use", href: "/terms" },
 ];
