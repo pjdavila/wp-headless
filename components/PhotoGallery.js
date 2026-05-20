@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/photo-gallery.module.css";
 
 export default function PhotoGallery({ images }) {
@@ -39,7 +40,7 @@ export default function PhotoGallery({ images }) {
             aria-label={`View image ${i + 1}`}
           >
             <Image
-              src={img.sourceUrl}
+              src={normalizeImageUrl(img.sourceUrl)}
               alt={img.altText || `Image ${i + 1}`}
               fill
               sizes="(max-width: 768px) 50vw, 200px"
@@ -69,7 +70,7 @@ export default function PhotoGallery({ images }) {
 
             <div className={styles.lightboxImgWrap}>
               <Image
-                src={images[lightboxIndex].sourceUrl}
+                src={normalizeImageUrl(images[lightboxIndex].sourceUrl)}
                 alt={images[lightboxIndex].altText || ""}
                 fill
                 sizes="90vw"

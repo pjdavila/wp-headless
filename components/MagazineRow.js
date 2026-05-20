@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import StoryCard from "./StoryCard";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/magazine-row.module.css";
 
 function formatDate(dateStr) {
@@ -14,7 +15,7 @@ function formatDate(dateStr) {
 function HeroCard({ post }) {
   const { title, uri, excerpt, date, featuredImage, author, categories } = post;
   const category = categories?.nodes?.[0];
-  const imgSrc = featuredImage?.node?.sourceUrl;
+  const imgSrc = normalizeImageUrl(featuredImage?.node?.sourceUrl);
   const imgAlt = featuredImage?.node?.altText || title;
 
   return (

@@ -17,6 +17,7 @@ import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
 import { useFaustQuery } from "@faustwp/core";
 import { estimateReadingTime } from "../utils/readingTime";
 import { useTrackView, useRecommendations } from "../lib/useRecombee";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/single.module.css";
 
 const POST_QUERY = gql`
@@ -140,7 +141,7 @@ export default function Component(props) {
   const audioUrl = post?.articulos?.audioUrl?.trim();
   const category = categories?.nodes?.find((c) => c.slug !== "uncategorized") || categories?.nodes?.[0];
   const readTime = estimateReadingTime(content);
-  const imgSrc = featuredImage?.node?.sourceUrl;
+  const imgSrc = normalizeImageUrl(featuredImage?.node?.sourceUrl);
 
   const fallbackRelated = (category?.posts?.nodes || []).filter(
     (p) => p.id !== post.id && p.title !== title

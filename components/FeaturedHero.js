@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/featured-hero.module.css";
 
 const SLIDE_INTERVAL = 5000;
@@ -17,7 +18,7 @@ function MiniCard({ post }) {
   const cat = post.categories?.nodes?.find(
     (c) => c.slug !== "uncategorized" && c.slug !== "sin-categoria"
   ) || post.categories?.nodes?.[0];
-  const imgSrc = post.featuredImage?.node?.sourceUrl;
+  const imgSrc = normalizeImageUrl(post.featuredImage?.node?.sourceUrl);
 
   return (
     <article className={styles.miniCard}>
@@ -63,7 +64,7 @@ function Slide({ post, isActive }) {
   const category = post.categories?.nodes?.find(
     (c) => c.slug !== "uncategorized" && c.slug !== "sin-categoria"
   ) || post.categories?.nodes?.[0];
-  const imgSrc = post.featuredImage?.node?.sourceUrl;
+  const imgSrc = normalizeImageUrl(post.featuredImage?.node?.sourceUrl);
 
   return (
     <div className={`${styles.slide} ${isActive ? styles.slideActive : ""}`}>

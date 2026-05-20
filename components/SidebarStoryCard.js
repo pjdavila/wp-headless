@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/sidebar-story-card.module.css";
 
 function relativeTime(dateStr) {
@@ -28,7 +29,7 @@ function relativeTime(dateStr) {
 
 export default function SidebarStoryCard({ post, index }) {
   const { title, uri, date, featuredImage } = post;
-  const imgSrc = featuredImage?.node?.sourceUrl;
+  const imgSrc = normalizeImageUrl(featuredImage?.node?.sourceUrl);
   const imgAlt = featuredImage?.node?.altText || title;
 
   return (

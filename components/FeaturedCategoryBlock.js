@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/featured-category-block.module.css";
 
 function formatDate(dateStr) {
@@ -14,7 +15,7 @@ export default function FeaturedCategoryBlock({ title, categoryUri, posts = [] }
   if (posts.length === 0) return null;
 
   const [hero, ...sideItems] = posts;
-  const heroImg = hero.featuredImage?.node?.sourceUrl;
+  const heroImg = normalizeImageUrl(hero.featuredImage?.node?.sourceUrl);
   const heroAlt = hero.featuredImage?.node?.altText || hero.title;
   const heroCategory = hero.categories?.nodes?.[0];
 
@@ -65,7 +66,7 @@ export default function FeaturedCategoryBlock({ title, categoryUri, posts = [] }
         {sideItems.length > 0 && (
           <div className={styles.sideList}>
             {sideItems.map((post) => {
-              const img = post.featuredImage?.node?.sourceUrl;
+              const img = normalizeImageUrl(post.featuredImage?.node?.sourceUrl);
               const alt = post.featuredImage?.node?.altText || post.title;
               const cat = post.categories?.nodes?.[0];
 

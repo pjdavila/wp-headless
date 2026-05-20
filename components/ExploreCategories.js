@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/explore-categories.module.css";
 
 export default function ExploreCategories({ categories, posts }) {
@@ -10,7 +11,7 @@ export default function ExploreCategories({ categories, posts }) {
 
   const categoryImages = {};
   for (const post of posts || []) {
-    const imgSrc = post.featuredImage?.node?.sourceUrl;
+    const imgSrc = normalizeImageUrl(post.featuredImage?.node?.sourceUrl);
     if (!imgSrc) continue;
     const cats = post.categories?.nodes || [];
     for (const cat of cats) {
