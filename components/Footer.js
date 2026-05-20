@@ -12,7 +12,7 @@ const SECTIONS = [
 
 const COMPANY = [
   { label: "About Us", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", href: "https://vnmedia.co/contacto", external: true },
   { label: "Advertise", href: "/advertise" },
   { label: "Current Edition", href: "/magazine/" },
   { label: "Edición impresa", href: "/edicion-impresa/" },
@@ -110,11 +110,23 @@ export default function Footer() {
 
             <div className={styles.linkCol}>
               <h4 className={styles.colTitle}>Company</h4>
-              {COMPANY.map((link) => (
-                <Link key={link.href} href={link.href} className={styles.footerLink}>
-                  {link.label}
-                </Link>
-              ))}
+              {COMPANY.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className={styles.footerLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link key={link.href} href={link.href} className={styles.footerLink}>
+                    {link.label}
+                  </Link>
+                )
+              )}
             </div>
           </div>
         </div>
