@@ -13,7 +13,7 @@ const SECTIONS = [
 const COMPANY = [
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "https://vnmedia.co/contacto", external: true },
-  { label: "Advertise", href: "/advertise" },
+  { label: "Advertise", href: "https://vnmedia.co/contacto", external: true },
   { label: "Current Edition", href: "/magazine/" },
   { label: "Edición impresa", href: "/edicion-impresa/" },
   { label: "Terms of Use", href: "/terms" },
