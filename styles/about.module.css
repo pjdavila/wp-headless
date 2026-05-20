@@ -94,6 +94,11 @@
   margin: 0.25rem 0 0.25rem;
 }
 
+.leadBlock {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
 .body {
   display: flex;
   flex-direction: column;
@@ -104,7 +109,13 @@
   font-size: 1.15rem;
   line-height: 1.7;
   color: hsl(var(--foreground));
-  margin: 0 0 1.25rem;
+  margin: 0;
+}
+
+.lead::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
 .lead::first-letter {
@@ -134,9 +145,10 @@
   padding: 0.4rem 0 0.4rem 1.25rem;
   border-left: 4px solid hsl(var(--primary));
   font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 1.3rem;
-  line-height: 1.45;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.5;
   color: hsl(var(--foreground));
 }
 
@@ -145,9 +157,9 @@
   margin-top: 0.5rem;
   font-family: var(--font-sans);
   font-style: normal;
-  font-weight: 600;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: hsl(var(--muted-foreground));
 }
@@ -177,6 +189,7 @@
 
 .missionText {
   font-family: var(--font-serif);
+  font-style: italic;
   font-size: 1.2rem;
   line-height: 1.55;
   color: hsl(var(--foreground));
@@ -201,8 +214,9 @@
 
 .caption {
   margin: 0.85rem 0.25rem 0;
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
 }
@@ -231,17 +245,24 @@
     order: 1;
   }
 
-  .body {
+  .divider {
+    display: none;
+  }
+
+  .leadBlock {
+    order: 2;
+  }
+
+  .heroRight {
     order: 3;
   }
 
-  .missionCard {
+  .body {
     order: 4;
   }
 
-  .divider {
-    order: 1;
-    display: none;
+  .missionCard {
+    order: 5;
   }
 }
 

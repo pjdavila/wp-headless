@@ -93,7 +93,7 @@ export default function AboutPage() {
 
               <div className={styles.divider} aria-hidden="true" />
 
-              <div className={styles.body}>
+              <div className={styles.leadBlock}>
                 <p className={styles.lead}>
                   For more than four decades, Caribbean Business has served as a trusted source of business,
                   economic and political journalism in Puerto Rico and the Caribbean. Its reporting has
@@ -101,6 +101,9 @@ export default function AboutPage() {
                   every major industry, from finance and real estate to healthcare, technology, tourism and
                   government.
                 </p>
+              </div>
+
+              <div className={styles.body}>
                 <p>
                   Throughout its history, Caribbean Business has chronicled Puerto Rico&rsquo;s economic
                   evolution, providing in-depth coverage, analysis and editorial perspective during some of
