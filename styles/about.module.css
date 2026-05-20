@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
-  padding: 2.5rem 0 4rem;
+  padding: 3.5rem 0 5rem;
 }
 
 .breadcrumb {
@@ -33,46 +33,94 @@
   font-weight: 600;
 }
 
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.heroRight {
+  position: sticky;
+  top: 6rem;
+  min-width: 0;
+}
+
 .header {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  max-width: 760px;
+  gap: 0.75rem;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  margin: 0;
 }
 
 .title {
   font-family: var(--font-serif);
-  font-size: clamp(1.85rem, 3.6vw, 2.65rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: hsl(var(--foreground));
   margin: 0;
 }
 
 .subtitle {
-  font-size: 1.05rem;
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
   line-height: 1.6;
   color: hsl(var(--muted-foreground));
   margin: 0;
 }
 
+.divider {
+  height: 1px;
+  width: 100%;
+  background: hsl(var(--border));
+  margin: 0.25rem 0 0.25rem;
+}
+
 .body {
-  max-width: 760px;
   display: flex;
   flex-direction: column;
 }
 
-.intro {
+.lead {
+  font-family: var(--font-sans);
   font-size: 1.15rem;
   line-height: 1.7;
   color: hsl(var(--foreground));
   margin: 0 0 1.25rem;
 }
 
+.lead::first-letter {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 3.75rem;
+  line-height: 0.9;
+  float: left;
+  padding: 0.35rem 0.6rem 0 0;
+  color: hsl(var(--primary));
+}
+
 .body p {
+  font-family: var(--font-sans);
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: hsl(var(--foreground));
   margin: 0 0 1.1rem;
 }
@@ -81,16 +129,132 @@
   margin-bottom: 0;
 }
 
-.mission {
-  max-width: 760px;
-  margin: 0.5rem 0 0;
-  padding: 1.1rem 1.35rem;
+.pullquote {
+  margin: 0.5rem 0 1.5rem;
+  padding: 0.4rem 0 0.4rem 1.25rem;
   border-left: 4px solid hsl(var(--primary));
-  background: hsl(var(--muted) / 0.4);
-  border-radius: 0 var(--radius) var(--radius) 0;
   font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.45;
   color: hsl(var(--foreground));
+}
+
+.pullquoteAttr {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.missionCard {
+  margin-top: 0.75rem;
+  padding: 1.5rem 1.5rem 1.5rem 1.65rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.6);
+  border-left: 4px solid hsl(var(--primary));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.missionEyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  margin: 0;
+}
+
+.missionText {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.figure {
+  margin: 0;
+  padding: 1.25rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.6);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.figureImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: calc(var(--radius) - 4px);
+}
+
+.caption {
+  margin: 0.85rem 0.25rem 0;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 960px) {
+  .wrapper {
+    padding: 2.5rem 0 4rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .heroRight {
+    position: static;
+    top: auto;
+    order: 2;
+  }
+
+  .heroLeft {
+    display: contents;
+  }
+
+  .header {
+    order: 1;
+  }
+
+  .body {
+    order: 3;
+  }
+
+  .missionCard {
+    order: 4;
+  }
+
+  .divider {
+    order: 1;
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .lead::first-letter {
+    font-size: 3rem;
+  }
+
+  .pullquote {
+    font-size: 1.15rem;
+  }
+
+  .missionText {
+    font-size: 1.1rem;
+  }
 }
