@@ -1,0 +1,96 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding: 2.5rem 0 4rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.breadcrumb a {
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+.breadcrumbSep {
+  color: hsl(var(--muted-foreground) / 0.6);
+}
+
+.breadcrumb [aria-current="page"] {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 760px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 3.6vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+
+.body {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+}
+
+.intro {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: hsl(var(--foreground));
+  margin: 0 0 1.25rem;
+}
+
+.body p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: hsl(var(--foreground));
+  margin: 0 0 1.1rem;
+}
+
+.body p:last-child {
+  margin-bottom: 0;
+}
+
+.mission {
+  max-width: 760px;
+  margin: 0.5rem 0 0;
+  padding: 1.1rem 1.35rem;
+  border-left: 4px solid hsl(var(--primary));
+  background: hsl(var(--muted) / 0.4);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground));
+}
