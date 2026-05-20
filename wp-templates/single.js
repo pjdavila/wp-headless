@@ -18,6 +18,7 @@ import { useFaustQuery } from "@faustwp/core";
 import { estimateReadingTime } from "../utils/readingTime";
 import { useTrackView, useRecommendations } from "../lib/useRecombee";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
+import { rewriteWpContentImageUrls, rewriteWpImageSrc } from "../lib/rewriteWpContentImageUrls";
 import styles from "../styles/single.module.css";
 
 const POST_QUERY = gql`
@@ -89,7 +90,7 @@ function extractImagesFromContent(html) {
   const images = [];
   let match;
   while ((match = regex.exec(html)) !== null) {
-    images.push({ sourceUrl: match[1], altText: match[2] || "" });
+    images.push({ sourceUrl: rewriteWpImageSrc(match[1]), altText: match[2] || "" });
   }
   return images;
 }
@@ -137,7 +138,8 @@ export default function Component(props) {
   const { title: siteTitle } = siteData;
 
   const post = contentQuery?.post || {};
-  const { title, content, date, modified, uri, featuredImage, author, categories } = post;
+  const { title, content: rawContent, date, modified, uri, featuredImage, author, categories } = post;
+  const content = rewriteWpContentImageUrls(rawContent);
   const audioUrl = post?.articulos?.audioUrl?.trim();
   const category = categories?.nodes?.find((c) => c.slug !== "uncategorized") || categories?.nodes?.[0];
   const readTime = estimateReadingTime(content);
