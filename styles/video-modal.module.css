@@ -52,7 +52,6 @@
   .defaultContainer {
     width: 95vw;
   }
-
   .defaultClose {
     top: -36px;
   }
@@ -65,13 +64,13 @@
   inset: 0;
   z-index: 9999;
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr minmax(280px, 340px);
   grid-template-areas: "stage meta";
   align-items: center;
   background: rgba(0, 0, 0, 0.94);
   backdrop-filter: blur(14px);
   animation: fadeIn 0.2s ease;
-  padding: 1.5rem;
+  padding: 1.25rem;
   box-sizing: border-box;
 }
 
@@ -113,7 +112,8 @@
 .close:focus-visible,
 .navBtn:focus-visible,
 .actionBtn:focus-visible,
-.soundHint:focus-visible {
+.soundHint:focus-visible,
+.moreBtn:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
@@ -161,9 +161,9 @@
 
 .player {
   position: relative;
-  height: min(92vh, calc((100vw - 340px - 6rem) * 16 / 9));
+  height: min(92vh, calc((100vw - 340px - 5rem) * 16 / 9));
   aspect-ratio: 9 / 16;
-  max-height: calc(100vh - 64px);
+  max-height: calc(100vh - 56px);
   max-width: 100%;
   background: #000;
   border-radius: 18px;
@@ -245,27 +245,13 @@
   appearance: none;
 }
 
-.bigPlayBtn svg {
-  display: block;
-}
-
-.bigPlayBtn:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-}
-
-.bigPlayBtnHidden {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
+.bigPlayBtn svg { display: block; }
+.bigPlayBtn:hover { transform: translate(-50%, -50%) scale(1.05); }
+.bigPlayBtnHidden { opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
 
 .bigPlayBtn:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 4px;
-}
-
-.swipeArea {
-  display: none;
 }
 
 /* Floating actions column on the right edge of the video */
@@ -329,14 +315,9 @@
   transform: translateX(-50%) scale(1.04);
 }
 
-/* Mobile-only meta overlay at bottom-left of video */
-.mobileMeta {
-  display: none;
-}
-
 .navBtn {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.08);
@@ -346,6 +327,7 @@
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  opacity: 0;
   transition: background 0.2s, transform 0.2s, opacity 0.2s;
 }
 
@@ -354,17 +336,9 @@
   transform: scale(1.06);
 }
 
-/* Desktop: nav buttons only on stage hover */
-@media (min-width: 901px) {
-  .navBtn {
-    opacity: 0;
-    width: 38px;
-    height: 38px;
-  }
-  .stage:hover .navBtn,
-  .navBtn:focus-visible {
-    opacity: 1;
-  }
+.stage:hover .navBtn,
+.navBtn:focus-visible {
+  opacity: 1;
 }
 
 /* Desktop sidebar meta */
@@ -374,9 +348,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 0.5rem 0 1.5rem;
+  padding: 0 0.5rem 0 1.25rem;
   color: #fff;
-  max-height: calc(100vh - 64px);
+  max-height: calc(100vh - 56px);
   overflow-y: auto;
 }
 
@@ -391,7 +365,7 @@
   border: 1px solid hsl(var(--primary) / 0.45);
   color: #fff;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -408,7 +382,7 @@
 
 .metaTitle {
   font-family: var(--font-serif);
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 1.22;
   margin: 0 0 0.5rem 0;
@@ -417,7 +391,7 @@
 
 .metaDate {
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -428,7 +402,7 @@
 
 .metaDescription {
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.85);
   margin: 0 0 1rem 0;
@@ -441,7 +415,7 @@
 
 .counter {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   color: rgba(255, 255, 255, 0.55);
@@ -474,8 +448,138 @@
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-/* ---------- Mobile (≤900px): full-screen Reels feel ---------- */
-@media (max-width: 900px) {
+/* ---------- Mobile (≤768px): real snap-scroll Reels feed ---------- */
+
+.feed {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #000;
+}
+
+.feed::-webkit-scrollbar {
+  display: none;
+}
+
+.feedItem {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.feedPlayer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+.feedVideo,
+.feedPoster,
+.feedIframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+}
+
+.feedVideo,
+.feedPoster {
+  object-fit: cover;
+}
+
+.mobileMeta {
+  position: absolute;
+  left: 0;
+  right: 64px;
+  bottom: 0;
+  padding: 3rem 1rem 1.25rem 1.1rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 10%,
+    rgba(0, 0, 0, 0.55) 55%,
+    transparent
+  );
+  z-index: 2;
+  color: #fff;
+}
+
+.mobileTitle {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.35rem 0;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.mobileDate {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.5rem;
+}
+
+.mobileDescription {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mobileDescriptionExpanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-height: 50dvh;
+  overflow-y: auto;
+}
+
+.moreBtn {
+  margin-top: 0.35rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.moreBtn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 768px) {
   .overlay {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
@@ -485,127 +589,30 @@
     backdrop-filter: none;
   }
 
-  .stage {
-    height: 100vh;
-    height: 100dvh;
-    width: 100vw;
-    padding: 0;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .player {
-    position: relative;
-    inset: auto;
-    width: min(100vw, calc(100dvh * 9 / 16));
-    max-width: 100vw;
-    height: min(100dvh, calc(100vw * 16 / 9));
-    max-height: 100dvh;
-    aspect-ratio: 9 / 16;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .swipeArea {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: transparent;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Hide desktop side nav buttons on mobile (swipe replaces them) */
-  .navBtn {
-    display: none;
-  }
-
-  /* Hide desktop sidebar on mobile */
-  .meta {
-    display: none;
-  }
-
-  /* Mobile meta overlay: bottom-left over video with dark gradient */
-  .mobileMeta {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 64px; /* leave room for action column */
-    bottom: 0;
-    padding: 2.5rem 1rem 1.25rem 1.1rem;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.88) 10%,
-      rgba(0, 0, 0, 0.55) 55%,
-      transparent
-    );
-    z-index: 2;
-    color: #fff;
-    pointer-events: none;
-  }
-
-  .mobileTitle {
-    font-family: var(--font-serif);
-    font-size: 1.1rem;
-    font-weight: 700;
-    line-height: 1.25;
-    margin: 0 0 0.35rem 0;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  }
-
-  .mobileDate {
-    display: block;
-    font-family: var(--font-sans);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.75);
-    margin-bottom: 0.5rem;
-  }
-
-  .mobileDescription {
-    font-family: var(--font-sans);
-    font-size: 0.84rem;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Actions column raised above mobile meta */
-  .actions {
-    right: 10px;
-    bottom: 110px;
-    gap: 14px;
-  }
-
-  .actionBtn {
-    width: 46px;
-    height: 46px;
-  }
-
-  /* Close button visible above the video */
   .close {
-    top: 0.85rem;
-    right: 0.85rem;
+    top: 0.75rem;
+    right: 0.75rem;
     width: 38px;
     height: 38px;
+    z-index: 10;
   }
 
-  /* Progress bar sits inside safe area */
   .progress {
     top: 0.6rem;
     width: calc(100vw - 80px);
     max-width: calc(100vw - 80px);
+    z-index: 9;
   }
+}
 
-  /* Sound hint stays as centered pill above the meta gradient */
-  .soundHint {
-    bottom: 130px;
+@media (min-width: 769px) and (max-width: 1024px) {
+  .overlay {
+    grid-template-columns: 1fr minmax(260px, 300px);
+    padding: 1rem;
   }
+  .player {
+    height: min(92vh, calc((100vw - 300px - 4rem) * 16 / 9));
+  }
+  .metaTitle { font-size: 1.2rem; }
+  .metaDescription { font-size: 0.85rem; }
 }

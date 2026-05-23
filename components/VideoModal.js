@@ -44,8 +44,208 @@ function pickSources(item) {
   return out;
 }
 
+function pickPoster(video) {
+  const sized =
+    (video?.images || []).find((im) => im.width === 480) ||
+    (video?.images || []).find((im) => im.width >= 320);
+  return sized?.src || video?.image || "";
+}
+
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+const MOBILE_BREAKPOINT = "(max-width: 768px)";
+
+function ShortsMobileFeed({
+  list,
+  index,
+  setIndex,
+  muted,
+  onToggleMute,
+  onShare,
+  expanded,
+  toggleExpanded,
+}) {
+  const feedRef = useRef(null);
+  const sectionRefs = useRef([]);
+  const externalScrollLock = useRef(false);
+  const programmaticScroll = useRef(false);
+
+  // Scroll to active section when index changes from outside (keyboard, init).
+  useEffect(() => {
+    const section = sectionRefs.current[index];
+    const feed = feedRef.current;
+    if (!section || !feed) return;
+    const sRect = section.getBoundingClientRect();
+    const fRect = feed.getBoundingClientRect();
+    if (Math.abs(sRect.top - fRect.top) > 8) {
+      programmaticScroll.current = true;
+      externalScrollLock.current = true;
+      section.scrollIntoView({ behavior: "auto", block: "start" });
+      setTimeout(() => {
+        externalScrollLock.current = false;
+      }, 250);
+    }
+  }, [index]);
+
+  // IntersectionObserver: update index when a section is mostly visible.
+  useEffect(() => {
+    const feed = feedRef.current;
+    if (!feed) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (externalScrollLock.current) return;
+        let best = null;
+        for (const e of entries) {
+          if (e.isIntersecting && (!best || e.intersectionRatio > best.intersectionRatio)) {
+            best = e;
+          }
+        }
+        if (best) {
+          const idx = Number(best.target.getAttribute("data-idx"));
+          if (!Number.isNaN(idx)) setIndex(idx);
+        }
+      },
+      { root: feed, threshold: [0.55] }
+    );
+    sectionRefs.current.forEach((s) => s && io.observe(s));
+    return () => io.disconnect();
+  }, [list.length, setIndex]);
+
+  return (
+    <div ref={feedRef} className={styles.feed} role="list">
+      {list.map((video, i) => {
+        const isActive = i === index;
+        const sources = pickSources(video);
+        const mp4 = sources.find((s) => s.type === "video/mp4");
+        const poster = pickPoster(video);
+        const hasLongDesc = (video.description || "").length > 90;
+        return (
+          <section
+            key={`${video.mediaid}-${i}`}
+            ref={(el) => (sectionRefs.current[i] = el)}
+            data-idx={i}
+            className={styles.feedItem}
+            role="listitem"
+            aria-label={video.title}
+          >
+            <div className={styles.feedPlayer}>
+              {isActive && mp4 ? (
+                <ActiveNativeVideo src={mp4.src} poster={poster} muted={muted} />
+              ) : isActive && !mp4 ? (
+                <iframe
+                  className={styles.feedIframe}
+                  src={`https://astrovms.com/embed/${video.mediaid}?autoplay=1&muted=${muted ? 1 : 0}`}
+                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                  allowFullScreen
+                  title={video.title || "Video"}
+                />
+              ) : (
+                poster && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className={styles.feedPoster}
+                    src={poster}
+                    alt=""
+                    loading="lazy"
+                  />
+                )
+              )}
+
+              <div className={styles.actions}>
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={onToggleMute}
+                  aria-label={muted ? "Activar sonido" : "Silenciar"}
+                >
+                  {muted ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+                      <line x1="23" y1="9" x2="17" y2="15" />
+                      <line x1="17" y1="9" x2="23" y2="15" />
+                    </svg>
+                  ) : (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={onShare}
+                  aria-label="Compartir"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className={styles.mobileMeta}>
+                {video.title && <h3 className={styles.mobileTitle}>{video.title}</h3>}
+                {video.pubDate && (
+                  <time className={styles.mobileDate} dateTime={video.pubDate}>
+                    {formatDate(video.pubDate)}
+                  </time>
+                )}
+                {video.description && (
+                  <>
+                    <p
+                      className={`${styles.mobileDescription} ${
+                        isActive && expanded ? styles.mobileDescriptionExpanded : ""
+                      }`}
+                    >
+                      {video.description}
+                    </p>
+                    {hasLongDesc && isActive && (
+                      <button
+                        type="button"
+                        className={styles.moreBtn}
+                        onClick={toggleExpanded}
+                      >
+                        {expanded ? "menos" : "más"}
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+function ActiveNativeVideo({ src, poster, muted }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = muted;
+    const p = v.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  }, [src, muted]);
+  return (
+    <video
+      ref={ref}
+      className={styles.feedVideo}
+      src={src}
+      poster={poster}
+      autoPlay
+      loop
+      playsInline
+      preload="auto"
+    />
+  );
+}
 
 export default function VideoModal({
   videos,
@@ -74,6 +274,8 @@ export default function VideoModal({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showBigBtn, setShowBigBtn] = useState(true);
   const [toast, setToast] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const total = list.length;
   const active = list[index];
 
@@ -85,8 +287,28 @@ export default function VideoModal({
   const hideBtnTimerRef = useRef(null);
   const toastTimerRef = useRef(null);
 
+  // Detect mobile breakpoint (must match CSS @media).
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia(MOBILE_BREAKPOINT);
+    const update = () => setIsMobile(mq.matches);
+    update();
+    if (mq.addEventListener) mq.addEventListener("change", update);
+    else mq.addListener(update);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", update);
+      else mq.removeListener(update);
+    };
+  }, []);
+
+  // Reset description expansion on clip change.
+  useEffect(() => {
+    setExpanded(false);
+  }, [index]);
+
   const activeSources = isShorts ? pickSources(active) : [];
-  const useVideoJs = isShorts && activeSources.length > 0;
+  // Only use video.js on desktop (mobile uses native <video> per feed item).
+  const useVideoJs = isShorts && !isMobile && activeSources.length > 0;
 
   const goTo = useCallback(
     (next) => {
@@ -134,6 +356,21 @@ export default function VideoModal({
     } catch {}
     showToast("No se pudo compartir");
   }, [active, showToast]);
+
+  const handleToggleMute = useCallback(() => {
+    const player = playerRef.current;
+    if (player && !player.isDisposed()) {
+      const newMuted = !player.muted();
+      player.muted(newMuted);
+      if (!newMuted) {
+        const p = player.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      }
+      setMuted(newMuted);
+    } else {
+      setMuted((m) => !m);
+    }
+  }, []);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -203,7 +440,7 @@ export default function VideoModal({
     };
   }, []);
 
-  // Initialize video.js when the shorts variant has direct sources.
+  // Initialize video.js (desktop only).
   useEffect(() => {
     if (!useVideoJs) return;
     let cancelled = false;
@@ -240,27 +477,11 @@ export default function VideoModal({
         }
       };
 
-      player.on("play", () => {
-        setIsPlaying(true);
-        scheduleHide();
-      });
-      player.on("playing", () => {
-        setIsPlaying(true);
-        scheduleHide();
-      });
-      player.on("pause", () => {
-        setIsPlaying(false);
-        cancelHide();
-        setShowBigBtn(true);
-      });
-      player.on("waiting", () => {
-        cancelHide();
-        setShowBigBtn(true);
-      });
-      player.on("ended", () => {
-        setIsPlaying(false);
-        setShowBigBtn(true);
-      });
+      player.on("play", () => { setIsPlaying(true); scheduleHide(); });
+      player.on("playing", () => { setIsPlaying(true); scheduleHide(); });
+      player.on("pause", () => { setIsPlaying(false); cancelHide(); setShowBigBtn(true); });
+      player.on("waiting", () => { cancelHide(); setShowBigBtn(true); });
+      player.on("ended", () => { setIsPlaying(false); setShowBigBtn(true); });
 
       playerRef.current = player;
     })();
@@ -279,7 +500,7 @@ export default function VideoModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useVideoJs]);
 
-  // Swap source when navigating between clips (no remount).
+  // Swap source when navigating between clips on desktop.
   useEffect(() => {
     const player = playerRef.current;
     if (!player || player.isDisposed()) return;
@@ -289,30 +510,6 @@ export default function VideoModal({
     const p = player.play();
     if (p && typeof p.catch === "function") p.catch(() => {});
   }, [active]);
-
-  const touchStart = useRef(null);
-  const onTouchStart = (e) => {
-    if (e.target && typeof e.target.closest === "function" &&
-        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.actionBtn)) {
-      touchStart.current = null;
-      return;
-    }
-    const t = e.touches[0];
-    if (!t) return;
-    touchStart.current = { y: t.clientY, x: t.clientX };
-  };
-  const onTouchEnd = (e) => {
-    if (!touchStart.current) return;
-    const t = e.changedTouches[0];
-    if (!t) { touchStart.current = null; return; }
-    const dy = t.clientY - touchStart.current.y;
-    const dx = t.clientX - touchStart.current.x;
-    if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx)) {
-      if (dy < 0) next();
-      else prev();
-    }
-    touchStart.current = null;
-  };
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
@@ -337,7 +534,7 @@ export default function VideoModal({
   const handlePlayerClick = (e) => {
     if (!useVideoJs) return;
     if (e.target && typeof e.target.closest === "function" &&
-        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.soundHint + ", ." + styles.bigPlayBtn + ", ." + styles.actionBtn + ", ." + styles.mobileMeta)) {
+        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.soundHint + ", ." + styles.bigPlayBtn + ", ." + styles.actionBtn)) {
       return;
     }
     togglePlay();
@@ -351,21 +548,6 @@ export default function VideoModal({
       if (p && typeof p.catch === "function") p.catch(() => {});
     }
     setMuted(false);
-  };
-
-  const handleToggleMute = () => {
-    const player = playerRef.current;
-    if (player && !player.isDisposed()) {
-      const newMuted = !player.muted();
-      player.muted(newMuted);
-      if (!newMuted) {
-        const p = player.play();
-        if (p && typeof p.catch === "function") p.catch(() => {});
-      }
-      setMuted(newMuted);
-    } else {
-      setMuted((m) => !m);
-    }
   };
 
   if (!active) return null;
@@ -444,173 +626,165 @@ export default function VideoModal({
         </div>
       )}
 
-      <div className={styles.stage} onClick={handleOverlayClick}>
-        {total > 1 && (
-          <button
-            className={`${styles.navBtn} ${styles.navUp}`}
-            onClick={prev}
-            aria-label="Anterior"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
-          </button>
-        )}
-
-        <div
-          className={styles.player}
-          data-vjs-player={useVideoJs ? "" : undefined}
-          onTouchStart={useVideoJs ? onTouchStart : undefined}
-          onTouchEnd={useVideoJs ? onTouchEnd : undefined}
-          onClick={useVideoJs ? handlePlayerClick : undefined}
-        >
-          {useVideoJs ? (
-            <>
-              <video
-                ref={videoElRef}
-                className={`video-js vjs-fill ${styles.videoEl}`}
-                playsInline
-              />
+      {isMobile ? (
+        <ShortsMobileFeed
+          list={list}
+          index={index}
+          setIndex={(i) => goTo(i)}
+          muted={muted}
+          onToggleMute={handleToggleMute}
+          onShare={handleShare}
+          expanded={expanded}
+          toggleExpanded={() => setExpanded((v) => !v)}
+        />
+      ) : (
+        <>
+          <div className={styles.stage} onClick={handleOverlayClick}>
+            {total > 1 && (
               <button
-                type="button"
-                className={`${styles.bigPlayBtn} ${isPlaying && !showBigBtn ? styles.bigPlayBtnHidden : ""}`}
-                onClick={(e) => { e.stopPropagation(); togglePlay(); }}
-                aria-label={isPlaying ? "Pausar" : "Reproducir"}
+                className={`${styles.navBtn} ${styles.navUp}`}
+                onClick={prev}
+                aria-label="Anterior"
               >
-                {isPlaying ? (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <rect x="6" y="5" width="4" height="14" rx="1" />
-                    <rect x="14" y="5" width="4" height="14" rx="1" />
-                  </svg>
-                ) : (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M9 5v14l10-7z" />
-                  </svg>
-                )}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="18 15 12 9 6 15" />
+                </svg>
               </button>
-            </>
-          ) : (
-            <iframe
-              key={`${active.mediaid}-${muted ? "m" : "u"}`}
-              className={styles.iframe}
-              src={fallbackSrc}
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-              allowFullScreen
-              title={active.title || "Video"}
-            />
-          )}
+            )}
 
-          <div className={styles.actions}>
-            {useVideoJs && (
-              <button
-                type="button"
-                className={styles.actionBtn}
-                onClick={(e) => { e.stopPropagation(); handleToggleMute(); }}
-                aria-label={muted ? "Activar sonido" : "Silenciar"}
-              >
-                {muted ? (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
-                    <line x1="23" y1="9" x2="17" y2="15" />
-                    <line x1="17" y1="9" x2="23" y2="15" />
+            <div
+              className={styles.player}
+              data-vjs-player={useVideoJs ? "" : undefined}
+              onClick={useVideoJs ? handlePlayerClick : undefined}
+            >
+              {useVideoJs ? (
+                <>
+                  <video
+                    ref={videoElRef}
+                    className={`video-js vjs-fill ${styles.videoEl}`}
+                    playsInline
+                  />
+                  <button
+                    type="button"
+                    className={`${styles.bigPlayBtn} ${isPlaying && !showBigBtn ? styles.bigPlayBtnHidden : ""}`}
+                    onClick={(e) => { e.stopPropagation(); togglePlay(); }}
+                    aria-label={isPlaying ? "Pausar" : "Reproducir"}
+                  >
+                    {isPlaying ? (
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <rect x="6" y="5" width="4" height="14" rx="1" />
+                        <rect x="14" y="5" width="4" height="14" rx="1" />
+                      </svg>
+                    ) : (
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M9 5v14l10-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </>
+              ) : (
+                <iframe
+                  key={`${active.mediaid}-${muted ? "m" : "u"}`}
+                  className={styles.iframe}
+                  src={fallbackSrc}
+                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                  allowFullScreen
+                  title={active.title || "Video"}
+                />
+              )}
+
+              <div className={styles.actions}>
+                {useVideoJs && (
+                  <button
+                    type="button"
+                    className={styles.actionBtn}
+                    onClick={(e) => { e.stopPropagation(); handleToggleMute(); }}
+                    aria-label={muted ? "Activar sonido" : "Silenciar"}
+                  >
+                    {muted ? (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+                        <line x1="23" y1="9" x2="17" y2="15" />
+                        <line x1="17" y1="9" x2="23" y2="15" />
+                      </svg>
+                    ) : (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      </svg>
+                    )}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={(e) => { e.stopPropagation(); handleShare(); }}
+                  aria-label="Compartir"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                   </svg>
-                ) : (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                </button>
+              </div>
+
+              {useVideoJs && muted && (
+                <button
+                  type="button"
+                  className={styles.soundHint}
+                  onClick={(e) => { e.stopPropagation(); handleSoundOn(); }}
+                  aria-label="Activar sonido"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
                     <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
-                )}
+                  Activar sonido
+                </button>
+              )}
+            </div>
+
+            {total > 1 && (
+              <button
+                className={`${styles.navBtn} ${styles.navDown}`}
+                onClick={next}
+                aria-label="Siguiente"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </button>
             )}
-            <button
-              type="button"
-              className={styles.actionBtn}
-              onClick={(e) => { e.stopPropagation(); handleShare(); }}
-              aria-label="Compartir"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="18" cy="5" r="3" />
-                <circle cx="6" cy="12" r="3" />
-                <circle cx="18" cy="19" r="3" />
-                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-              </svg>
-            </button>
           </div>
 
-          {useVideoJs && muted && (
-            <button
-              type="button"
-              className={styles.soundHint}
-              onClick={(e) => { e.stopPropagation(); handleSoundOn(); }}
-              aria-label="Activar sonido"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-              </svg>
-              Activar sonido
-            </button>
-          )}
-
-          <div className={styles.mobileMeta}>
-            {active.title && <h3 className={styles.mobileTitle}>{active.title}</h3>}
+          <aside className={styles.meta}>
+            <div className={styles.brandChip}>
+              <span className={styles.brandDot} aria-hidden="true" />
+              Caribbean Business
+            </div>
+            {active.title && <h3 className={styles.metaTitle}>{active.title}</h3>}
             {active.pubDate && (
-              <time className={styles.mobileDate} dateTime={active.pubDate}>
+              <time className={styles.metaDate} dateTime={active.pubDate}>
                 {formatDate(active.pubDate)}
               </time>
             )}
             {active.description && (
-              <p className={styles.mobileDescription}>{active.description}</p>
+              <p className={styles.metaDescription}>{active.description}</p>
             )}
-          </div>
-
-          {!useVideoJs && (
-            <div
-              className={styles.swipeArea}
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
-              aria-hidden="true"
-            />
-          )}
-        </div>
-
-        {total > 1 && (
-          <button
-            className={`${styles.navBtn} ${styles.navDown}`}
-            onClick={next}
-            aria-label="Siguiente"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-        )}
-      </div>
-
-      <aside className={styles.meta}>
-        <div className={styles.brandChip}>
-          <span className={styles.brandDot} aria-hidden="true" />
-          Caribbean Business
-        </div>
-        {active.title && <h3 className={styles.metaTitle}>{active.title}</h3>}
-        {active.pubDate && (
-          <time className={styles.metaDate} dateTime={active.pubDate}>
-            {formatDate(active.pubDate)}
-          </time>
-        )}
-        {active.description && (
-          <p className={styles.metaDescription}>{active.description}</p>
-        )}
-        <div className={styles.metaAd}>
-          <AdServerSlot zone="161655" width={300} height={250} />
-        </div>
-        {total > 1 && (
-          <div className={styles.counter}>
-            {index + 1} / {total}
-          </div>
-        )}
-      </aside>
+            <div className={styles.metaAd}>
+              <AdServerSlot zone="161655" width={300} height={250} />
+            </div>
+            {total > 1 && (
+              <div className={styles.counter}>
+                {index + 1} / {total}
+              </div>
+            )}
+          </aside>
+        </>
+      )}
 
       {toast && (
         <div className={styles.toast} role="status" aria-live="polite">
