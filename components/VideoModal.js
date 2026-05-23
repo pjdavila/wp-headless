@@ -226,6 +226,10 @@ function ShortsMobileFeed({
 
 function ActiveNativeVideo({ src, poster, muted }) {
   const ref = useRef(null);
+  const [paused, setPaused] = useState(false);
+  const [showBig, setShowBig] = useState(false);
+  const hideTimerRef = useRef(null);
+
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
@@ -233,17 +237,63 @@ function ActiveNativeVideo({ src, poster, muted }) {
     const p = v.play();
     if (p && typeof p.catch === "function") p.catch(() => {});
   }, [src, muted]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, []);
+
+  const toggle = () => {
+    const v = ref.current;
+    if (!v) return;
+    setShowBig(true);
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    if (v.paused) {
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+      hideTimerRef.current = setTimeout(() => setShowBig(false), 600);
+    } else {
+      v.pause();
+    }
+  };
+
   return (
-    <video
-      ref={ref}
-      className={styles.feedVideo}
-      src={src}
-      poster={poster}
-      autoPlay
-      loop
-      playsInline
-      preload="auto"
-    />
+    <>
+      <video
+        ref={ref}
+        className={styles.feedVideo}
+        src={src}
+        poster={poster}
+        autoPlay
+        loop
+        playsInline
+        preload="auto"
+        onPlay={() => setPaused(false)}
+        onPause={() => setPaused(true)}
+        onClick={toggle}
+      />
+      <button
+        type="button"
+        className={`${styles.bigPlayBtn} ${!paused && !showBig ? styles.bigPlayBtnHidden : ""}`}
+        onClick={(e) => { e.stopPropagation(); toggle(); }}
+        aria-label={paused ? "Reproducir" : "Pausar"}
+      >
+        {paused ? (
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M9 5v14l10-7z" />
+          </svg>
+        ) : (
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="6" y="5" width="4" height="14" rx="1" />
+            <rect x="14" y="5" width="4" height="14" rx="1" />
+          </svg>
+        )}
+      </button>
+    </>
   );
 }
 
@@ -540,7 +590,7 @@ export default function VideoModal({
     togglePlay();
   };
 
-  const handleSoundOn = () => {
+  const handleSoundOn = useCallback(() => {
     const player = playerRef.current;
     if (player && !player.isDisposed()) {
       player.muted(false);
@@ -548,7 +598,7 @@ export default function VideoModal({
       if (p && typeof p.catch === "function") p.catch(() => {});
     }
     setMuted(false);
-  };
+  }, []);
 
   if (!active) return null;
 
@@ -694,13 +744,12 @@ export default function VideoModal({
               )}
 
               <div className={styles.actions}>
-                {useVideoJs && (
-                  <button
-                    type="button"
-                    className={styles.actionBtn}
-                    onClick={(e) => { e.stopPropagation(); handleToggleMute(); }}
-                    aria-label={muted ? "Activar sonido" : "Silenciar"}
-                  >
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={(e) => { e.stopPropagation(); handleToggleMute(); }}
+                  aria-label={muted ? "Activar sonido" : "Silenciar"}
+                >
                     {muted ? (
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
@@ -713,8 +762,7 @@ export default function VideoModal({
                         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
                       </svg>
                     )}
-                  </button>
-                )}
+                </button>
                 <button
                   type="button"
                   className={styles.actionBtn}
@@ -731,20 +779,6 @@ export default function VideoModal({
                 </button>
               </div>
 
-              {useVideoJs && muted && (
-                <button
-                  type="button"
-                  className={styles.soundHint}
-                  onClick={(e) => { e.stopPropagation(); handleSoundOn(); }}
-                  aria-label="Activar sonido"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  Activar sonido
-                </button>
-              )}
             </div>
 
             {total > 1 && (
@@ -784,6 +818,21 @@ export default function VideoModal({
             )}
           </aside>
         </>
+      )}
+
+      {muted && (
+        <button
+          type="button"
+          className={styles.soundHint}
+          onClick={(e) => { e.stopPropagation(); handleSoundOn(); }}
+          aria-label="Activar sonido"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+          Activar sonido
+        </button>
       )}
 
       {toast && (
