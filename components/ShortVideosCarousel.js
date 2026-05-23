@@ -3,13 +3,13 @@ import VideoModal from "./VideoModal";
 import styles from "../styles/short-videos-carousel.module.css";
 
 function useVisibleCount() {
-  const [count, setCount] = useState(4);
+  const [count, setCount] = useState(5);
 
   useEffect(() => {
     function update() {
-      if (window.innerWidth <= 640) setCount(1);
-      else if (window.innerWidth <= 1024) setCount(2);
-      else setCount(4);
+      if (window.innerWidth <= 640) setCount(2);
+      else if (window.innerWidth <= 1024) setCount(3);
+      else setCount(5);
     }
     update();
     window.addEventListener("resize", update);
@@ -23,6 +23,13 @@ function formatDuration(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function pickThumb(video) {
+  const sized =
+    (video.images || []).find((img) => img.width === 480) ||
+    (video.images || []).find((img) => img.width >= 320);
+  return sized?.src || video.image || "";
 }
 
 export default function ShortVideosCarousel() {
@@ -41,7 +48,7 @@ export default function ShortVideosCarousel() {
     fetch("/api/shorts-playlist")
       .then((r) => r.json())
       .then((data) => {
-        setVideos((data.videos || []).slice(0, 6));
+        setVideos((data.videos || []).slice(0, 8));
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -96,7 +103,7 @@ export default function ShortVideosCarousel() {
           <h2 className={styles.title}>Short Videos</h2>
         </div>
         <div className={styles.loading}>
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className={styles.loadingCard} />
           ))}
         </div>
@@ -138,17 +145,16 @@ export default function ShortVideosCarousel() {
               className={styles.slide}
               style={{ flex: `0 0 ${slidePercent}%` }}
             >
-              <div
+              <button
+                type="button"
                 className={styles.card}
                 onClick={() => setActiveIndexModal(videos.findIndex((v) => v.mediaid === video.mediaid))}
+                aria-label={`Reproducir: ${video.title}`}
               >
                 <div className={styles.thumbWrap}>
                   <img
-                    src={
-                      video.images?.find((img) => img.width === 480)?.src ||
-                      video.image
-                    }
-                    alt={video.title}
+                    src={pickThumb(video)}
+                    alt=""
                     className={styles.thumb}
                     loading="lazy"
                   />
@@ -160,11 +166,11 @@ export default function ShortVideosCarousel() {
                       {formatDuration(video.duration)}
                     </span>
                   )}
+                  <div className={styles.titleOverlay}>
+                    <h3 className={styles.cardTitle}>{video.title}</h3>
+                  </div>
                 </div>
-                <div className={styles.cardBody}>
-                  <h3 className={styles.cardTitle}>{video.title}</h3>
-                </div>
-              </div>
+              </button>
             </div>
           ))}
         </div>

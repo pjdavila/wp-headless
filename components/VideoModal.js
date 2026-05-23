@@ -73,6 +73,7 @@ export default function VideoModal({
   const [muted, setMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showBigBtn, setShowBigBtn] = useState(true);
+  const [toast, setToast] = useState("");
   const total = list.length;
   const active = list[index];
 
@@ -82,6 +83,7 @@ export default function VideoModal({
   const videoElRef = useRef(null);
   const playerRef = useRef(null);
   const hideBtnTimerRef = useRef(null);
+  const toastTimerRef = useRef(null);
 
   const activeSources = isShorts ? pickSources(active) : [];
   const useVideoJs = isShorts && activeSources.length > 0;
@@ -97,6 +99,41 @@ export default function VideoModal({
 
   const prev = useCallback(() => goTo(index - 1), [goTo, index]);
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
+
+  const showToast = useCallback((msg) => {
+    setToast(msg);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToast(""), 2200);
+  }, []);
+
+  const handleShare = useCallback(async () => {
+    if (!active) return;
+    const url =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/video/${active.mediaid}/`
+        : active.link || "";
+    const shareData = {
+      title: active.title || "Caribbean Business",
+      text: active.title || "",
+      url,
+    };
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch (err) {
+      if (err && err.name === "AbortError") return;
+    }
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+        showToast("Enlace copiado");
+        return;
+      }
+    } catch {}
+    showToast("No se pudo compartir");
+  }, [active, showToast]);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -156,6 +193,15 @@ export default function VideoModal({
       }
     };
   }, [handleKeyDown]);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = null;
+      }
+    };
+  }, []);
 
   // Initialize video.js when the shorts variant has direct sources.
   useEffect(() => {
@@ -247,7 +293,7 @@ export default function VideoModal({
   const touchStart = useRef(null);
   const onTouchStart = (e) => {
     if (e.target && typeof e.target.closest === "function" &&
-        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button")) {
+        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.actionBtn)) {
       touchStart.current = null;
       return;
     }
@@ -291,7 +337,7 @@ export default function VideoModal({
   const handlePlayerClick = (e) => {
     if (!useVideoJs) return;
     if (e.target && typeof e.target.closest === "function" &&
-        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.soundHint + ", ." + styles.bigPlayBtn)) {
+        e.target.closest(".vjs-control-bar, .vjs-menu, .vjs-button, ." + styles.soundHint + ", ." + styles.bigPlayBtn + ", ." + styles.actionBtn + ", ." + styles.mobileMeta)) {
       return;
     }
     togglePlay();
@@ -305,6 +351,21 @@ export default function VideoModal({
       if (p && typeof p.catch === "function") p.catch(() => {});
     }
     setMuted(false);
+  };
+
+  const handleToggleMute = () => {
+    const player = playerRef.current;
+    if (player && !player.isDisposed()) {
+      const newMuted = !player.muted();
+      player.muted(newMuted);
+      if (!newMuted) {
+        const p = player.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      }
+      setMuted(newMuted);
+    } else {
+      setMuted((m) => !m);
+    }
   };
 
   if (!active) return null;
@@ -366,6 +427,23 @@ export default function VideoModal({
         </svg>
       </button>
 
+      {total > 1 && (
+        <div className={styles.progress} aria-hidden="true">
+          {list.map((_, i) => (
+            <span
+              key={i}
+              className={`${styles.segment} ${
+                i === index
+                  ? styles.segmentActive
+                  : i < index
+                  ? styles.segmentDone
+                  : ""
+              }`}
+            />
+          ))}
+        </div>
+      )}
+
       <div className={styles.stage} onClick={handleOverlayClick}>
         {total > 1 && (
           <button
@@ -421,11 +499,50 @@ export default function VideoModal({
               title={active.title || "Video"}
             />
           )}
-          {muted && (
+
+          <div className={styles.actions}>
+            {useVideoJs && (
+              <button
+                type="button"
+                className={styles.actionBtn}
+                onClick={(e) => { e.stopPropagation(); handleToggleMute(); }}
+                aria-label={muted ? "Activar sonido" : "Silenciar"}
+              >
+                {muted ? (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+                    <line x1="23" y1="9" x2="17" y2="15" />
+                    <line x1="17" y1="9" x2="23" y2="15" />
+                  </svg>
+                ) : (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                )}
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.actionBtn}
+              onClick={(e) => { e.stopPropagation(); handleShare(); }}
+              aria-label="Compartir"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            </button>
+          </div>
+
+          {useVideoJs && muted && (
             <button
               type="button"
               className={styles.soundHint}
-              onClick={handleSoundOn}
+              onClick={(e) => { e.stopPropagation(); handleSoundOn(); }}
               aria-label="Activar sonido"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -435,6 +552,19 @@ export default function VideoModal({
               Activar sonido
             </button>
           )}
+
+          <div className={styles.mobileMeta}>
+            {active.title && <h3 className={styles.mobileTitle}>{active.title}</h3>}
+            {active.pubDate && (
+              <time className={styles.mobileDate} dateTime={active.pubDate}>
+                {formatDate(active.pubDate)}
+              </time>
+            )}
+            {active.description && (
+              <p className={styles.mobileDescription}>{active.description}</p>
+            )}
+          </div>
+
           {!useVideoJs && (
             <div
               className={styles.swipeArea}
@@ -459,6 +589,10 @@ export default function VideoModal({
       </div>
 
       <aside className={styles.meta}>
+        <div className={styles.brandChip}>
+          <span className={styles.brandDot} aria-hidden="true" />
+          Caribbean Business
+        </div>
         {active.title && <h3 className={styles.metaTitle}>{active.title}</h3>}
         {active.pubDate && (
           <time className={styles.metaDate} dateTime={active.pubDate}>
@@ -477,6 +611,12 @@ export default function VideoModal({
           </div>
         )}
       </aside>
+
+      {toast && (
+        <div className={styles.toast} role="status" aria-live="polite">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
