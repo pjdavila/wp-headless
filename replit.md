@@ -84,6 +84,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **WPE Atlas Deployment**: Requires Node.js v20 and uses `wpe-build` and `faust start` scripts.
 - **Print Edition Local Storage**: `data/print-edition-interest.jsonl` is per-container and not synced across instances; on WPE Atlas it may be wiped on redeploys. Treat the team notification email as the authoritative record.
 - **Coming Soon Gate Disabled**: The password gate in `pages/_app.js` is hard-coded off (`isComingSoonEnabled = false`). To re-enable it, restore the original env-var check (`COMING_SOON === "true"` / `NEXT_PUBLIC_COMING_SOON === "true"`) and ensure `SITE_PASSWORD` is set. The `ComingSoon` component and `/api/check-access`, `/api/verify-access` endpoints are kept for that purpose.
+- **Live Page Disabled**: The `/live` page is temporarily off. `pages/live.js` is a 307 redirect to `/`, the OFF AIR / Live button is removed from `components/Header.js` (both desktop nav and mobile drawer), and the home `FeaturedVideosWidget` "Ver todo" now points to `/videos` instead of `/live`. The `useLiveStatus` polling import was removed from the Header to stop periodic `/api/live-status` requests. `components/LivePlayer.js`, `components/LiveStreamHeader.js`, `lib/useLiveStatus.js`, `pages/api/live-status.js` and `styles/live.module.css` are intact. To reactivate: restore the original `pages/live.js` (LivePage component + queries), re-add the `useLiveStatus` import + JSX buttons in `components/Header.js`, and point the widget link back to `/live`.
 
 ## Pointers
 

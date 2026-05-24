@@ -9,7 +9,6 @@ import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import TsaBadge from "./TsaBadge";
 import style from "../styles/header.module.css";
-import useLiveStatus from "../lib/useLiveStatus";
 
 function MenuIcon() {
   return (
@@ -35,15 +34,6 @@ function UserIcon() {
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function TvIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
-      <polyline points="17 2 12 7 7 2" />
     </svg>
   );
 }
@@ -117,8 +107,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   };
 
   const navItems = buildNavItems(categories);
-  const { live: liveOn } = useLiveStatus();
-  const isOffAir = liveOn !== true;
 
   return (
     <>
@@ -228,16 +216,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 </Link>
               </li>
             </ul>
-            <Link
-              href="/live"
-              className={`${style.liveBtn} ${isOffAir ? style.liveBtnOff : ""}`}
-            >
-              <TvIcon />
-              <span>{isOffAir ? "Off Air" : "Live"}</span>
-              <span
-                className={`${style.liveDot} ${isOffAir ? style.liveDotOff : ""}`}
-              />
-            </Link>
           </div>
         </nav>
 
@@ -258,17 +236,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               </button>
             </div>
             <nav className={style.drawerNav}>
-              <Link
-                href="/live"
-                className={`${style.drawerLiveBtn} ${isOffAir ? style.drawerLiveBtnOff : ""}`}
-                onClick={() => setDrawerOpen(false)}
-              >
-                <TvIcon />
-                <span>{isOffAir ? "Off Air" : "Live"}</span>
-                <span
-                  className={`${style.liveDot} ${isOffAir ? style.liveDotOff : ""}`}
-                />
-              </Link>
               {navItems.map((cat) =>
                 cat.children.length > 0 ? (
                   <div key={cat.slug} className={style.drawerGroup}>
