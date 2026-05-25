@@ -86,6 +86,10 @@
   object-fit: contain;
 }
 
+.brandLogoCalce {
+  max-height: 42px;
+}
+
 :global(.dark) .brandLogoPunto {
   filter: invert(1) brightness(1.05);
 }

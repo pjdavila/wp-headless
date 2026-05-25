@@ -53,7 +53,7 @@ const SOCIALS = [
 
 const BRANDS = [
   { name: "Metro", src: "/footer/metro.webp", href: "https://www.metro.pr/", className: "" },
-  { name: "El Calce", src: "/footer/elcalce.svg", href: "https://www.elcalce.com/", className: "" },
+  { name: "El Calce", src: "/footer/elcalce.svg", href: "https://www.elcalce.com/", className: "brandLogoCalce" },
   { name: "Caribbean Business", src: "/footer/cb-logo.webp", href: "https://caribbean.business", internal: true, className: "brandLogoCb" },
   { name: "Punto Digital", src: "/footer/punto-digital.webp", href: "https://puntodigitalpr.com/", className: "brandLogoPunto" },
 ];
