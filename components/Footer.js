@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/footer.module.css";
@@ -52,36 +51,68 @@ const SOCIALS = [
   { type: "tiktok", href: "https://www.tiktok.com/@cbusinesspr" },
 ];
 
+const BRANDS = [
+  { name: "Metro", src: "/footer/metro.webp", href: "https://www.metro.pr/", className: "" },
+  { name: "El Calce", src: "/footer/elcalce.svg", href: "https://www.elcalce.com/", className: "" },
+  { name: "Caribbean Business", src: "/footer/cb-logo.webp", href: "/", internal: true, className: "brandLogoCb" },
+  { name: "Punto Digital", src: "/footer/punto-digital.webp", href: "https://puntodigital.com.pr/", className: "brandLogoPunto" },
+];
+
 export default function Footer() {
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    };
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
         <div className={styles.grid}>
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.logo}>
+            <a
+              href="https://vnmedia.co"
+              className={styles.logo}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Image
-                src={isDark ? "/logo-dark.webp" : "/logo-light.webp"}
-                alt="Caribbean Business"
-                width={280}
-                height={35}
-                className={styles.logoImage}
+                src="/footer/vnm-logo.webp"
+                alt="Vision News Media"
+                width={220}
+                height={50}
+                className={styles.vnmLogoImage}
               />
-            </Link>
+            </a>
             <p className={styles.tagline}>
-              Business, finance, and technology news from the Caribbean and Latin America.
+              Liderando la evolución de la información en Puerto Rico con tecnología, rigor y periodismo de excelencia.
             </p>
+            <div className={styles.brands}>
+              {BRANDS.map((b) =>
+                b.internal ? (
+                  <Link key={b.name} href={b.href} className={styles.brandLink} aria-label={b.name}>
+                    <Image
+                      src={b.src}
+                      alt={b.name}
+                      width={90}
+                      height={30}
+                      className={`${styles.brandLogo} ${b.className ? styles[b.className] : ""}`}
+                    />
+                  </Link>
+                ) : (
+                  <a
+                    key={b.name}
+                    href={b.href}
+                    className={styles.brandLink}
+                    aria-label={b.name}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image
+                      src={b.src}
+                      alt={b.name}
+                      width={90}
+                      height={30}
+                      className={`${styles.brandLogo} ${b.className ? styles[b.className] : ""}`}
+                    />
+                  </a>
+                )
+              )}
+            </div>
             <div className={styles.socials}>
               {SOCIALS.map((s) => (
                 <a
