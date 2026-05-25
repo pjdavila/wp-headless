@@ -54,8 +54,8 @@ const SOCIALS = [
 const BRANDS = [
   { name: "Metro", src: "/footer/metro.webp", href: "https://www.metro.pr/", className: "" },
   { name: "El Calce", src: "/footer/elcalce.svg", href: "https://www.elcalce.com/", className: "" },
-  { name: "Caribbean Business", src: "/footer/cb-logo.webp", href: "/", internal: true, className: "brandLogoCb" },
-  { name: "Punto Digital", src: "/footer/punto-digital.webp", href: "https://puntodigital.com.pr/", className: "brandLogoPunto" },
+  { name: "Caribbean Business", src: "/footer/cb-logo.webp", href: "https://caribbean.business", internal: true, className: "brandLogoCb" },
+  { name: "Punto Digital", src: "/footer/punto-digital.webp", href: "https://puntodigitalpr.com/", className: "brandLogoPunto" },
 ];
 
 export default function Footer() {
