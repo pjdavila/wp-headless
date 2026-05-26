@@ -13,7 +13,7 @@ import "../styles/globals.css";
 import "video.js/dist/video-js.css";
 import "../styles/video-player.css";
 
-const GA_ID = "G-F4RRT00M6P";
+const GA_IDS = ["G-F4RRT00M6P", "G-F4HN496VQV"];
 const QUANTCAST_QACCT = "p-SQPESTjuEeY-e";
 
 const QUANTCAST_INIT_SCRIPT = `
@@ -46,16 +46,19 @@ const THEME_INIT_SCRIPT = `
 
 const GA_INIT_SCRIPT = `
 (function(){
+  var IDS = ${JSON.stringify(GA_IDS)};
   function loadGA() {
     var s = document.createElement('script');
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_ID}';
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + IDS[0];
     s.async = true;
     document.head.appendChild(s);
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     window.gtag = gtag;
     gtag('js', new Date());
-    gtag('config', '${GA_ID}', { send_page_view: true });
+    for (var i = 0; i < IDS.length; i++) {
+      gtag('config', IDS[i], { send_page_view: true });
+    }
   }
   if (typeof requestIdleCallback === 'function') {
     requestIdleCallback(function(){ setTimeout(loadGA, 3000); });
