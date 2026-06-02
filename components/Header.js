@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { useAuth } from "../lib/useAuth";
@@ -34,6 +35,15 @@ function UserIcon() {
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="7" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   );
 }
@@ -77,8 +87,14 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [drawerExpandedSlugs, setDrawerExpandedSlugs] = useState({});
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [drawerSearchTerm, setDrawerSearchTerm] = useState("");
   const { user, loading } = useAuth();
   const dropdownRef = useRef(null);
+  const searchRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -90,6 +106,45 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [dropdownOpen]);
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    if (searchInputRef.current) searchInputRef.current.focus();
+    const handleClick = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
+    };
+    const handleKey = (e) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [searchOpen]);
+
+  const submitSearch = (term) => {
+    const q = term.trim();
+    if (!q) return;
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  };
+
+  const handleHeaderSearch = (e) => {
+    e.preventDefault();
+    submitSearch(searchTerm);
+    setSearchOpen(false);
+    setSearchTerm("");
+  };
+
+  const handleDrawerSearch = (e) => {
+    e.preventDefault();
+    submitSearch(drawerSearchTerm);
+    setDrawerOpen(false);
+    setDrawerSearchTerm("");
+  };
 
   const handleSignOut = async () => {
     try {
@@ -136,6 +191,29 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
             </Link>
 
             <div className={style.rightActions}>
+              <div className={style.searchWrap} ref={searchRef}>
+                {searchOpen && (
+                  <form className={style.searchForm} onSubmit={handleHeaderSearch}>
+                    <input
+                      ref={searchInputRef}
+                      type="search"
+                      className={style.searchInput}
+                      placeholder="Buscar…"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      aria-label="Buscar"
+                    />
+                  </form>
+                )}
+                <button
+                  className={style.searchBtn}
+                  onClick={() => setSearchOpen((v) => !v)}
+                  aria-label="Search"
+                  aria-expanded={searchOpen}
+                >
+                  <SearchIcon />
+                </button>
+              </div>
               <ThemeToggle />
               {!loading && (
                 user ? (
@@ -236,6 +314,19 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               </button>
             </div>
             <nav className={style.drawerNav}>
+              <form className={style.drawerSearchForm} onSubmit={handleDrawerSearch}>
+                <span className={style.drawerSearchIcon}>
+                  <SearchIcon />
+                </span>
+                <input
+                  type="search"
+                  className={style.drawerSearchInput}
+                  placeholder="Buscar…"
+                  value={drawerSearchTerm}
+                  onChange={(e) => setDrawerSearchTerm(e.target.value)}
+                  aria-label="Buscar"
+                />
+              </form>
               {navItems.map((cat) =>
                 cat.children.length > 0 ? (
                   <div key={cat.slug} className={style.drawerGroup}>
