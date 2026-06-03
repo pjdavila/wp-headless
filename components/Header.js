@@ -92,8 +92,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   const [drawerSearchTerm, setDrawerSearchTerm] = useState("");
   const { user, loading } = useAuth();
   const dropdownRef = useRef(null);
-  const searchRef = useRef(null);
-  const searchInputRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -109,9 +107,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
 
   useEffect(() => {
     if (!searchOpen) return;
-    if (searchInputRef.current) searchInputRef.current.focus();
+    const inputs = document.querySelectorAll("[data-header-search-input]");
+    const visibleInput = Array.from(inputs).find((el) => el.offsetParent !== null);
+    if (visibleInput) visibleInput.focus();
     const handleClick = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
+      if (!e.target.closest("[data-search-wrap]")) {
         setSearchOpen(false);
       }
     };
@@ -176,6 +176,35 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               >
                 <MenuIcon />
               </button>
+              <div
+                className={`${style.searchWrap} ${style.searchWrapMobile}`}
+                data-search-wrap
+              >
+                {searchOpen && (
+                  <form
+                    className={`${style.searchForm} ${style.searchFormLeft}`}
+                    onSubmit={handleHeaderSearch}
+                  >
+                    <input
+                      type="search"
+                      className={style.searchInput}
+                      data-header-search-input
+                      placeholder="Buscar…"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      aria-label="Buscar"
+                    />
+                  </form>
+                )}
+                <button
+                  className={style.searchBtn}
+                  onClick={() => setSearchOpen((v) => !v)}
+                  aria-label="Search"
+                  aria-expanded={searchOpen}
+                >
+                  <SearchIcon />
+                </button>
+              </div>
               <TsaBadge />
             </div>
 
@@ -191,13 +220,16 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
             </Link>
 
             <div className={style.rightActions}>
-              <div className={style.searchWrap} ref={searchRef}>
+              <div
+                className={`${style.searchWrap} ${style.searchWrapDesktop}`}
+                data-search-wrap
+              >
                 {searchOpen && (
                   <form className={style.searchForm} onSubmit={handleHeaderSearch}>
                     <input
-                      ref={searchInputRef}
                       type="search"
                       className={style.searchInput}
+                      data-header-search-input
                       placeholder="Buscar…"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}

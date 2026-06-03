@@ -109,6 +109,10 @@
   align-items: center;
 }
 
+.searchWrapMobile {
+  display: none;
+}
+
 .searchBtn {
   display: flex;
   align-items: center;
@@ -137,6 +141,11 @@
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
+}
+
+.searchFormLeft {
+  right: auto;
+  left: 0;
 }
 
 .searchInput {
@@ -641,5 +650,13 @@
   .loginBtn {
     padding: 0.35rem;
     border: none;
+  }
+
+  .searchWrapDesktop {
+    display: none;
+  }
+
+  .searchWrapMobile {
+    display: flex;
   }
 }
