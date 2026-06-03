@@ -131,29 +131,36 @@
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  z-index: 150;
+  z-index: 250;
+  padding: 0.5rem;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
 }
 
 .searchInput {
   width: min(320px, 70vw);
   padding: 0.6rem 0.875rem;
-  background-color: hsl(225 15% 10%);
-  border: 1px solid hsl(225 10% 16%);
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
   border-radius: var(--radius-sm);
   color: hsl(var(--foreground));
+  -webkit-text-fill-color: hsl(var(--foreground));
+  color-scheme: normal;
   font-family: var(--font-sans);
   font-size: 0.9rem;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
   outline: none;
+}
+
+.searchInput::placeholder {
+  color: hsl(var(--muted-foreground));
+  -webkit-text-fill-color: hsl(var(--muted-foreground));
+  opacity: 1;
 }
 
 .searchInput:focus {
   border-color: hsl(152 56% 45%);
-}
-
-:global(html:not(.dark)) .searchInput {
-  background-color: hsl(0 0% 100%);
-  border-color: hsl(var(--border));
 }
 
 .drawerSearchForm {
@@ -178,9 +185,17 @@
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-sm);
   color: hsl(var(--foreground));
+  -webkit-text-fill-color: hsl(var(--foreground));
+  color-scheme: normal;
   font-family: var(--font-sans);
   font-size: 0.9rem;
   outline: none;
+}
+
+.drawerSearchInput::placeholder {
+  color: hsl(var(--muted-foreground));
+  -webkit-text-fill-color: hsl(var(--muted-foreground));
+  opacity: 1;
 }
 
 .drawerSearchInput:focus {
