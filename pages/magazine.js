@@ -91,7 +91,7 @@ export default function CurrentEditionPage() {
 
           <div className={styles.viewer}>
             <iframe
-              src="https://www.pdf-flip.com/viewers/379264/k1crph.html"
+              src="https://www.pdf-flip.com/viewers/379264/vpj6ik.html"
               title="Caribbean Business — Current Edition"
               className={styles.iframe}
               loading="lazy"
