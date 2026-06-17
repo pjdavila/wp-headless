@@ -236,6 +236,8 @@ export default function Component(props) {
               </div>
             )}
 
+            <h1 className={styles.articleTitle}>{title}</h1>
+
             <div className={styles.metaBar}>
               {category && (
                 <Link href={category.uri} className={styles.categoryBadge}>
@@ -264,8 +266,6 @@ export default function Component(props) {
                 {readTime} min read
               </span>
             </div>
-
-            <h1 className={styles.articleTitle}>{title}</h1>
 
             {audioUrl && <ArticleAudioPlayer src={audioUrl} title={title} />}
 
