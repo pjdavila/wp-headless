@@ -248,7 +248,7 @@ export default function Component(props) {
                 <>
                   <span className={styles.metaDot}>·</span>
                   <span className={styles.metaItem}>
-                    <span className={styles.authorName}>{author.node.name}</span>
+                    By <span className={styles.authorName}>{author.node.name}</span>
                   </span>
                 </>
               )}
