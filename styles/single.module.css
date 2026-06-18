@@ -22,14 +22,34 @@
   object-fit: cover;
 }
 
+.articleExcerpt {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 1.5rem;
+}
+
+.articleExcerpt p {
+  margin: 0;
+}
+
+.articleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--border));
+  margin-bottom: 2rem;
+}
+
 .metaBar {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid hsl(var(--border));
-  margin-bottom: 1.5rem;
 }
 
 .categoryBadge {

@@ -223,6 +223,48 @@ export default function Component(props) {
       <main className="container">
         <div className={styles.layout}>
           <article className={styles.articleMain}>
+            <h1 className={styles.articleTitle}>{title}</h1>
+
+            {post.excerpt && (
+              <div
+                className={styles.articleExcerpt}
+                dangerouslySetInnerHTML={{ __html: post.excerpt }}
+              />
+            )}
+
+            <div className={styles.articleHeader}>
+              <div className={styles.metaBar}>
+                {category && (
+                  <Link href={category.uri} className={styles.categoryBadge}>
+                    {category.name}
+                  </Link>
+                )}
+                {author?.node?.name && (
+                  <>
+                    <span className={styles.metaDot}>·</span>
+                    <span className={styles.metaItem}>
+                      By <span className={styles.authorName}>{author.node.name}</span>
+                    </span>
+                  </>
+                )}
+                {date && (
+                  <>
+                    <span className={styles.metaDot}>·</span>
+                    <time className={styles.metaItem} dateTime={date} suppressHydrationWarning>
+                      {formatDate(date)}
+                    </time>
+                  </>
+                )}
+                <span className={styles.metaDot}>·</span>
+                <span className={`${styles.metaItem} ${styles.readingTime}`}>
+                  <ClockIcon />
+                  {readTime} min read
+                </span>
+              </div>
+
+              <ShareMenu url={pageUrl} title={title} />
+            </div>
+
             {imgSrc && (
               <div className={styles.heroImage}>
                 <Image
@@ -236,37 +278,6 @@ export default function Component(props) {
               </div>
             )}
 
-            <h1 className={styles.articleTitle}>{title}</h1>
-
-            <div className={styles.metaBar}>
-              {category && (
-                <Link href={category.uri} className={styles.categoryBadge}>
-                  {category.name}
-                </Link>
-              )}
-              {author?.node?.name && (
-                <>
-                  <span className={styles.metaDot}>·</span>
-                  <span className={styles.metaItem}>
-                    By <span className={styles.authorName}>{author.node.name}</span>
-                  </span>
-                </>
-              )}
-              {date && (
-                <>
-                  <span className={styles.metaDot}>·</span>
-                  <time className={styles.metaItem} dateTime={date} suppressHydrationWarning>
-                    {formatDate(date)}
-                  </time>
-                </>
-              )}
-              <span className={styles.metaDot}>·</span>
-              <span className={`${styles.metaItem} ${styles.readingTime}`}>
-                <ClockIcon />
-                {readTime} min read
-              </span>
-            </div>
-
             {audioUrl && <ArticleAudioPlayer src={audioUrl} title={title} />}
 
             <ArticleContent content={content} />
@@ -274,8 +285,6 @@ export default function Component(props) {
             {galleryImages.length > 1 && (
               <PhotoGallery images={galleryImages} />
             )}
-
-            <ShareMenu url={pageUrl} title={title} />
 
             {relatedPosts.length > 0 && (
               <section className={styles.relatedSection}>
