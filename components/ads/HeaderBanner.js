@@ -16,6 +16,7 @@ function pickBreakpoint(width) {
 
 export default function HeaderBanner() {
   const [breakpoint, setBreakpoint] = useState(null);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const update = () => setBreakpoint(pickBreakpoint(window.innerWidth));
@@ -24,7 +25,14 @@ export default function HeaderBanner() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  if (!breakpoint) return null;
+  useEffect(() => {
+    const onScroll = () => setHidden(window.scrollY > 100);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!breakpoint || hidden) return null;
 
   const { zone, width, height } = ZONES[breakpoint];
 
