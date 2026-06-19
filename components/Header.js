@@ -9,6 +9,7 @@ import { useAuth } from "../lib/useAuth";
 import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import TsaBadge from "./TsaBadge";
+import HeaderBanner from "./ads/HeaderBanner";
 import style from "../styles/header.module.css";
 
 function MenuIcon() {
@@ -166,6 +167,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   return (
     <>
       <header className={style.header}>
+        <HeaderBanner />
         <div className={style.logoBar}>
           <div className={`container ${style.logoBarInner}`}>
             <div className={style.leftActions}>
