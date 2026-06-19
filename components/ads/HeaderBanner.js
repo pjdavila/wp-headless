@@ -26,18 +26,25 @@ export default function HeaderBanner() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setHidden(window.scrollY > 100);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden((prev) => {
+        if (!prev && y > 100) return true;
+        if (prev && y < 50) return false;
+        return prev;
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (!breakpoint || hidden) return null;
+  if (!breakpoint) return null;
 
   const { zone, width, height } = ZONES[breakpoint];
 
   return (
-    <div className={styles.bar}>
+    <div className={`${styles.bar} ${hidden ? styles.hidden : ""}`}>
       <AdServerSlot key={breakpoint} zone={zone} width={width} height={height} />
     </div>
   );
