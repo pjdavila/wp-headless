@@ -13,22 +13,41 @@ export default function AdServerSlot({ zone, width, height, className, style }) 
   }
 
   useEffect(() => {
-    if (loadedRef.current) return;
     const ins = insRef.current;
     if (!ins) return;
 
     let cancelled = false;
     let timeoutId = null;
+    let intervalId = null;
     let attempts = 0;
-    const tryLoad = () => {
-      if (cancelled || typeof window === "undefined") return;
+
+    const loadAd = () => {
+      if (cancelled || typeof window === "undefined") return false;
       if (window._ASO && typeof window._ASO.loadAd === "function") {
         try {
           window._ASO.loadAd(idRef.current, Number(zone));
-          loadedRef.current = true;
         } catch (e) {
           console.warn("[AdServerSlot] loadAd failed", e);
         }
+        return true;
+      }
+      return false;
+    };
+
+    const startRefresh = () => {
+      if (intervalId) return;
+      intervalId = setInterval(() => {
+        if (cancelled || typeof document === "undefined") return;
+        if (document.hidden) return;
+        loadAd();
+      }, 30000);
+    };
+
+    const tryLoad = () => {
+      if (cancelled) return;
+      if (loadAd()) {
+        loadedRef.current = true;
+        startRefresh();
         return;
       }
       attempts += 1;
@@ -41,6 +60,7 @@ export default function AdServerSlot({ zone, width, height, className, style }) 
     return () => {
       cancelled = true;
       if (timeoutId) clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
     };
   }, [zone]);
 
