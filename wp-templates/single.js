@@ -10,6 +10,7 @@ import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import SidebarHalfPage from "../components/ads/SidebarHalfPage";
+import AdServerSlot from "../components/AdServerSlot";
 import ArticleAudioPlayer from "../components/ArticleAudioPlayer";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -100,14 +101,19 @@ function ArticleContent({ content }) {
   const parts = content.split(/<\/p>/i);
   const paragraphs = parts.filter((p) => p.trim().length > 0);
 
-  const splitAt = Math.min(2, paragraphs.length);
+  const splitAt = Math.min(3, paragraphs.length);
   const before = paragraphs.slice(0, splitAt).map((p) => p + "</p>").join("");
   const after = paragraphs.slice(splitAt).map((p) => p + "</p>").join("");
 
   return (
     <>
       <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: before }} />
-      <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: after }} />
+      <div className={styles.inContentAd}>
+        <AdServerSlot zone="161655" width={300} height={250} />
+      </div>
+      {after && (
+        <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: after }} />
+      )}
     </>
   );
 }
