@@ -22,6 +22,8 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
     - `NEXT_PUBLIC_FIREBASE_VAPID_KEY`
     - `PRINT_EDITION_NOTIFY_EMAIL` (internal address for new print-edition interest notifications)
     - `ADMIN_EXPORT_TOKEN` (token to authorize `/api/print-edition-export` CSV download)
+    - `NEWSLETTER_CRON_TOKEN` (token to authorize `/api/send-daily-newsletter`; required for the daily 5pm send)
+    - `MOOSEND_NEWSLETTER_SENDER_EMAIL` (verified Moosend sender for the daily newsletter campaign)
 
 ## Stack
 
@@ -50,6 +52,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 - **Dark Mode First**: Default dark mode with `localStorage` persistence and FOUC prevention in `_app.js`.
 - **Firebase Integration**: Comprehensive Firebase services (Auth, Firestore, FCM) integrated via context providers and hooks for modularity and reusability.
 - **Transactional Email with Resend**: Server-side Resend API for welcome emails, with internal logging of message IDs for deliverability tracking.
+- **Daily Lead Newsletter**: `/api/send-daily-newsletter` (protected by `NEWSLETTER_CRON_TOKEN`, sent as `Bearer`, `?token=`, or `x-cron-token`) fetches posts tagged `lead` published in the last 24h (via `dateGmt`), builds a dark-themed HTML email (`lib/dailyNewsletter.js`) mirroring the welcome email but with the CB logo header, and sends a Moosend campaign (create + send) to `MOOSEND_LIST_ID` from `MOOSEND_NEWSLETTER_SENDER_EMAIL`. If there are no lead posts it skips sending and returns `{ok:true, sent:false, reason:"no-lead-posts"}`. An external cron must hit it daily at 5pm AST.
 - **Print Edition Waitlist**: `/edicion-impresa/` collects interest in the future printed edition. Submissions are appended as JSON lines to a local file (`data/print-edition-interest.jsonl`) by `lib/printEditionStore.js`, trigger a Spanish confirmation email via Resend, and send a full-detail backup notification to the team inbox (`PRINT_EDITION_NOTIFY_EMAIL`). Admins can download a CSV via `/api/print-edition-export` using `ADMIN_EXPORT_TOKEN`. The team email is the durable source of truth (the local file may not survive multi-instance/ephemeral deploys).
 
 ## Product
