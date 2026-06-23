@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
   const now = new Date();
   const html = buildDailyNewsletterHtml({ posts, date: now });
-  const subject = "Caribbean Business — Lo más importante de hoy";
+  const subject = "Caribbean Business — Today's Top Stories";
 
   try {
     const { campaignId } = await sendDailyNewsletterCampaign({
