@@ -2,6 +2,7 @@ import {
   fetchLeadPostsLast24h,
   buildDailyNewsletterHtml,
   sendDailyNewsletterCampaign,
+  formatEnglishDate,
 } from "../../lib/dailyNewsletter";
 
 function isAuthorized(req) {
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
 
   const now = new Date();
   const html = buildDailyNewsletterHtml({ posts, date: now });
-  const subject = "Caribbean Business — Today's Top Stories";
+  const subject = `Caribbean Business — Today's Top Stories (${formatEnglishDate(now)})`;
 
   try {
     const { campaignId } = await sendDailyNewsletterCampaign({
