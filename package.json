@@ -12,6 +12,7 @@
     "wpe-build": "node scripts/generate-firebase-sw.js && faust build",
     "generate": "faust generatePossibleTypes",
     "start": "faust start",
+    "send-newsletter": "node scripts/send-daily-newsletter.mjs",
     "format": "prettier . --write",
     "test:format": "prettier . --check"
   },
