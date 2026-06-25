@@ -1,6 +1,7 @@
 import { isValidMunicipality } from "../../lib/puertoRicoMunicipalities";
 import { sendWelcomeEmail } from "../../lib/welcomeEmail";
 import { appendInterest } from "../../lib/printEditionStore";
+import { sendPrintEditionToOdoo } from "../../lib/odooPrintEdition";
 
 // Best-effort, in-memory rate limit. Per-process only — does not coordinate
 // across serverless instances. Acceptable as a basic abuse deterrent given
@@ -166,6 +167,25 @@ export default async function handler(req, res) {
   const ipPrefix = truncateIp(ip);
   const userAgent = sanitize(req.headers["user-agent"] || "", 300);
 
+  // Primary persistent store: send to Odoo. Awaited and logged on failure, but
+  // not fatal — the team backup email below guarantees the signup is not lost
+  // if Odoo is unreachable.
+  try {
+    await sendPrintEditionToOdoo({
+      fullName,
+      email,
+      phone,
+      addressLine1,
+      addressLine2,
+      town,
+      zip,
+    });
+  } catch (err) {
+    console.error("Odoo print edition submit failed:", err.message);
+  }
+
+  // Best-effort local copy. The filesystem is ephemeral on WPE Atlas, so a
+  // failure here must not block the submission.
   try {
     await appendInterest({
       fullName,
@@ -184,7 +204,6 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error("Local store write failed (printEditionInterest):", err.message);
-    return res.status(500).json({ error: "No pudimos guardar tu registro. Intenta de nuevo en unos minutos." });
   }
 
   try {

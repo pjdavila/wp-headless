@@ -1,0 +1,1 @@
+- [Production deploy flow](deployment-flow.md) — prod is WP Engine via GitHub origin/main; Replit "Merged" ≠ live. Unpushed commits cause prod 404s.
