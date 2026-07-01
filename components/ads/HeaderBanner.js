@@ -26,15 +26,22 @@ export default function HeaderBanner() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => {
+    let ticking = false;
+    const evaluate = () => {
+      ticking = false;
       const y = window.scrollY;
       setHidden((prev) => {
-        if (!prev && y > 100) return true;
+        if (!prev && y > 250) return true;
         if (prev && y < 50) return false;
         return prev;
       });
     };
-    onScroll();
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(evaluate);
+    };
+    evaluate();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
