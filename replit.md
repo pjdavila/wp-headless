@@ -17,6 +17,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
     - `MOOSEND_API_KEY`
     - `MOOSEND_LIST_ID`
     - `RESEND_API_KEY`
+    - `FINNHUB_API_KEY`
 - **Optional Env Vars**:
     - `RECOMBEE_REGION`
     - `NEXT_PUBLIC_FIREBASE_VAPID_KEY`
@@ -49,6 +50,7 @@ A headless WordPress frontend for Caribbean Business, powered by Faust.js and Ne
 ## Architecture decisions
 
 - **Server-side Recommendation Proxy**: Recombee integration uses server-side API routes to protect private tokens, with client-side fetching to avoid blocking ISR caching.
+- **Markets Widget (live)**: The homepage "Mercados" widget (`components/MarketWatchlist.js`) fetches live quotes client-side from `/api/markets`, which proxies Finnhub (`pages/api/markets.js`, key `FINNHUB_API_KEY`) to protect the key. Because Finnhub's free tier does not cover indices, gold, or crypto directly, the route uses ETF proxies (`SPY`≈S&P 500, `DIA`≈Dow Jones, `QQQ`≈Nasdaq, `GLD`≈Gold, `IBIT`≈Bitcoin) and rows are labeled with the ETF ticker (not the index name) so the displayed ETF price is not mistaken for the index/spot level. Response cached 60s (`s-maxage=60, stale-while-revalidate=300`); the client re-fetches every 60s. If no data is returned the widget hides. `components/MarketTicker.js` still holds static demo data and is not currently rendered.
 - **Dynamic `robots.txt`**: Generated via `getServerSideProps` for environment-specific configuration and blocking `/api/` routes.
 - **Dark Mode First**: Default dark mode with `localStorage` persistence and FOUC prevention in `_app.js`.
 - **Firebase Integration**: Comprehensive Firebase services (Auth, Firestore, FCM) integrated via context providers and hooks for modularity and reusability.
