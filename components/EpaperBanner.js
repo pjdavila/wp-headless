@@ -1,8 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useMagazineCover } from "../lib/useMagazineCover";
 import styles from "../styles/epaper-banner.module.css";
 
+const FALLBACK_COVER_SRC = "/epaper/portada-actual.webp";
+
 export default function EpaperBanner() {
+  const cover = useMagazineCover();
+  const coverSrc = cover?.thumbnailUrl || FALLBACK_COVER_SRC;
+
   return (
     <Link
       href="/magazine/"
@@ -14,7 +20,8 @@ export default function EpaperBanner() {
         <div className={`${styles.cover} ${styles.coverMid}`} />
         <div className={`${styles.cover} ${styles.coverFront}`}>
           <Image
-            src="/epaper/portada-actual.webp"
+            key={coverSrc}
+            src={coverSrc}
             alt="Caribbean Business latest edition cover"
             fill
             sizes="(max-width: 640px) 90px, 130px"

@@ -25,6 +25,10 @@ module.exports = withAtlasConfig(
         },
         {
           protocol: "https",
+          hostname: "img.vnmedia.co",
+        },
+        {
+          protocol: "https",
           hostname: "**.b-cdn.net",
         },
         {

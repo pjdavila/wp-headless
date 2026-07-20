@@ -7,7 +7,10 @@ import SeoHead from "../components/SeoHead";
 import { BreadcrumbJsonLd } from "../components/JsonLd";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
+import { useMagazineCover } from "../lib/useMagazineCover";
 import styles from "../styles/magazine.module.css";
+
+const FALLBACK_FLIPBOOK_URL = "https://www.pdf-flip.com/viewers/379264/vpj6ik.html";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://caribbean.business").replace(/\/+$/, "");
 const PAGE_URL = `${SITE_URL}/magazine/`;
@@ -38,6 +41,9 @@ function safeJsonLd(obj) {
 }
 
 export default function CurrentEditionPage() {
+  const cover = useMagazineCover();
+  const flipbookUrl = cover?.flipbookUrl || FALLBACK_FLIPBOOK_URL;
+
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useQuery(HEADER_MENU_QUERY) || {};
 
@@ -91,7 +97,8 @@ export default function CurrentEditionPage() {
 
           <div className={styles.viewer}>
             <iframe
-              src="https://www.pdf-flip.com/viewers/379264/vpj6ik.html"
+              key={flipbookUrl}
+              src={flipbookUrl}
               title="Caribbean Business — Current Edition"
               className={styles.iframe}
               loading="lazy"
