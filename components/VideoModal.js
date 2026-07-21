@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState, useRef } from "react";
 import AdServerSlot from "./AdServerSlot";
+import { videoPath } from "../lib/videoUrl";
 import styles from "../styles/video-modal.module.css";
 
 function formatDate(dateStr) {
@@ -382,7 +383,7 @@ export default function VideoModal({
     if (!active) return;
     const url =
       typeof window !== "undefined"
-        ? `${window.location.origin}/video/${active.mediaid}/`
+        ? `${window.location.origin}${videoPath(active)}/`
         : active.link || "";
     const shareData = {
       title: active.title || "Caribbean Business",

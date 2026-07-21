@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
 import VideoModal from "../components/VideoModal";
+import { videoPath } from "../lib/videoUrl";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import styles from "../styles/videos-page.module.css";
@@ -90,7 +91,7 @@ function FeaturedSection({ videos }) {
         </h2>
       </div>
       <div className={styles.featuredGrid}>
-        <Link href={`/video/${hero.mediaid}`} className={styles.featuredMain}>
+        <Link href={videoPath(hero)} className={styles.featuredMain}>
           <div className={styles.featuredThumbWrap}>
             {heroThumb && (
               <img src={heroThumb} alt={hero.title} className={styles.featuredThumb} />
@@ -120,7 +121,7 @@ function FeaturedSection({ videos }) {
             {rest.slice(0, 4).map((v) => {
               const thumb = getThumb(v, 320);
               return (
-                <Link key={v.mediaid} href={`/video/${v.mediaid}`} className={styles.sideCard}>
+                <Link key={v.mediaid} href={videoPath(v)} className={styles.sideCard}>
                   <div className={styles.sideThumbWrap}>
                     {thumb && (
                       <img src={thumb} alt={v.title} className={styles.sideThumb} loading="lazy" />
@@ -167,7 +168,7 @@ function MoreVideosSection({ videos }) {
         {videos.map((v) => {
           const thumb = getThumb(v, 480);
           return (
-            <Link key={v.mediaid} href={`/video/${v.mediaid}`} className={styles.gridCard}>
+            <Link key={v.mediaid} href={videoPath(v)} className={styles.gridCard}>
               <div className={styles.gridThumbWrap}>
                 {thumb && (
                   <img src={thumb} alt={v.title} className={styles.gridThumb} loading="lazy" />
@@ -211,7 +212,7 @@ function FinishlineSection({ videos }) {
         {videos.map((v) => {
           const thumb = getThumb(v, 480);
           return (
-            <Link key={v.mediaid} href={`/video/${v.mediaid}`} className={styles.podcastCard}>
+            <Link key={v.mediaid} href={videoPath(v)} className={styles.podcastCard}>
               <div className={styles.podcastThumbWrap}>
                 {thumb && (
                   <img src={thumb} alt={v.title} className={styles.podcastThumb} loading="lazy" />

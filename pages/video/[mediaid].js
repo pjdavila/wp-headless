@@ -10,6 +10,7 @@ import SidebarHalfPage from "../../components/ads/SidebarHalfPage";
 import { SITE_DATA_QUERY } from "../../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../../fragments/PostListFragment";
+import { videoPath, extractMediaId } from "../../lib/videoUrl";
 import styles from "../../styles/video-detail.module.css";
 
 const RECENT_POSTS_QUERY = gql`
@@ -58,7 +59,8 @@ function ClockIcon() {
 
 export default function VideoDetailPage() {
   const router = useRouter();
-  const { mediaid } = router.query;
+  const { mediaid: slugParam } = router.query;
+  const mediaid = extractMediaId(slugParam);
 
   const [video, setVideo] = useState(null);
   const [otherVideos, setOtherVideos] = useState([]);
@@ -96,10 +98,10 @@ export default function VideoDetailPage() {
           seen.add(v.mediaid);
           return true;
         });
-        const found = unique.find((v) => v.mediaid === mediaid);
+        const found = unique.find((v) => (v.mediaid || "").toLowerCase() === mediaid);
         if (found) {
           setVideo(found);
-          setOtherVideos(unique.filter((v) => v.mediaid !== mediaid).slice(0, 3));
+          setOtherVideos(unique.filter((v) => (v.mediaid || "").toLowerCase() !== mediaid).slice(0, 3));
         } else {
           setError(true);
         }
@@ -114,10 +116,28 @@ export default function VideoDetailPage() {
     return () => { cancelled = true; };
   }, [mediaid]);
 
+  // Old bare-mediaid URLs: replace with the SEO slug URL once the title is known.
+  useEffect(() => {
+    if (!video || !slugParam) return;
+    const param = Array.isArray(slugParam) ? slugParam[0] : slugParam;
+    const canonical = videoPath(video);
+    if (`/video/${param}` !== canonical) {
+      router.replace(canonical, undefined, { shallow: true });
+    }
+  }, [video, slugParam, router]);
+
+  const paramValue = Array.isArray(slugParam) ? slugParam[0] : slugParam;
+  const asPathClean = (router.asPath || "").split(/[?#]/)[0].replace(/\/+$/, "");
+  const requestedPath = paramValue
+    ? `/video/${paramValue}`
+    : asPathClean && !asPathClean.includes("[")
+      ? asPathClean
+      : undefined;
+
   if (loading || !mediaid) {
     return (
       <>
-        <SeoHead title="Video" description="Loading video..." />
+        <SeoHead title="Video" description="Loading video..." url={requestedPath} />
         <Header siteTitle={siteTitle} menuItems={menuItems} categories={categories} />
         <main className="container">
           <div className={styles.loading}>Loading...</div>
@@ -155,7 +175,7 @@ export default function VideoDetailPage() {
         description={video.title}
         ogImage={thumbSrc}
         ogType="video.other"
-        url={`/video/${mediaid}`}
+        url={videoPath(video)}
         imageAlt={video.title}
       />
 
@@ -212,7 +232,7 @@ export default function VideoDetailPage() {
                     return (
                       <Link
                         key={v.mediaid}
-                        href={`/video/${v.mediaid}`}
+                        href={videoPath(v)}
                         className={styles.relatedCard}
                       >
                         <div className={styles.relatedThumbWrap}>
