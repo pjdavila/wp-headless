@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 import SeoHead from "../../components/SeoHead";
 import SidebarStoryCard from "../../components/SidebarStoryCard";
 import SidebarHalfPage from "../../components/ads/SidebarHalfPage";
+import { VideoJsonLd } from "../../components/JsonLd";
 import { SITE_DATA_QUERY } from "../../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../../fragments/PostListFragment";
@@ -177,6 +178,15 @@ export default function VideoDetailPage() {
         ogType="video.other"
         url={videoPath(video)}
         imageAlt={video.title}
+      />
+      <VideoJsonLd
+        title={video.title}
+        description={video.description}
+        url={videoPath(video)}
+        thumbnailUrl={thumbSrc}
+        uploadDate={video.pubDate}
+        durationSeconds={video.duration}
+        embedUrl={`https://astrovms.com/embed/${mediaid}`}
       />
 
       <Header siteTitle={siteTitle} menuItems={menuItems} categories={categories} />

@@ -153,6 +153,40 @@ export function ArticleJsonLd({
   );
 }
 
+export function VideoJsonLd({ title, description, url, thumbnailUrl, uploadDate, durationSeconds, embedUrl }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: title,
+    description: stripHtml(description) || title,
+    thumbnailUrl: thumbnailUrl || undefined,
+    uploadDate: uploadDate || undefined,
+    duration:
+      durationSeconds > 0
+        ? `PT${Math.floor(durationSeconds / 60)}M${Math.floor(durationSeconds % 60)}S`
+        : undefined,
+    embedUrl: embedUrl || undefined,
+    url: url ? `${SITE_URL}${url}` : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: {
+        "@type": "ImageObject",
+        url: DEFAULT_LOGO,
+      },
+    },
+  };
+
+  return (
+    <Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
+      />
+    </Head>
+  );
+}
+
 export function BreadcrumbJsonLd({ items }) {
   const schema = {
     "@context": "https://schema.org",

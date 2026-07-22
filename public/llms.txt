@@ -1,0 +1,27 @@
+# Caribbean Business
+
+> Caribbean Business (caribbean.business) es el medio de referencia en noticias de negocios, economía, tecnología, energía, empleo y finanzas de Puerto Rico y el Caribe. Publica artículos diarios, videos y una edición digital (revista).
+
+## Secciones principales
+
+- [Portada](https://caribbean.business/): Últimas noticias y destacados del día
+- [Business](https://caribbean.business/category/news/cbusiness-category/): Noticias de negocios
+- [Economy](https://caribbean.business/category/news/cbusiness-economy/): Economía de Puerto Rico y el Caribe
+- [Energy & Oil](https://caribbean.business/category/news/cbusiness-energy-oil/): Energía y petróleo
+- [Jobs & Labor](https://caribbean.business/category/news/cbusiness-jobs-labor/): Empleo y asuntos laborales
+- [Crypto](https://caribbean.business/category/news/crypto/): Criptomonedas y blockchain
+- [Media & Entertainment](https://caribbean.business/category/news/cbusiness-media-entertainment/): Medios y entretenimiento
+- [Tech & AI](https://caribbean.business/category/news/cbusiness-tech-ai/): Tecnología e inteligencia artificial
+- [Videos](https://caribbean.business/videos): Reportajes y entrevistas en video
+- [Revista](https://caribbean.business/magazine): Edición digital de la revista
+
+## Feeds y sitemaps
+
+- [RSS](https://caribbean.business/feed.xml): Últimos 30 artículos
+- [Sitemap](https://caribbean.business/sitemap.xml): Todo el contenido indexable
+- [News sitemap](https://caribbean.business/news-sitemap.xml): Artículos de las últimas 48 horas
+
+## Contacto
+
+- Sitio: https://caribbean.business
+- Redes: @cbusinesspr (X, Facebook, Instagram, TikTok)
