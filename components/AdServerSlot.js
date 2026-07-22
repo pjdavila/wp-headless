@@ -1,16 +1,10 @@
-import { useEffect, useRef } from "react";
-
-let slotCounter = 0;
+import { useEffect, useRef, useId } from "react";
 
 export default function AdServerSlot({ zone, width, height, className, style }) {
   const insRef = useRef(null);
-  const idRef = useRef(null);
   const loadedRef = useRef(false);
-
-  if (!idRef.current) {
-    slotCounter += 1;
-    idRef.current = `aso-slot-${zone}-${slotCounter}`;
-  }
+  const reactId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const idRef = useRef(`aso-slot-${zone}-${reactId}`);
 
   useEffect(() => {
     const ins = insRef.current;
