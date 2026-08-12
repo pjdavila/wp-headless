@@ -190,7 +190,7 @@ export default function ArchivePage(props) {
 
             {posts?.pageInfo?.hasNextPage && (
               <div className={styles.loadMoreContainer}>
-                <LoadMoreButton onClick={loadMorePosts} loading={loading} />
+                <LoadMoreButton onClick={loadMorePosts} />
               </div>
             )}
           </div>
@@ -221,14 +221,24 @@ export async function getStaticProps(context) {
   });
 }
 
-function LoadMoreButton({ onClick, loading }) {
+// Deliberately does not use the `loading` flag from the page-level useQuery:
+// with `cache-and-network` + `notifyOnNetworkStatusChange` that flag is already
+// true during the background revalidation fired on hydration, which would make
+// the server (enabled) and client (disabled) markup disagree. `localLoading`
+// tracks the only state this button actually cares about — its own click.
+function LoadMoreButton({ onClick }) {
   const [localLoading, setLocalLoading] = useState(false);
-  const isLoading = loading || localLoading;
+  const isLoading = localLoading;
 
   const handleClick = async () => {
     setLocalLoading(true);
-    await onClick();
-    setLocalLoading(false);
+    try {
+      await onClick();
+    } finally {
+      // Always clear it: a failed fetchMore would otherwise leave the button
+      // disabled forever with no way to retry.
+      setLocalLoading(false);
+    }
   };
 
   return (
