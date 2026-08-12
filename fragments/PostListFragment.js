@@ -16,6 +16,8 @@ export const POST_LIST_FRAGMENT = gql`
     author {
       node {
         name
+        slug
+        uri
         avatar {
           url
         }

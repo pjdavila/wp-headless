@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import AuthorByline from "./AuthorByline";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/featured-category-block.module.css";
 
@@ -51,9 +52,12 @@ export default function FeaturedCategoryBlock({ title, categoryUri, posts = [] }
               />
             )}
             <div className={styles.heroMeta}>
-              {hero.author?.node?.name && (
-                <span className={styles.author}>{hero.author.node.name}</span>
-              )}
+              {/* Plain text: the whole hero card is already a link. */}
+              <AuthorByline
+                author={hero.author}
+                className={styles.author}
+                asLink={false}
+              />
               {hero.date && (
                 <time dateTime={hero.date} suppressHydrationWarning>
                   {formatDate(hero.date)}
@@ -95,9 +99,7 @@ export default function FeaturedCategoryBlock({ title, categoryUri, posts = [] }
                       </Link>
                     </h4>
                     <div className={styles.sideMeta}>
-                      {post.author?.node?.name && (
-                        <span>{post.author.node.name}</span>
-                      )}
+                      <AuthorByline author={post.author} />
                       {post.date && (
                         <time dateTime={post.date} suppressHydrationWarning>
                           {formatDate(post.date)}

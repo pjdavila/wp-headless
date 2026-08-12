@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import AuthorByline from "./AuthorByline";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/story-card.module.css";
 
@@ -48,9 +49,7 @@ export default function StoryCard({ post }) {
           />
         )}
         <div className={styles.meta}>
-          {author?.node?.name && (
-            <span className={styles.author}>{author.node.name}</span>
-          )}
+          <AuthorByline author={author} className={styles.author} />
           {date && <time dateTime={date} suppressHydrationWarning>{formatDate(date)}</time>}
         </div>
       </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import AuthorByline from "./AuthorByline";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/post-list-row.module.css";
 
@@ -49,7 +50,8 @@ export default function PostListRow({ post }) {
             {author?.node?.name && (
               <>
                 <span className={styles.dot}>·</span>
-                <span>{author.node.name}</span>
+                {/* Plain text: the whole row is already a link. */}
+                <AuthorByline author={author} asLink={false} />
               </>
             )}
           </span>

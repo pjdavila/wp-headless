@@ -101,6 +101,7 @@ export function ArticleJsonLd({
   datePublished,
   dateModified,
   authorName,
+  authorUrl,
   categoryName,
 }) {
   const cleanDesc = stripHtml(description);
@@ -128,6 +129,7 @@ export function ArticleJsonLd({
     author: {
       "@type": "Person",
       name: authorName || SITE_NAME,
+      url: authorName && authorUrl ? `${SITE_URL}${authorUrl}` : undefined,
     },
     publisher: {
       "@type": "Organization",
@@ -175,6 +177,51 @@ export function VideoJsonLd({ title, description, url, thumbnailUrl, uploadDate,
         url: DEFAULT_LOGO,
       },
     },
+  };
+
+  return (
+    <Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
+      />
+    </Head>
+  );
+}
+
+export function ProfilePageJsonLd({
+  name,
+  url,
+  description,
+  imageUrl,
+  jobTitle,
+  email,
+  sameAs = [],
+}) {
+  const profileUrl = `${SITE_URL}${url || ""}`;
+  const cleanDesc = stripHtml(description);
+
+  const person = {
+    "@type": "Person",
+    name,
+    url: profileUrl,
+    description: cleanDesc || undefined,
+    image: imageUrl || undefined,
+    jobTitle: jobTitle || undefined,
+    email: email || undefined,
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
+    worksFor: {
+      "@type": "NewsMediaOrganization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: profileUrl,
+    mainEntity: person,
   };
 
   return (

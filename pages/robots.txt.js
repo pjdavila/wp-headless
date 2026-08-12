@@ -60,6 +60,7 @@ Disallow: /api/
 
 Sitemap: ${siteUrl}/sitemap.xml
 Sitemap: ${siteUrl}/news-sitemap.xml
+Sitemap: ${siteUrl}/author-sitemap.xml
 `;
 
   res.setHeader("Content-Type", "text/plain; charset=utf-8");

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import StoryCard from "./StoryCard";
+import AuthorByline from "./AuthorByline";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/magazine-row.module.css";
 
@@ -50,7 +51,7 @@ function HeroCard({ post }) {
           />
         )}
         <div className={styles.heroMeta}>
-          {author?.node?.name && <span>{author.node.name}</span>}
+          <AuthorByline author={author} />
           {date && (
             <>
               {author?.node?.name && <span className={styles.dot}>·</span>}

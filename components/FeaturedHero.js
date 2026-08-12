@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import AuthorByline from "./AuthorByline";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/featured-hero.module.css";
 
@@ -46,9 +47,11 @@ function MiniCard({ post }) {
           </Link>
         </h3>
         <div className={styles.miniMeta}>
-          {post.author?.node?.name && (
-            <span className={styles.miniAuthor}>By {post.author.node.name}</span>
-          )}
+          <AuthorByline
+            author={post.author}
+            className={styles.miniAuthor}
+            prefix="By "
+          />
           {post.date && (
             <time dateTime={post.date} suppressHydrationWarning>
               {formatDate(post.date)}
@@ -89,9 +92,13 @@ function Slide({ post, isActive }) {
           )}
           <h2 className={styles.featuredTitle}>{post.title}</h2>
           <div className={styles.featuredMeta}>
-            {post.author?.node?.name && (
-              <span className={styles.featuredAuthor}>By {post.author.node.name}</span>
-            )}
+            {/* Plain text: the whole slide is already a link. */}
+            <AuthorByline
+              author={post.author}
+              className={styles.featuredAuthor}
+              prefix="By "
+              asLink={false}
+            />
             {post.date && (
               <time dateTime={post.date} suppressHydrationWarning>
                 {formatDate(post.date)}

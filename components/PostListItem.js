@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FeaturedImage } from "./FeaturedImage";
+import AuthorByline from "./AuthorByline";
 import styles from "../styles/post-list-item.module.css";
 
 export default function PostListItem({ post }) {
@@ -21,9 +22,9 @@ export default function PostListItem({ post }) {
         </Link>
       </h2>
 
-      {post.author && post.author.node && (
+      {post.author?.node?.name && (
         <div className={styles.authorRow}>
-          <span>by {post.author.node.name}</span>
+          <AuthorByline author={post.author} prefix="by " />
         </div>
       )}
 

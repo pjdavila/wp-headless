@@ -6,6 +6,7 @@ import Link from "next/link";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ShareMenu from "../components/ShareMenu";
+import AuthorByline from "../components/AuthorByline";
 import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
@@ -42,6 +43,8 @@ const POST_QUERY = gql`
       author {
         node {
           name
+          slug
+          uri
           avatar {
             url
           }
@@ -214,6 +217,7 @@ export default function Component(props) {
         datePublished={date}
         dateModified={modified}
         authorName={author?.node?.name}
+        authorUrl={author?.node?.uri}
         categoryName={category?.name}
       />
       <BreadcrumbJsonLd
@@ -249,7 +253,11 @@ export default function Component(props) {
                   <>
                     <span className={styles.metaDot}>·</span>
                     <span className={styles.metaItem}>
-                      By <span className={styles.authorName}>{author.node.name}</span>
+                      By{" "}
+                      <AuthorByline
+                        author={author}
+                        className={styles.authorName}
+                      />
                     </span>
                   </>
                 )}

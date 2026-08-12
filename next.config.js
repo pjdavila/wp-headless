@@ -1,5 +1,6 @@
 const { withFaust } = require("@faustwp/core");
 const { withAtlasConfig } = require("@wpengine/atlas-next");
+const { REMOTE_IMAGE_PATTERNS } = require("./lib/imageHosts");
 
 /**
  * @type {import('next').NextConfig}
@@ -7,35 +8,15 @@ const { withAtlasConfig } = require("@wpengine/atlas-next");
 module.exports = withAtlasConfig(
   withFaust({
     env: {
-      NEXT_PUBLIC_FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+      NEXT_PUBLIC_FIREBASE_API_KEY:
+        process.env.FIREBASE_API_KEY ||
+        process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
+        "",
     },
     images: {
-      remotePatterns: [
-        {
-          protocol: "https",
-          hostname: "cms.vnmedia.co",
-        },
-        {
-          protocol: "https",
-          hostname: "vnmcms.wpenginepowered.com",
-        },
-        {
-          protocol: "https",
-          hostname: "img.caribbean.business",
-        },
-        {
-          protocol: "https",
-          hostname: "img.vnmedia.co",
-        },
-        {
-          protocol: "https",
-          hostname: "**.b-cdn.net",
-        },
-        {
-          protocol: "https",
-          hostname: "astrovms.com",
-        },
-      ],
+      // Shared with lib/imageHosts.js so app code can check, before rendering,
+      // whether an editor-supplied URL is safe to pass to next/image.
+      remotePatterns: REMOTE_IMAGE_PATTERNS,
     },
     trailingSlash: true,
     async redirects() {
@@ -57,5 +38,5 @@ module.exports = withAtlasConfig(
         },
       ];
     },
-  })
+  }),
 );

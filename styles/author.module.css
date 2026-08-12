@@ -1,0 +1,168 @@
+.profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.75rem;
+  padding: 2.5rem 0 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.avatarWrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarImg {
+  object-fit: cover;
+}
+
+/*
+ * Used for photos on hosts outside the next/image allowlist, which render as a
+ * plain <img>. next/image's `fill` mode injects the absolute-fill styles
+ * inline; a raw <img> gets none of them and would otherwise sit at its
+ * intrinsic size and be clipped by the round wrapper, so replicate them here.
+ */
+.avatarImgRaw {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarInitials {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: hsl(var(--muted-foreground));
+  user-select: none;
+}
+
+.profileBody {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.5rem;
+}
+
+.name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.jobTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  margin: 0.5rem 0 0;
+}
+
+.bio {
+  font-size: 1rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0.75rem 0 0;
+  max-width: 46rem;
+  line-height: 1.65;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1rem;
+}
+
+.contactLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.contactLink:hover {
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / 0.4);
+  background: hsl(var(--primary) / 0.08);
+}
+
+.postCount {
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.listHeading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+@media (max-width: 640px) {
+  .profile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+    padding: 1.5rem 0;
+  }
+
+  .avatarWrap {
+    width: 96px;
+    height: 96px;
+  }
+
+  .avatarInitials {
+    font-size: 1.75rem;
+  }
+
+  .name {
+    font-size: 1.75rem;
+  }
+
+  .contact {
+    justify-content: center;
+  }
+
+  .bio {
+    text-align: left;
+  }
+}

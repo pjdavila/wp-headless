@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import AuthorByline from "./AuthorByline";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import styles from "../styles/featured-list-block.module.css";
 
@@ -64,11 +65,12 @@ export default function FeaturedListBlock({ title, categoryUri, posts = [] }) {
               />
             )}
             <div className={styles.heroMeta}>
-              {hero.author?.node?.name && (
-                <span className={styles.heroAuthor}>
-                  {hero.author.node.name}
-                </span>
-              )}
+              {/* Plain text: the whole hero card is already a link. */}
+              <AuthorByline
+                author={hero.author}
+                className={styles.heroAuthor}
+                asLink={false}
+              />
               {hero.author?.node?.name && hero.date && (
                 <span className={styles.metaDot} aria-hidden="true">
                   •
@@ -118,11 +120,11 @@ export default function FeaturedListBlock({ title, categoryUri, posts = [] }) {
                       </Link>
                     </h4>
                     <div className={styles.sideMeta}>
-                      {post.author?.node?.name && (
-                        <span className={styles.sideAuthor}>
-                          By {post.author.node.name}
-                        </span>
-                      )}
+                      <AuthorByline
+                        author={post.author}
+                        className={styles.sideAuthor}
+                        prefix="By "
+                      />
                       {post.author?.node?.name && post.date && (
                         <span className={styles.metaDot} aria-hidden="true">
                           •
