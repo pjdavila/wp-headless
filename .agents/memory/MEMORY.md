@@ -1,2 +1,3 @@
 - [Production deploy flow](deployment-flow.md) — prod is WP Engine via GitHub origin/main; Replit "Merged" ≠ live. Unpushed commits cause prod 404s.
 - [Plugin-only WPGraphQL fields](wp-plugin-graphql-fields.md) — never inline them in a page query; one unknown field kills the whole query. Fetch separately, swallow errors.
+- [Self-generated absolute URLs](self-generated-urls.md) — the site-URL env var points at the CMS, and `/api/x` 308-redirects without a trailing slash. Both bite outbound links.

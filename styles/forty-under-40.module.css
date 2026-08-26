@@ -1,0 +1,243 @@
+.page {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The mark is built around a single diagonal cut through the "40/40". The page
+   repeats that cut as an edge, not as decoration: on wide screens the hero sits
+   on a tinted panel whose right side is sliced at the logo's angle, and the
+   form occupies the space the cut leaves behind. */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.4rem;
+  padding: 3.5rem 0 2.75rem;
+}
+
+/* Stacked layout: no cut to make, so the mark just gets a little light behind
+   it instead of a band crossing the copy. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -8% -12%;
+  background: radial-gradient(
+    68% 58% at 50% 34%,
+    hsl(var(--primary) / 0.11),
+    transparent 72%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--primary) / 0.25);
+}
+
+.logoWrap {
+  width: min(100%, 30rem);
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Two files, one shown at a time: the white mark reads on the dark theme, the
+   black mark on the light theme. Swapping in CSS (rather than in JS from the
+   stored theme) keeps the correct mark on screen from the very first paint. */
+.logoOnDark {
+  display: none;
+}
+
+:global(html.dark) .logoOnDark {
+  display: block;
+}
+
+:global(html.dark) .logoOnLight {
+  display: none;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.lead {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+  max-width: 40rem;
+}
+
+.deadline {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.85);
+  margin: 0;
+}
+
+.divider {
+  width: 100%;
+  max-width: 46rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--primary) / 0.55),
+    transparent
+  );
+  margin: 0.25rem 0 0;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 4rem;
+}
+
+.formCard {
+  width: 100%;
+  max-width: 40rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.6);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.formTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0 0 0.45rem;
+  text-align: center;
+}
+
+.formSubtitle {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 1.75rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Wide screens read the page as one spread: the mark and the pitch hold the
+   left rail while the form sits on the right, so the ask is visible without
+   scrolling past the hero. */
+@media (min-width: 64rem) {
+  .page {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 3.5rem;
+    padding-top: 1rem;
+  }
+
+  .hero {
+    align-items: flex-start;
+    text-align: left;
+    padding: 2.5rem 0 3rem;
+  }
+
+  /* The panel bleeds off the left edge of the viewport and is sliced on the
+     right, leaning the same way as the slash in the mark. The tint fades out
+     downwards so the panel dissolves instead of ending on a hard line, and the
+     slice is a clip path rather than a gradient stop so its angle does not
+     drift as the copy grows. */
+  .hero::before {
+    inset: -2.5rem -1.5rem -2.5rem -8rem;
+    background: linear-gradient(
+      180deg,
+      hsl(var(--primary) / 0.1) 0%,
+      hsl(var(--primary) / 0.05) 62%,
+      hsl(var(--primary) / 0) 100%
+    );
+    clip-path: polygon(0 0, 100% 0, calc(100% - 15rem) 100%, 0 100%);
+  }
+
+  /* On the dark theme the same alpha reads much greener against near-black, so
+     the panel is dialled back to a suggestion of colour. */
+  :global(html.dark) .hero::before {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--primary) / 0.06) 0%,
+      hsl(var(--primary) / 0.028) 62%,
+      hsl(var(--primary) / 0) 100%
+    );
+  }
+
+  .logoWrap {
+    width: min(100%, 27rem);
+  }
+
+  .lead {
+    max-width: none;
+  }
+
+  /* Horizontally the rule no longer hands off to the form below it, so it
+     anchors the left rail instead of spanning the page. */
+  .divider {
+    max-width: 12rem;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--primary) / 0.55),
+      transparent
+    );
+    margin-top: 0.5rem;
+  }
+
+  .formSection {
+    align-items: stretch;
+    padding: 2.5rem 0 4rem;
+  }
+
+  .formCard {
+    max-width: none;
+  }
+
+  .formTitle,
+  .formSubtitle {
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2.25rem 0 2rem;
+    gap: 1.1rem;
+  }
+  .formCard {
+    padding: 1.5rem 1.25rem;
+  }
+  .formSection {
+    padding-bottom: 3rem;
+  }
+}
