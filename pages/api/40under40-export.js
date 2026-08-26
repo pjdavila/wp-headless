@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { readAllApplications } from "../../lib/fortyUnder40Store";
 import { buildSignedFileUrl, requestOrigin } from "../../lib/fortyUnder40Files";
+import { getCloudflareFileUrl } from "../../lib/cloudflareStorage";
 
 const COLUMNS = [
   "createdAt",
@@ -22,6 +23,23 @@ const COLUMNS = [
   "userAgent",
 ];
 
+/**
+ * Links are always regenerated at export time, never read from the stored
+ * record: both the local signed links and the R2 presigned links expire, so a
+ * saved URL would export dead by the time someone opens the file.
+ */
+async function fileUrl(file, origin) {
+  if (!file || !file.storedName) return "";
+  if (file.storage === "cloudflare-r2") {
+    const url = await getCloudflareFileUrl({
+      key: file.storedName,
+      visibility: file.visibility || "private",
+    });
+    return url || "";
+  }
+  return buildSignedFileUrl(origin, file.storedName) || "";
+}
+
 function csvEscape(value) {
   if (value === null || value === undefined) return "";
   const str = String(value);
@@ -31,7 +49,7 @@ function csvEscape(value) {
   return str;
 }
 
-function toRow(record, origin) {
+async function toRow(record, origin) {
   return {
     createdAt: record.createdAt,
     id: record.id,
@@ -44,9 +62,9 @@ function toRow(record, origin) {
     country: record.country,
     consent: record.consent,
     photoName: record.photo?.originalName || "",
-    photoUrl: record.photo?.storedName ? buildSignedFileUrl(origin, record.photo.storedName) : "",
+    photoUrl: await fileUrl(record.photo, origin),
     resumeName: record.resume?.originalName || "",
-    resumeUrl: record.resume?.storedName ? buildSignedFileUrl(origin, record.resume.storedName) : "",
+    resumeUrl: await fileUrl(record.resume, origin),
     webhookStatus: record.webhook?.status || "",
     ipPrefix: record.ipPrefix,
     userAgent: record.userAgent,
@@ -97,7 +115,7 @@ export default async function handler(req, res) {
   }
 
   const origin = requestOrigin(req);
-  const csv = toCsv(records.map((r) => toRow(r, origin)));
+  const csv = toCsv(await Promise.all(records.map((r) => toRow(r, origin))));
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
   res.setHeader("Content-Disposition", 'attachment; filename="40under40-applications.csv"');
   return res.status(200).send(csv);

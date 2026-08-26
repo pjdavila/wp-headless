@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
+    "@aws-sdk/client-s3": "^3.1118.0",
+    "@aws-sdk/s3-request-presigner": "^3.1118.0",
     "@faustwp/cli": "^3.2.3",
     "@faustwp/core": "^3.2.6",
     "@tailwindcss/postcss": "^4.2.2",

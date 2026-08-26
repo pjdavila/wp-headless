@@ -4,6 +4,10 @@ import { sendWelcomeEmail } from "../../lib/welcomeEmail";
 import { appendApplication } from "../../lib/fortyUnder40Store";
 import { sendFortyUnder40Webhook } from "../../lib/fortyUnder40Webhook";
 import {
+  isCloudflareStorageConfigured,
+  uploadToCloudflare,
+} from "../../lib/cloudflareStorage";
+import {
   buildSignedFileUrl,
   requestOrigin,
   saveUpload,
@@ -187,29 +191,68 @@ export default async function handler(req, res) {
   const origin = requestOrigin(req);
 
   // Persist attachments before anything else so the webhook and the team email
-  // can reference them. A storage failure must not lose the application.
+  // can reference them. Cloudflare R2 is the real home: it survives deploys and
+  // yields a short public URL. Local disk is only the fallback when R2 is not
+  // configured or unreachable. A storage failure must not lose the application.
   const stored = {};
+  const useCloudflare = isCloudflareStorageConfigured();
+
   for (const [field, upload] of Object.entries(uploads)) {
-    try {
-      const storedName = await saveUpload({
-        id,
-        field,
-        buffer: upload.buffer,
-        extension: upload.extension,
-      });
-      stored[field] = {
-        storedName,
-        originalName: upload.originalName,
-        contentType: upload.contentType,
-        size: upload.size,
-      };
-    } catch (err) {
-      console.error(`40under40 upload write failed (${field}):`, err.message);
+    const record = {
+      storedName: null,
+      url: null,
+      storage: null,
+      visibility: null,
+      originalName: upload.originalName,
+      contentType: upload.contentType,
+      size: upload.size,
+    };
+
+    if (useCloudflare) {
+      const key = `40under40/2026/${id}-${field}.${upload.extension}`;
+      try {
+        // The photo is submitted for publication, so it can live at a permanent
+        // public URL. The résumé is personal data and stays behind an expiring
+        // link that the export regenerates on demand.
+        const result = await uploadToCloudflare({
+          key,
+          buffer: upload.buffer,
+          contentType: upload.contentType,
+          originalName: upload.originalName,
+          visibility: field === "photo" ? "public" : "private",
+        });
+        record.url = result.url;
+        record.storedName = result.key;
+        record.visibility = result.visibility;
+        record.storage = "cloudflare-r2";
+      } catch (err) {
+        console.error(`40under40 Cloudflare upload failed (${field}):`, err.message);
+      }
+    }
+
+    if (!record.url) {
+      try {
+        const storedName = await saveUpload({
+          id,
+          field,
+          buffer: upload.buffer,
+          extension: upload.extension,
+        });
+        record.storedName = storedName;
+        record.url = buildSignedFileUrl(origin, storedName);
+        record.storage = "local";
+      } catch (err) {
+        console.error(`40under40 upload write failed (${field}):`, err.message);
+      }
+    }
+
+    if (record.storedName) {
+      stored[field] = record;
     }
   }
 
-  const photoUrl = stored.photo ? buildSignedFileUrl(origin, stored.photo.storedName) : null;
-  const resumeUrl = stored.resume ? buildSignedFileUrl(origin, stored.resume.storedName) : null;
+  const photoUrl = stored.photo?.url || null;
+  const resumeUrl = stored.resume?.url || null;
 
   const application = {
     id,
