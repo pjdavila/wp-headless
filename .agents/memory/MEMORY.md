@@ -1,4 +1,5 @@
 - [Production deploy flow](deployment-flow.md) — prod is WP Engine via GitHub origin/main; Replit "Merged" ≠ live. Unpushed commits cause prod 404s.
 - [Plugin-only WPGraphQL fields](wp-plugin-graphql-fields.md) — never inline them in a page query; one unknown field kills the whole query. Fetch separately, swallow errors.
 - [Cloudflare R2 buckets](cloudflare-r2-buckets.md) — the image domain serves a whole public bucket; per-object "private" is a lie there, and deletes stay cached at the edge.
+- [Lockfile registry URLs](lockfile-registry-urls.md) — new deps get Replit's internal proxy host baked into package-lock.json; that lockfile cannot install off-platform.
 - [Self-generated absolute URLs](self-generated-urls.md) — the site-URL env var points at the CMS, and `/api/x` 308-redirects without a trailing slash. Both bite outbound links.
