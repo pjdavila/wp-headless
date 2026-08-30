@@ -1,0 +1,171 @@
+.section {
+  padding: 2rem 0;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  min-width: 0;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--primary) / 0.5));
+  border-radius: 2px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.viewAll {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+}
+
+.viewAll:hover {
+  text-decoration: none;
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.arrows {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.arrow:hover:not(:disabled) {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+}
+
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.track {
+  --visible-cards: 3;
+  --grid-gap: 1.25rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(
+    (100% - (var(--visible-cards) - 1) * var(--grid-gap)) / var(--visible-cards)
+  );
+  gap: var(--grid-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.5) transparent;
+  padding-bottom: 0.5rem;
+}
+
+.track > * {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.track::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.4);
+  border-radius: 999px;
+}
+
+.track::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.7);
+}
+
+@media (max-width: 1024px) {
+  .track {
+    --visible-cards: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Touch devices scroll the track directly; the arrows would only take space. */
+  .arrows {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.15rem;
+  }
+
+  .viewAll {
+    padding: 0.35rem 0;
+  }
+
+  .viewAll:hover {
+    background-color: transparent;
+  }
+
+  .track {
+    --grid-gap: 0.85rem;
+    grid-auto-columns: 85%;
+  }
+}

@@ -7,3 +7,17 @@ uri = "file://wordpress-demo-import.xml"
 type = "unspecified"
 title = "WordPress Demo Import - 20 Artículos"
 logical_id = "824d8294-50f9-4cd9-9637-fb78b705afd3"
+
+[[outputs]]
+id = "6O-7zkv9dIi1MntVj2hcs"
+uri = "file://screenshots/special-reports-desktop.jpg"
+type = "image"
+title = "Special Reports — /special-reports/"
+description = "La nueva página, con la fila 'August: Hospitals', su enlace 'View all articles' y las flechas del carrusel a la derecha."
+logical_id = "03cef3f0-3f41-4b7d-95d3-02456a384471"
+content_hash = "sha256:a1acb29a6e574c5faf7b84eaf337a6af59911f1444f49a779e8449d56bb6a3cb"
+size = 106568
+mtime_ms = 1788099660178
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:479a6c72-8185-477d-bb00-8b748469c21d/03cef3f0-3f41-4b7d-95d3-02456a384471/edb694e3-82db-43d9-b9bf-c1f7541d95a0"
+storage_version_token = "1788099666906485"
+content_type = "image/jpeg"

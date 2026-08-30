@@ -69,6 +69,12 @@ function ChevronIcon({ open }) {
 
 const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
 
+// Categories that have a dedicated landing page. The WordPress archive stays
+// reachable at its own URL; only the nav entry points at the custom page.
+const NAV_URI_OVERRIDES = {
+  "special-reports": "/special-reports/",
+};
+
 function buildNavItems(categories) {
   if (!Array.isArray(categories)) return [];
   const filtered = categories.filter((c) => !SKIP_SLUGS.includes(c.slug));
@@ -77,7 +83,7 @@ function buildNavItems(categories) {
     const children = (cat.children?.nodes || []).filter(
       (ch) => !SKIP_SLUGS.includes(ch.slug)
     );
-    return { ...cat, children };
+    return { ...cat, uri: NAV_URI_OVERRIDES[cat.slug] || cat.uri, children };
   });
   items.sort((a, b) => (b.slug === "news") - (a.slug === "news") || (b.children.length > 0) - (a.children.length > 0));
   return items;
