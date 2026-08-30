@@ -15,6 +15,7 @@ import MarketWatchlist from "../components/MarketWatchlist";
 import NewsletterWidget from "../components/NewsletterWidget";
 import PrintEditionWidget from "../components/PrintEditionWidget";
 import EpaperBanner from "../components/EpaperBanner";
+import SpecialReportsWidget from "../components/SpecialReportsWidget";
 import AdServerSlot from "../components/AdServerSlot";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -57,6 +58,36 @@ const HOMEPAGE_QUERY = gql`
     leadPosts: posts(first: 4, where: { tag: "lead", orderby: { field: DATE, order: DESC } }) {
       nodes { ...PostListFragment }
     }
+    # Special Reports editions for the sidebar widget. Standard WPGraphQL
+    # fields only: one plugin-provided field would fail this whole query and
+    # leave the homepage with no content at all. Lean selection on purpose,
+    # since it multiplies across every edition.
+    specialReports: category(id: "special-reports", idType: SLUG) {
+      id
+      name
+      uri
+      children(first: 50) {
+        nodes {
+          id
+          name
+          uri
+          posts(first: 5, where: { orderby: { field: DATE, order: DESC } }) {
+            nodes {
+              id
+              title
+              uri
+              date
+              featuredImage {
+                node {
+                  sourceUrl
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -94,6 +125,7 @@ export default function FrontPage(props) {
   const heroPosts = allPosts.slice(0, 5);
   const queMiImportaPosts = data?.queMiImporta?.nodes || [];
   const leadPosts = data?.leadPosts?.nodes || [];
+  const specialReportEditions = data?.specialReports?.children?.nodes || [];
 
   const CATEGORY_MAP = [
     { key: "business", name: "Business", uri: "/category/news/cbusiness-category/" },
@@ -190,6 +222,8 @@ export default function FrontPage(props) {
 
           <aside className={styles.sidebar}>
             <EpaperBanner />
+
+            <SpecialReportsWidget editions={specialReportEditions} />
 
             <div className={styles.sidebarAdSlot}>
               <AdServerSlot zone="161655" width={300} height={250} />
