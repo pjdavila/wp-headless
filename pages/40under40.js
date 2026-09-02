@@ -120,9 +120,14 @@ export default function FortyUnder40Page() {
             Do you have what it takes?
           </h1>
           <p className={styles.lead}>
-            Every year Caribbean Business spotlights the executives, founders and operators moving
-            the island&rsquo;s business landscape forward. If that sounds like you &mdash; or like
-            someone you work with &mdash; put your name in for the class of 2026.
+            Many have asked the prevalent question: &ldquo;Will you be producing 40 Under 40
+            again?&rdquo; The answer is &ldquo;yes.&rdquo; The recognition, 40 Under 40, and the
+            nomination period is now officially open.
+            <br />
+            <br />
+            Now it is up to you to help this business journal find the young
+            professionals&mdash;women and men possessing exemplary virtues&mdash;who are all
+            leaders in their respective fields.
           </p>
           <p className={styles.deadline}>Entries are open · Free to submit</p>
 
