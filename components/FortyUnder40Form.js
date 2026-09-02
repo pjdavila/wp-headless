@@ -14,6 +14,9 @@ const STEPS = [
 ];
 
 const INITIAL_FORM = {
+  applicantType: "self",
+  nominatorName: "",
+  nominatorEmail: "",
   fullName: "",
   email: "",
   phone: "",
@@ -70,6 +73,14 @@ export default function FortyUnder40Form() {
   function validateStep(index) {
     const errors = {};
     if (index === 0) {
+      if (form.applicantType === "colleague") {
+        if (form.nominatorName.trim().length < 2) {
+          errors.nominatorName = "Please enter your full name.";
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.nominatorEmail.trim())) {
+          errors.nominatorEmail = "Please enter a valid email address.";
+        }
+      }
       if (form.fullName.trim().length < 2) errors.fullName = "Please enter your full name.";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
         errors.email = "Please enter a valid email address.";
@@ -234,6 +245,63 @@ export default function FortyUnder40Form() {
       {step === 0 && (
         <div className={styles.step}>
           <div className={styles.field}>
+            <label htmlFor="applicantType" className={styles.label}>
+              Who are you nominating? <span className={styles.required}>*</span>
+            </label>
+            <select
+              id="applicantType"
+              className={`${styles.input} ${styles.select}`}
+              value={form.applicantType}
+              onChange={(e) => update("applicantType", e.target.value)}
+              disabled={isLoading}
+            >
+              <option value="self">I&rsquo;m nominating myself</option>
+              <option value="colleague">I&rsquo;m nominating a colleague</option>
+            </select>
+          </div>
+
+          {form.applicantType === "colleague" && (
+            <div className={styles.row}>
+              <div className={styles.field}>
+                <label htmlFor="nominatorName" className={styles.label}>
+                  Your name <span className={styles.required}>*</span>
+                </label>
+                <input
+                  id="nominatorName"
+                  type="text"
+                  autoComplete="name"
+                  className={`${styles.input} ${fieldErrors.nominatorName ? styles.inputError : ""}`}
+                  value={form.nominatorName}
+                  onChange={(e) => update("nominatorName", e.target.value)}
+                  disabled={isLoading}
+                />
+                {fieldErrors.nominatorName && (
+                  <p className={styles.fieldError}>{fieldErrors.nominatorName}</p>
+                )}
+              </div>
+
+              <div className={styles.field}>
+                <label htmlFor="nominatorEmail" className={styles.label}>
+                  Your email <span className={styles.required}>*</span>
+                </label>
+                <input
+                  id="nominatorEmail"
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  className={`${styles.input} ${fieldErrors.nominatorEmail ? styles.inputError : ""}`}
+                  value={form.nominatorEmail}
+                  onChange={(e) => update("nominatorEmail", e.target.value)}
+                  disabled={isLoading}
+                />
+                {fieldErrors.nominatorEmail && (
+                  <p className={styles.fieldError}>{fieldErrors.nominatorEmail}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className={styles.field}>
             <label htmlFor="fullName" className={styles.label}>
               Nominee <span className={styles.required}>*</span>
             </label>
@@ -385,6 +453,12 @@ export default function FortyUnder40Form() {
           <p className={styles.stepIntro}>Review your entry before you submit.</p>
 
           <dl className={styles.summary}>
+            {form.applicantType === "colleague" && (
+              <>
+                <SummaryRow label="Nominated by" value={form.nominatorName} />
+                <SummaryRow label="Nominator email" value={form.nominatorEmail} />
+              </>
+            )}
             <SummaryRow label="Name" value={form.fullName} />
             <SummaryRow label="Email" value={form.email} />
             <SummaryRow label="Phone" value={form.phone} />

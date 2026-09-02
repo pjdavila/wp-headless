@@ -83,6 +83,12 @@ async function notifyTeam({ application, photoUrl, resumeUrl, webhook }) {
   if (!notifyEmail || !apiKey) return;
 
   const rows = [
+    ...(application.applicantType === "colleague"
+      ? [
+          ["Nominated by", application.nominatorName],
+          ["Nominator email", application.nominatorEmail],
+        ]
+      : []),
     ["Name", application.fullName],
     ["Email", application.email],
     ["Phone", application.phone],
@@ -152,6 +158,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
+  const applicantType = body.applicantType === "colleague" ? "colleague" : "self";
+  const nominatorName = applicantType === "colleague" ? sanitize(body.nominatorName, 120) : "";
+  const nominatorEmail =
+    applicantType === "colleague" ? sanitize(body.nominatorEmail, 200).toLowerCase() : "";
   const fullName = sanitize(body.fullName, 120);
   const email = sanitize(body.email, 200).toLowerCase();
   const phone = sanitize(body.phone, 40);
@@ -161,6 +171,14 @@ export default async function handler(req, res) {
   const consent = body.consent === true;
 
   const errors = {};
+  if (applicantType === "colleague") {
+    if (!nominatorName || nominatorName.length < 2) {
+      errors.nominatorName = "Please enter your full name.";
+    }
+    if (!nominatorEmail || !isValidEmail(nominatorEmail)) {
+      errors.nominatorEmail = "Please enter a valid email address.";
+    }
+  }
   if (!fullName || fullName.length < 2) errors.fullName = "Please enter your full name.";
   if (!email || !isValidEmail(email)) errors.email = "Please enter a valid email address.";
   if (!phone || phone.length < 7) errors.phone = "Please enter a valid phone number.";
@@ -258,6 +276,9 @@ export default async function handler(req, res) {
     id,
     createdAt: new Date().toISOString(),
     program: "40-under-40-2026",
+    applicantType,
+    nominatorName,
+    nominatorEmail,
     fullName,
     email,
     phone,
@@ -282,6 +303,9 @@ export default async function handler(req, res) {
     application: {
       id,
       program: application.program,
+      applicantType,
+      nominatorName,
+      nominatorEmail,
       fullName,
       email,
       phone,

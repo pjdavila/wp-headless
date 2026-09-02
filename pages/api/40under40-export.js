@@ -6,6 +6,9 @@ import { getCloudflareFileUrl } from "../../lib/cloudflareStorage";
 const COLUMNS = [
   "createdAt",
   "id",
+  "applicantType",
+  "nominatorName",
+  "nominatorEmail",
   "fullName",
   "email",
   "phone",
@@ -53,6 +56,9 @@ async function toRow(record, origin) {
   return {
     createdAt: record.createdAt,
     id: record.id,
+    applicantType: record.applicantType || "self",
+    nominatorName: record.nominatorName || "",
+    nominatorEmail: record.nominatorEmail || "",
     fullName: record.fullName,
     email: record.email,
     phone: record.phone,
