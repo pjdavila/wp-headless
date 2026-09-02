@@ -129,7 +129,7 @@ export default function FortyUnder40Page() {
             professionals&mdash;women and men possessing exemplary virtues&mdash;who are all
             leaders in their respective fields.
           </p>
-          <p className={styles.deadline}>Entries are open · Free to submit</p>
+          <p className={styles.deadline}>Entries are open · nomination period ends on September 25, 2026</p>
 
           <div className={styles.divider} aria-hidden="true" />
         </section>
