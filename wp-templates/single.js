@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ShareMenu from "../components/ShareMenu";
 import AuthorByline from "../components/AuthorByline";
+import AuthorCard from "../components/AuthorCard";
 import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
@@ -20,7 +21,10 @@ import { useFaustQuery } from "@faustwp/core";
 import { estimateReadingTime } from "../utils/readingTime";
 import { useTrackView, useRecommendations } from "../lib/useRecombee";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
-import { rewriteWpContentImageUrls, rewriteWpImageSrc } from "../lib/rewriteWpContentImageUrls";
+import {
+  rewriteWpContentImageUrls,
+  rewriteWpImageSrc,
+} from "../lib/rewriteWpContentImageUrls";
 import styles from "../styles/single.module.css";
 
 const POST_QUERY = gql`
@@ -45,6 +49,7 @@ const POST_QUERY = gql`
           name
           slug
           uri
+          description
           avatar {
             url
           }
@@ -90,11 +95,15 @@ function formatDate(dateStr) {
 
 function extractImagesFromContent(html) {
   if (!html) return [];
-  const regex = /<img[^>]+src=["']([^"']+)["'][^>]*(?:alt=["']([^"']*)["'])?[^>]*>/gi;
+  const regex =
+    /<img[^>]+src=["']([^"']+)["'][^>]*(?:alt=["']([^"']*)["'])?[^>]*>/gi;
   const images = [];
   let match;
   while ((match = regex.exec(html)) !== null) {
-    images.push({ sourceUrl: rewriteWpImageSrc(match[1]), altText: match[2] || "" });
+    images.push({
+      sourceUrl: rewriteWpImageSrc(match[1]),
+      altText: match[2] || "",
+    });
   }
   return images;
 }
@@ -105,17 +114,29 @@ function ArticleContent({ content }) {
   const paragraphs = parts.filter((p) => p.trim().length > 0);
 
   const splitAt = Math.min(3, paragraphs.length);
-  const before = paragraphs.slice(0, splitAt).map((p) => p + "</p>").join("");
-  const after = paragraphs.slice(splitAt).map((p) => p + "</p>").join("");
+  const before = paragraphs
+    .slice(0, splitAt)
+    .map((p) => p + "</p>")
+    .join("");
+  const after = paragraphs
+    .slice(splitAt)
+    .map((p) => p + "</p>")
+    .join("");
 
   return (
     <>
-      <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: before }} />
+      <div
+        className={styles.articleBody}
+        dangerouslySetInnerHTML={{ __html: before }}
+      />
       <div className={styles.inContentAd}>
         <AdServerSlot zone="161655" width={300} height={250} />
       </div>
       {after && (
-        <div className={styles.articleBody} dangerouslySetInnerHTML={{ __html: after }} />
+        <div
+          className={styles.articleBody}
+          dangerouslySetInnerHTML={{ __html: after }}
+        />
       )}
     </>
   );
@@ -123,7 +144,16 @@ function ArticleContent({ content }) {
 
 function ClockIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -147,16 +177,27 @@ export default function Component(props) {
   const { title: siteTitle } = siteData;
 
   const post = contentQuery?.post || {};
-  const { title, content: rawContent, date, modified, uri, featuredImage, author, categories } = post;
+  const {
+    title,
+    content: rawContent,
+    date,
+    modified,
+    uri,
+    featuredImage,
+    author,
+    categories,
+  } = post;
   const content = rewriteWpContentImageUrls(rawContent);
   const audioUrl = post?.articulos?.audioUrl?.trim();
-  const category = categories?.nodes?.find((c) => c.slug !== "uncategorized") || categories?.nodes?.[0];
+  const category =
+    categories?.nodes?.find((c) => c.slug !== "uncategorized") ||
+    categories?.nodes?.[0];
   const readTime = estimateReadingTime(content);
   const imgSrc = normalizeImageUrl(featuredImage?.node?.sourceUrl);
 
-  const fallbackRelated = (category?.posts?.nodes || []).filter(
-    (p) => p.id !== post.id && p.title !== title
-  ).slice(0, 3);
+  const fallbackRelated = (category?.posts?.nodes || [])
+    .filter((p) => p.id !== post.id && p.title !== title)
+    .slice(0, 3);
 
   const postSlug = uri ? uri.replace(/^\/|\/$/g, "") : "";
   useTrackView(postSlug);
@@ -173,8 +214,12 @@ export default function Component(props) {
     excerpt: r.excerpt,
     uri: r.uri,
     date: r.date,
-    featuredImage: r.imageUrl ? { node: { sourceUrl: r.imageUrl, altText: r.title } } : null,
-    categories: r.category ? { nodes: [{ name: r.category, uri: r.categoryUri }] } : { nodes: [] },
+    featuredImage: r.imageUrl
+      ? { node: { sourceUrl: r.imageUrl, altText: r.title } }
+      : null,
+    categories: r.category
+      ? { nodes: [{ name: r.category, uri: r.categoryUri }] }
+      : { nodes: [] },
   }));
 
   let relatedPosts;
@@ -228,7 +273,11 @@ export default function Component(props) {
         ]}
       />
 
-      <Header siteTitle={siteTitle} menuItems={menuItems} categories={navCategories} />
+      <Header
+        siteTitle={siteTitle}
+        menuItems={menuItems}
+        categories={navCategories}
+      />
 
       <main className="container">
         <div className={styles.layout}>
@@ -264,7 +313,11 @@ export default function Component(props) {
                 {date && (
                   <>
                     <span className={styles.metaDot}>·</span>
-                    <time className={styles.metaItem} dateTime={date} suppressHydrationWarning>
+                    <time
+                      className={styles.metaItem}
+                      dateTime={date}
+                      suppressHydrationWarning
+                    >
                       {formatDate(date)}
                     </time>
                   </>
@@ -299,6 +352,8 @@ export default function Component(props) {
             {galleryImages.length > 1 && (
               <PhotoGallery images={galleryImages} />
             )}
+
+            <AuthorCard author={author} profile={props.authorProfile} />
 
             {relatedPosts.length > 0 && (
               <section className={styles.relatedSection}>

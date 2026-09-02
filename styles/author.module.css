@@ -136,7 +136,102 @@
   border-bottom: 1px solid hsl(var(--border));
 }
 
+/* End-of-article author card (see components/AuthorCard.js) */
+.card {
+  scroll-margin-top: 160px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  margin-top: 2.5rem;
+  background: hsl(var(--muted) / 0.4);
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+}
+
+.cardAvatarWrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardInitials {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: hsl(var(--muted-foreground));
+  user-select: none;
+}
+
+.cardName {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.cardNameLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cardNameLink:hover {
+  color: hsl(var(--primary));
+}
+
+.cardBio {
+  font-size: 0.95rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0.6rem 0 0;
+  line-height: 1.6;
+}
+
+.cardMoreLink {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.cardMoreLink:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 640px) {
+  .card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .cardAvatarWrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .cardBio {
+    text-align: left;
+  }
+
+  .card .contact {
+    justify-content: center;
+  }
+
   .profile {
     flex-direction: column;
     align-items: center;
