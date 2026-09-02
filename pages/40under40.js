@@ -117,7 +117,7 @@ export default function FortyUnder40Page() {
           </div>
 
           <h1 className={styles.title}>
-            The 40 leaders under 40 shaping Puerto Rico&rsquo;s economy
+            Do you have what it takes?
           </h1>
           <p className={styles.lead}>
             Every year Caribbean Business spotlights the executives, founders and operators moving
