@@ -3,8 +3,15 @@ import { PR_MUNICIPALITIES } from "../lib/puertoRicoMunicipalities";
 import styles from "../styles/forty-under-40-form.module.css";
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_BIO_LENGTH = 1000;
 const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const RESUME_TYPES = ["application/pdf"];
+const RECOMMENDATION_TYPES = ["application/pdf"];
+const FILE_TYPES_BY_FIELD = {
+  photo: PHOTO_TYPES,
+  resume: RESUME_TYPES,
+  recommendation: RECOMMENDATION_TYPES,
+};
 
 const STEPS = [
   { id: "contact", label: "Contact" },
@@ -23,9 +30,20 @@ const INITIAL_FORM = {
   jobTitle: "",
   company: "",
   town: "",
+  bio: "",
+  linkedin: "",
   consent: false,
   website: "",
 };
+
+function isValidUrl(value) {
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
 
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -48,13 +66,14 @@ function readFileAsBase64(file) {
 export default function FortyUnder40Form() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(INITIAL_FORM);
-  const [files, setFiles] = useState({ photo: null, resume: null });
+  const [files, setFiles] = useState({ photo: null, resume: null, recommendation: null });
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
   const photoInputRef = useRef(null);
   const resumeInputRef = useRef(null);
+  const recommendationInputRef = useRef(null);
 
   function update(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -91,6 +110,17 @@ export default function FortyUnder40Form() {
       if (!form.jobTitle.trim()) errors.jobTitle = "Please enter your title.";
       if (!form.company.trim()) errors.company = "Please enter your company.";
       if (!form.town) errors.town = "Please select your town.";
+      if (form.bio.length > MAX_BIO_LENGTH) {
+        errors.bio = `The bio must be ${MAX_BIO_LENGTH} characters or fewer.`;
+      }
+      if (!form.linkedin.trim()) {
+        errors.linkedin = "Please enter your LinkedIn profile URL.";
+      } else if (!isValidUrl(form.linkedin)) {
+        errors.linkedin = "Please enter a valid URL.";
+      }
+    }
+    if (index === 2) {
+      if (!files.photo) errors.photo = "Please upload a professional photo.";
     }
     if (index === 3) {
       if (!form.consent) errors.consent = "Please accept the terms to submit.";
@@ -115,14 +145,16 @@ export default function FortyUnder40Form() {
 
   function handleFile(field, file) {
     if (!file) return;
-    const allowed = field === "photo" ? PHOTO_TYPES : RESUME_TYPES;
+    const allowed = FILE_TYPES_BY_FIELD[field] || [];
     if (!allowed.includes(file.type)) {
       setFieldErrors((prev) => ({
         ...prev,
         [field]:
           field === "photo"
             ? "The photo must be a JPG, PNG or WebP image."
-            : "The résumé must be a PDF file.",
+            : field === "recommendation"
+              ? "The recommendation letter must be a PDF file."
+              : "The résumé must be a PDF file.",
       }));
       return;
     }
@@ -137,7 +169,12 @@ export default function FortyUnder40Form() {
   function removeFile(field) {
     setFiles((prev) => ({ ...prev, [field]: null }));
     clearError(field);
-    const ref = field === "photo" ? photoInputRef : resumeInputRef;
+    const ref =
+      field === "photo"
+        ? photoInputRef
+        : field === "recommendation"
+          ? recommendationInputRef
+          : resumeInputRef;
     if (ref.current) ref.current.value = "";
   }
 
@@ -159,7 +196,7 @@ export default function FortyUnder40Form() {
 
     try {
       const payload = { ...form };
-      for (const field of ["photo", "resume"]) {
+      for (const field of ["photo", "resume", "recommendation"]) {
         const file = files[field];
         if (!file) continue;
         payload[field] = {
@@ -184,7 +221,7 @@ export default function FortyUnder40Form() {
 
       setStatus("success");
       setForm(INITIAL_FORM);
-      setFiles({ photo: null, resume: null });
+      setFiles({ photo: null, resume: null, recommendation: null });
     } catch (err) {
       setErrorMsg(err.message || "We could not submit your entry. Please try again.");
       setStatus("idle");
@@ -411,13 +448,52 @@ export default function FortyUnder40Form() {
             </select>
             {fieldErrors.town && <p className={styles.fieldError}>{fieldErrors.town}</p>}
           </div>
+
+          <div className={styles.field}>
+            <label htmlFor="linkedin" className={styles.label}>
+              LinkedIn <span className={styles.required}>*</span>
+            </label>
+            <input
+              id="linkedin"
+              type="url"
+              inputMode="url"
+              autoComplete="url"
+              placeholder="https://www.linkedin.com/in/your-name"
+              className={`${styles.input} ${fieldErrors.linkedin ? styles.inputError : ""}`}
+              value={form.linkedin}
+              onChange={(e) => update("linkedin", e.target.value)}
+              disabled={isLoading}
+            />
+            {fieldErrors.linkedin && <p className={styles.fieldError}>{fieldErrors.linkedin}</p>}
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="bio" className={styles.label}>
+              Bio <span className={styles.optional}>(optional)</span>
+            </label>
+            <textarea
+              id="bio"
+              rows={5}
+              maxLength={MAX_BIO_LENGTH}
+              placeholder="A short professional bio…"
+              className={`${styles.input} ${fieldErrors.bio ? styles.inputError : ""}`}
+              value={form.bio}
+              onChange={(e) => update("bio", e.target.value)}
+              disabled={isLoading}
+            />
+            <p className={styles.stepIntro}>
+              {form.bio.length}/{MAX_BIO_LENGTH} characters
+            </p>
+            {fieldErrors.bio && <p className={styles.fieldError}>{fieldErrors.bio}</p>}
+          </div>
         </div>
       )}
 
       {step === 2 && (
         <div className={styles.step}>
           <p className={styles.stepIntro}>
-            Both files are optional, but they help our editors build your profile. Max 5 MB each.
+            The professional photo is required. The résumé and recommendation letter are optional
+            but help our editors build your profile. Max 5 MB each.
           </p>
 
           <FileField
@@ -445,6 +521,19 @@ export default function FortyUnder40Form() {
             onSelect={(file) => handleFile("resume", file)}
             onRemove={() => removeFile("resume")}
           />
+
+          <FileField
+            id="recommendation"
+            label="Recommendation letter"
+            hint="PDF · up to 5 MB"
+            accept="application/pdf"
+            inputRef={recommendationInputRef}
+            file={files.recommendation}
+            error={fieldErrors.recommendation}
+            disabled={isLoading}
+            onSelect={(file) => handleFile("recommendation", file)}
+            onRemove={() => removeFile("recommendation")}
+          />
         </div>
       )}
 
@@ -465,8 +554,14 @@ export default function FortyUnder40Form() {
             <SummaryRow label="Title" value={form.jobTitle} />
             <SummaryRow label="Company" value={form.company} />
             <SummaryRow label="Town" value={form.town} />
+            <SummaryRow label="LinkedIn" value={form.linkedin} />
+            <SummaryRow label="Bio" value={form.bio ? form.bio : "Not included"} />
             <SummaryRow label="Photo" value={files.photo ? files.photo.name : "Not included"} />
             <SummaryRow label="Résumé" value={files.resume ? files.resume.name : "Not included"} />
+            <SummaryRow
+              label="Recommendation letter"
+              value={files.recommendation ? files.recommendation.name : "Not included"}
+            />
           </dl>
 
           <div className={styles.consentField}>

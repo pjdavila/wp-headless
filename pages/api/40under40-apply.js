@@ -15,10 +15,11 @@ import {
 } from "../../lib/fortyUnder40Files";
 
 // Attachments arrive base64-encoded inside the JSON body, so the default 1 MB
-// body limit has to cover two 5 MB files plus ~33% base64 overhead.
+// body limit has to cover three 5 MB files (photo, résumé, recommendation
+// letter) plus ~33% base64 overhead — 15 MB of raw bytes becomes ~20 MB encoded.
 export const config = {
   api: {
-    bodyParser: { sizeLimit: "16mb" },
+    bodyParser: { sizeLimit: "24mb" },
   },
 };
 
@@ -76,7 +77,16 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-async function notifyTeam({ application, photoUrl, resumeUrl, webhook }) {
+function isValidHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+async function notifyTeam({ application, photoUrl, resumeUrl, recommendationUrl, webhook }) {
   const notifyEmail =
     process.env.FORTY_UNDER_40_NOTIFY_EMAIL || process.env.PRINT_EDITION_NOTIFY_EMAIL;
   const apiKey = process.env.RESEND_API_KEY;
@@ -95,14 +105,17 @@ async function notifyTeam({ application, photoUrl, resumeUrl, webhook }) {
     ["Title", application.jobTitle],
     ["Company", application.company],
     ["Town", application.town],
+    ["LinkedIn", application.linkedin],
+    ["Bio", application.bio || "—"],
     ["Photo", photoUrl ? `<a href="${escapeHtml(photoUrl)}">${escapeHtml(application.photo?.originalName || "photo")}</a>` : "—"],
     ["Résumé", resumeUrl ? `<a href="${escapeHtml(resumeUrl)}">${escapeHtml(application.resume?.originalName || "resume.pdf")}</a>` : "—"],
+    ["Recommendation letter", recommendationUrl ? `<a href="${escapeHtml(recommendationUrl)}">${escapeHtml(application.recommendation?.originalName || "recommendation.pdf")}</a>` : "—"],
     ["Webhook", webhook.status],
     ["IP (prefix)", application.ipPrefix],
     ["User-Agent", application.userAgent],
   ]
     .map(([label, value]) => {
-      const isHtml = label === "Photo" || label === "Résumé";
+      const isHtml = label === "Photo" || label === "Résumé" || label === "Recommendation letter";
       return `<tr><td><strong>${label}:</strong></td><td>${isHtml ? value : escapeHtml(value || "—")}</td></tr>`;
     })
     .join("");
@@ -168,6 +181,8 @@ export default async function handler(req, res) {
   const jobTitle = sanitize(body.jobTitle, 120);
   const company = sanitize(body.company, 160);
   const town = sanitize(body.town, 60);
+  const bio = sanitize(body.bio, 1000);
+  const linkedin = sanitize(body.linkedin, 300);
   const consent = body.consent === true;
 
   const errors = {};
@@ -185,10 +200,11 @@ export default async function handler(req, res) {
   if (!jobTitle) errors.jobTitle = "Please enter your title.";
   if (!company) errors.company = "Please enter your company.";
   if (!town || !isValidMunicipality(town)) errors.town = "Please select a town.";
+  if (!linkedin || !isValidHttpUrl(linkedin)) errors.linkedin = "Please enter a valid LinkedIn URL.";
   if (!consent) errors.consent = "Please accept the terms to submit.";
 
   const uploads = {};
-  for (const field of ["photo", "resume"]) {
+  for (const field of ["photo", "resume", "recommendation"]) {
     const value = body[field];
     if (value === null || value === undefined || value === "") continue;
     const result = validateUpload(field, value);
@@ -197,6 +213,9 @@ export default async function handler(req, res) {
       continue;
     }
     uploads[field] = result;
+  }
+  if (!uploads.photo) {
+    errors.photo = errors.photo || "Please upload a professional photo.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -271,6 +290,7 @@ export default async function handler(req, res) {
 
   const photoUrl = stored.photo?.url || null;
   const resumeUrl = stored.resume?.url || null;
+  const recommendationUrl = stored.recommendation?.url || null;
 
   const application = {
     id,
@@ -285,11 +305,14 @@ export default async function handler(req, res) {
     jobTitle,
     company,
     town,
+    bio,
+    linkedin,
     country: "PR",
     consent: true,
     status: "received",
     photo: stored.photo || null,
     resume: stored.resume || null,
+    recommendation: stored.recommendation || null,
     ipPrefix,
     userAgent,
   };
@@ -312,6 +335,8 @@ export default async function handler(req, res) {
       jobTitle,
       company,
       town,
+      bio,
+      linkedin,
       country: "PR",
       consent: true,
     },
@@ -332,6 +357,14 @@ export default async function handler(req, res) {
         url: resumeUrl,
         contentBase64: uploads.resume.buffer.toString("base64"),
       },
+      stored.recommendation && {
+        field: "recommendation",
+        filename: stored.recommendation.originalName,
+        contentType: stored.recommendation.contentType,
+        size: stored.recommendation.size,
+        url: recommendationUrl,
+        contentBase64: uploads.recommendation.buffer.toString("base64"),
+      },
     ].filter(Boolean),
     source: { ipPrefix, userAgent },
   });
@@ -348,7 +381,7 @@ export default async function handler(req, res) {
     console.error("40under40 acknowledgement email failed:", err.message);
   }
 
-  notifyTeam({ application, photoUrl, resumeUrl, webhook }).catch(() => {});
+  notifyTeam({ application, photoUrl, resumeUrl, recommendationUrl, webhook }).catch(() => {});
 
   return res.status(200).json({ ok: true });
 }
