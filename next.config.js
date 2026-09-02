@@ -18,6 +18,9 @@ module.exports = withAtlasConfig(
       // whether an editor-supplied URL is safe to pass to next/image.
       remotePatterns: REMOTE_IMAGE_PATTERNS,
     },
+    // Faust's ISR HMR message can arrive before the Pages Router dev indicator
+    // has initialized, causing a browser runtime exception in Next.js 15.
+    devIndicators: false,
     trailingSlash: true,
     async redirects() {
       return [
