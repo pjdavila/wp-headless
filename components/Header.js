@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { useAuth } from "../lib/useAuth";
+import { useMagazineCover } from "../lib/useMagazineCover";
 import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import TsaBadge from "./TsaBadge";
@@ -68,6 +69,21 @@ function ChevronIcon({ open }) {
 }
 
 const SKIP_SLUGS = ["uncategorized", "sin-categoria"];
+const FALLBACK_COVER_SRC = "/epaper/portada-actual.webp";
+
+function formatMagazineDate(value) {
+  if (!value) return "Edición más reciente";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Edición más reciente";
+
+  return new Intl.DateTimeFormat("es-PR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "America/Puerto_Rico",
+  }).format(date);
+}
 
 // Categories that have a dedicated landing page. The WordPress archive stays
 // reachable at its own URL; only the nav entry points at the custom page.
@@ -98,8 +114,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   const [searchTerm, setSearchTerm] = useState("");
   const [drawerSearchTerm, setDrawerSearchTerm] = useState("");
   const { user, loading } = useAuth();
+  const magazineCover = useMagazineCover();
   const dropdownRef = useRef(null);
   const router = useRouter();
+  const magazineCoverSrc = magazineCover?.thumbnailUrl || FALLBACK_COVER_SRC;
+  const magazineDate = formatMagazineDate(magazineCover?.updatedAt);
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -426,6 +445,31 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 onClick={() => setDrawerOpen(false)}
               >
                 Videos
+              </Link>
+              <Link
+                href="/magazine/"
+                className={style.drawerMagazine}
+                onClick={() => setDrawerOpen(false)}
+                aria-label={`Abrir Edición Impresa: ${magazineDate}`}
+              >
+                <span className={style.drawerMagazineCover}>
+                  <Image
+                    key={magazineCoverSrc}
+                    src={magazineCoverSrc}
+                    alt="Portada de la edición más reciente de Caribbean Business"
+                    fill
+                    sizes="72px"
+                    className={style.drawerMagazineImage}
+                  />
+                </span>
+                <span className={style.drawerMagazineText}>
+                  <span className={style.drawerMagazineTitle}>
+                    Edición Impresa
+                  </span>
+                  <span className={style.drawerMagazineDate}>
+                    {magazineDate}
+                  </span>
+                </span>
               </Link>
             </nav>
           </div>

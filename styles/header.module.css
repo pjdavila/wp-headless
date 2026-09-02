@@ -611,6 +611,62 @@
   text-decoration: none;
 }
 
+.drawerMagazine {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0.75rem 0.25rem 0.25rem;
+  padding: 0.875rem;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--muted) / 0.55);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.drawerMagazine:hover {
+  background-color: hsl(var(--muted));
+  border-color: hsl(var(--foreground) / 0.2);
+  text-decoration: none;
+}
+
+.drawerMagazineCover {
+  position: relative;
+  flex: 0 0 72px;
+  width: 72px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.drawerMagazineImage {
+  object-fit: cover;
+}
+
+.drawerMagazineText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.drawerMagazineTitle {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.drawerMagazineDate {
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: hsl(var(--muted-foreground));
+}
+
 @keyframes slideIn {
   from { transform: translateX(-100%); }
   to { transform: translateX(0); }
