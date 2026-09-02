@@ -235,7 +235,7 @@ export default function FortyUnder40Form() {
         <div className={styles.step}>
           <div className={styles.field}>
             <label htmlFor="fullName" className={styles.label}>
-              Name <span className={styles.required}>*</span>
+              Nominee <span className={styles.required}>*</span>
             </label>
             <input
               id="fullName"
