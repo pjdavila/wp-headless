@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { PR_MUNICIPALITIES } from "../lib/puertoRicoMunicipalities";
+import FortyUnder40TermsModal from "./FortyUnder40TermsModal";
 import styles from "../styles/forty-under-40-form.module.css";
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
@@ -70,10 +71,12 @@ export default function FortyUnder40Form() {
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
+  const [termsOpen, setTermsOpen] = useState(false);
 
   const photoInputRef = useRef(null);
   const resumeInputRef = useRef(null);
   const recommendationInputRef = useRef(null);
+  const termsButtonRef = useRef(null);
 
   function update(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -575,7 +578,17 @@ export default function FortyUnder40Form() {
               />
               <span>
                 I confirm the information above is accurate and I agree that Caribbean Business may
-                use it to evaluate and, if selected, publish my 40 Under 40 profile.
+                use it to evaluate and, if selected, publish my 40 Under 40 profile. I accept the{" "}
+                <button
+                  ref={termsButtonRef}
+                  type="button"
+                  className={styles.termsLink}
+                  onClick={() => setTermsOpen(true)}
+                  aria-haspopup="dialog"
+                >
+                  Terms and Conditions
+                </button>
+                .
               </span>
             </label>
             {fieldErrors.consent && <p className={styles.fieldError}>{fieldErrors.consent}</p>}
@@ -617,6 +630,12 @@ export default function FortyUnder40Form() {
         Entering does not guarantee selection. Honorees are chosen by the Caribbean Business
         editorial team.
       </p>
+
+      <FortyUnder40TermsModal
+        isOpen={termsOpen}
+        onClose={() => setTermsOpen(false)}
+        returnFocusRef={termsButtonRef}
+      />
     </form>
   );
 }
