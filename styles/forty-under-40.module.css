@@ -51,7 +51,8 @@
 }
 
 .logoWrap {
-  width: min(100%, 30rem);
+  width: min(100%, 24rem);
+  margin: 0 auto;
 }
 
 .logo {
@@ -195,7 +196,8 @@
   }
 
   .logoWrap {
-    width: min(100%, 27rem);
+    width: min(100%, 21.6rem);
+    align-self: center;
   }
 
   .lead {
