@@ -15,13 +15,15 @@ import {
 } from "../../lib/fortyUnder40Files";
 
 // Attachments arrive base64-encoded inside the JSON body, so the default 1 MB
-// body limit has to cover three 5 MB files (photo, résumé, recommendation
-// letter) plus ~33% base64 overhead — 15 MB of raw bytes becomes ~20 MB encoded.
+// body limit has to cover three 5 MB recommendation letters plus ~33% base64
+// overhead — 15 MB of raw bytes becomes ~20 MB encoded.
 export const config = {
   api: {
     bodyParser: { sizeLimit: "24mb" },
   },
 };
+
+const RECOMMENDATION_FIELDS = ["recommendation1", "recommendation2", "recommendation3"];
 
 // Best-effort, in-memory rate limit. Per-process only — does not coordinate
 // across serverless instances. Same deterrent used by the print-edition form.
@@ -86,7 +88,7 @@ function isValidHttpUrl(value) {
   }
 }
 
-async function notifyTeam({ application, photoUrl, resumeUrl, recommendationUrl, webhook }) {
+async function notifyTeam({ application, recommendationUrls, webhook }) {
   const notifyEmail =
     process.env.FORTY_UNDER_40_NOTIFY_EMAIL || process.env.PRINT_EDITION_NOTIFY_EMAIL;
   const apiKey = process.env.RESEND_API_KEY;
@@ -107,15 +109,20 @@ async function notifyTeam({ application, photoUrl, resumeUrl, recommendationUrl,
     ["Town", application.town],
     ["LinkedIn", application.linkedin],
     ["Bio", application.bio || "—"],
-    ["Photo", photoUrl ? `<a href="${escapeHtml(photoUrl)}">${escapeHtml(application.photo?.originalName || "photo")}</a>` : "—"],
-    ["Résumé", resumeUrl ? `<a href="${escapeHtml(resumeUrl)}">${escapeHtml(application.resume?.originalName || "resume.pdf")}</a>` : "—"],
-    ["Recommendation letter", recommendationUrl ? `<a href="${escapeHtml(recommendationUrl)}">${escapeHtml(application.recommendation?.originalName || "recommendation.pdf")}</a>` : "—"],
+    ...RECOMMENDATION_FIELDS.map((field, i) => {
+      const url = recommendationUrls[field];
+      const doc = application[field];
+      return [
+        `Recommendation letter ${i + 1}`,
+        url ? `<a href="${escapeHtml(url)}">${escapeHtml(doc?.originalName || `recommendation${i + 1}.pdf`)}</a>` : "—",
+      ];
+    }),
     ["Webhook", webhook.status],
     ["IP (prefix)", application.ipPrefix],
     ["User-Agent", application.userAgent],
   ]
     .map(([label, value]) => {
-      const isHtml = label === "Photo" || label === "Résumé" || label === "Recommendation letter";
+      const isHtml = label.startsWith("Recommendation letter");
       return `<tr><td><strong>${label}:</strong></td><td>${isHtml ? value : escapeHtml(value || "—")}</td></tr>`;
     })
     .join("");
@@ -181,7 +188,7 @@ export default async function handler(req, res) {
   const jobTitle = sanitize(body.jobTitle, 120);
   const company = sanitize(body.company, 160);
   const town = sanitize(body.town, 60);
-  const bio = sanitize(body.bio, 1000);
+  const bio = sanitize(body.bio, 2000);
   const linkedin = sanitize(body.linkedin, 300);
   const consent = body.consent === true;
 
@@ -201,10 +208,12 @@ export default async function handler(req, res) {
   if (!company) errors.company = "Please enter your company.";
   if (!town || !isValidMunicipality(town)) errors.town = "Please select a town.";
   if (!linkedin || !isValidHttpUrl(linkedin)) errors.linkedin = "Please enter a valid LinkedIn URL.";
+  const bioWordCount = bio ? bio.trim().split(/\s+/).length : 0;
+  if (bioWordCount > 250) errors.bio = "The bio must be 250 words or fewer.";
   if (!consent) errors.consent = "Please accept the terms to submit.";
 
   const uploads = {};
-  for (const field of ["photo", "resume", "recommendation"]) {
+  for (const field of RECOMMENDATION_FIELDS) {
     const value = body[field];
     if (value === null || value === undefined || value === "") continue;
     const result = validateUpload(field, value);
@@ -213,9 +222,6 @@ export default async function handler(req, res) {
       continue;
     }
     uploads[field] = result;
-  }
-  if (!uploads.photo) {
-    errors.photo = errors.photo || "Please upload a professional photo.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -248,15 +254,14 @@ export default async function handler(req, res) {
     if (useCloudflare) {
       const key = `40under40/2026/${id}-${field}.${upload.extension}`;
       try {
-        // The photo is submitted for publication, so it can live at a permanent
-        // public URL. The résumé is personal data and stays behind an expiring
-        // link that the export regenerates on demand.
+        // Recommendation letters are personal data and stay behind an
+        // expiring link that the export regenerates on demand.
         const result = await uploadToCloudflare({
           key,
           buffer: upload.buffer,
           contentType: upload.contentType,
           originalName: upload.originalName,
-          visibility: field === "photo" ? "public" : "private",
+          visibility: "private",
         });
         record.url = result.url;
         record.storedName = result.key;
@@ -288,9 +293,9 @@ export default async function handler(req, res) {
     }
   }
 
-  const photoUrl = stored.photo?.url || null;
-  const resumeUrl = stored.resume?.url || null;
-  const recommendationUrl = stored.recommendation?.url || null;
+  const recommendationUrls = Object.fromEntries(
+    RECOMMENDATION_FIELDS.map((field) => [field, stored[field]?.url || null]),
+  );
 
   const application = {
     id,
@@ -310,9 +315,9 @@ export default async function handler(req, res) {
     country: "PR",
     consent: true,
     status: "received",
-    photo: stored.photo || null,
-    resume: stored.resume || null,
-    recommendation: stored.recommendation || null,
+    recommendation1: stored.recommendation1 || null,
+    recommendation2: stored.recommendation2 || null,
+    recommendation3: stored.recommendation3 || null,
     ipPrefix,
     userAgent,
   };
@@ -340,32 +345,18 @@ export default async function handler(req, res) {
       country: "PR",
       consent: true,
     },
-    documents: [
-      stored.photo && {
-        field: "photo",
-        filename: stored.photo.originalName,
-        contentType: stored.photo.contentType,
-        size: stored.photo.size,
-        url: photoUrl,
-        contentBase64: uploads.photo.buffer.toString("base64"),
-      },
-      stored.resume && {
-        field: "resume",
-        filename: stored.resume.originalName,
-        contentType: stored.resume.contentType,
-        size: stored.resume.size,
-        url: resumeUrl,
-        contentBase64: uploads.resume.buffer.toString("base64"),
-      },
-      stored.recommendation && {
-        field: "recommendation",
-        filename: stored.recommendation.originalName,
-        contentType: stored.recommendation.contentType,
-        size: stored.recommendation.size,
-        url: recommendationUrl,
-        contentBase64: uploads.recommendation.buffer.toString("base64"),
-      },
-    ].filter(Boolean),
+    documents: RECOMMENDATION_FIELDS.map((field) => {
+      const record = stored[field];
+      if (!record) return null;
+      return {
+        field,
+        filename: record.originalName,
+        contentType: record.contentType,
+        size: record.size,
+        url: recommendationUrls[field],
+        contentBase64: uploads[field].buffer.toString("base64"),
+      };
+    }).filter(Boolean),
     source: { ipPrefix, userAgent },
   });
 
@@ -381,7 +372,7 @@ export default async function handler(req, res) {
     console.error("40under40 acknowledgement email failed:", err.message);
   }
 
-  notifyTeam({ application, photoUrl, resumeUrl, recommendationUrl, webhook }).catch(() => {});
+  notifyTeam({ application, recommendationUrls, webhook }).catch(() => {});
 
   return res.status(200).json({ ok: true });
 }

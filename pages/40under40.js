@@ -1,10 +1,12 @@
 import Head from "next/head";
+import { useRef, useState } from "react";
 import { useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
 import { BreadcrumbJsonLd } from "../components/JsonLd";
 import FortyUnder40Form from "../components/FortyUnder40Form";
+import FortyUnder40TermsModal from "../components/FortyUnder40TermsModal";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import styles from "../styles/forty-under-40.module.css";
@@ -59,6 +61,9 @@ function safeJsonLd(obj) {
 export default function FortyUnder40Page() {
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useQuery(HEADER_MENU_QUERY) || {};
+
+  const [termsOpen, setTermsOpen] = useState(false);
+  const heroTermsButtonRef = useRef(null);
 
   const siteData = siteDataQuery?.data?.generalSettings || {};
   const menuItems = headerMenuDataQuery?.data?.primaryMenuItems?.nodes || [];
@@ -128,6 +133,15 @@ export default function FortyUnder40Page() {
             Now it is up to you to help this business journal find the young
             professionals&mdash;women and men possessing exemplary virtues&mdash;who are all
             leaders in their respective fields.
+            <button
+              ref={heroTermsButtonRef}
+              type="button"
+              className={styles.termsButton}
+              onClick={() => setTermsOpen(true)}
+              aria-haspopup="dialog"
+            >
+              Read the terms and conditions
+            </button>
           </p>
           <p className={styles.deadline}>Entries are open · nomination period ends on September 25, 2026</p>
 
@@ -144,6 +158,12 @@ export default function FortyUnder40Page() {
           </div>
         </section>
       </main>
+
+      <FortyUnder40TermsModal
+        isOpen={termsOpen}
+        onClose={() => setTermsOpen(false)}
+        returnFocusRef={heroTermsButtonRef}
+      />
 
       <Footer />
     </>
