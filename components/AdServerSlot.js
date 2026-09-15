@@ -36,12 +36,24 @@ export default function AdServerSlot({
       return false;
     };
 
+    // The ASO SDK appends each new creative into the <ins> element rather
+    // than replacing its previous content, so calling loadAd() again on an
+    // already-rendered slot just stacks a new ad behind/inside the old one
+    // (invisible under our fixed-size, overflow:hidden wrapper). Clear the
+    // slot's rendered content before re-requesting an ad so the refresh is
+    // actually visible.
+    const refreshAd = () => {
+      if (cancelled || !insRef.current) return;
+      insRef.current.innerHTML = "";
+      loadAd();
+    };
+
     const startRefresh = () => {
       if (intervalId) return;
       intervalId = setInterval(() => {
         if (cancelled || typeof document === "undefined") return;
         if (document.hidden) return;
-        loadAd();
+        refreshAd();
       }, 30000);
     };
 
@@ -64,7 +76,7 @@ export default function AdServerSlot({
     // its own when the route changes. Re-request the ad on every
     // completed client-side navigation once it has loaded at least once.
     const handleRouteChange = () => {
-      if (loadedRef.current) loadAd();
+      if (loadedRef.current) refreshAd();
     };
     router?.events?.on("routeChangeComplete", handleRouteChange);
 
