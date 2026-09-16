@@ -1,18 +1,25 @@
 .banner {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--radius);
-  padding: 1.25rem 1.5rem;
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 0.25rem);
   margin-bottom: 2rem;
   box-shadow: var(--shadow-sm);
+  border: 1px solid hsl(var(--border));
+}
+
+.logoPanel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1.5rem;
+  background: linear-gradient(150deg, hsl(160 55% 16%) 0%, hsl(160 60% 10%) 100%);
 }
 
 .logoWrap {
-  flex: 0 0 auto;
-  width: 9rem;
+  width: 100%;
+  max-width: 11rem;
 }
 
 .logo {
@@ -21,71 +28,108 @@
   display: block;
 }
 
-/* Two files, one shown at a time: the white mark reads on the dark theme, the
-   black mark on the light theme. Swapping in CSS keeps the correct mark on
-   screen from the very first paint, matching the /40under40 landing page. */
-.logoOnDark {
-  display: none;
-}
-
-:global(html.dark) .logoOnDark {
-  display: block;
-}
-
-:global(html.dark) .logoOnLight {
-  display: none;
-}
-
-.copy {
-  flex: 1 1 auto;
+.content {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(120deg, hsl(var(--primary) / 0.08), hsl(var(--card)) 55%);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.12);
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--primary) / 0.25);
 }
 
 .headline {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.15;
   color: hsl(var(--foreground));
 }
 
+.lead {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
 .cta {
-  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
   white-space: nowrap;
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   font-weight: 700;
   font-size: 0.9rem;
-  padding: 0.65rem 1.4rem;
+  padding: 0.7rem 1.5rem;
   border-radius: 999px;
   text-decoration: none;
-  transition: opacity 0.15s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .cta:hover {
-  opacity: 0.85;
+  opacity: 0.9;
+  transform: translateX(2px);
 }
 
-@media (max-width: 560px) {
+.ctaArrow {
+  transition: transform 0.15s ease;
+}
+
+.cta:hover .ctaArrow {
+  transform: translateX(2px);
+}
+
+.deadline {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 720px) {
   .banner {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+    grid-template-columns: 1fr;
+  }
+
+  .logoPanel {
+    padding: 1.5rem;
   }
 
   .logoWrap {
-    width: 7rem;
-    margin: 0 auto;
+    max-width: 8rem;
   }
 
-  .copy {
-    flex-direction: column;
+  .content {
+    align-items: center;
     text-align: center;
+    padding: 1.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: center;
   }
 }
