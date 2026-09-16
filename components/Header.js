@@ -352,6 +352,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   Videos
                 </Link>
               </li>
+              <li className={style.navItem}>
+                <Link href="/40under40/" className={style.navLink}>
+                  40 Under 40
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>
@@ -445,6 +450,13 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 onClick={() => setDrawerOpen(false)}
               >
                 Videos
+              </Link>
+              <Link
+                href="/40under40/"
+                className={style.drawerLink}
+                onClick={() => setDrawerOpen(false)}
+              >
+                40 Under 40
               </Link>
               <Link
                 href="/magazine/"
