@@ -17,6 +17,7 @@ import PrintEditionWidget from "../components/PrintEditionWidget";
 import EpaperBanner from "../components/EpaperBanner";
 import SpecialReportsWidget from "../components/SpecialReportsWidget";
 import AdServerSlot from "../components/AdServerSlot";
+import FortyUnder40Promo from "../components/FortyUnder40Promo";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { POST_LIST_FRAGMENT } from "../fragments/PostListFragment";
@@ -170,6 +171,8 @@ export default function FrontPage(props) {
         <div className={styles.layout}>
           <div className={styles.mainContent}>
             <ShortStoriesRow />
+
+            <FortyUnder40Promo />
 
             {latestNewsPosts.length > 0 && (
               <section className={styles.recommendedSection}>

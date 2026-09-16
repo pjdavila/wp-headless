@@ -1,0 +1,91 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.logoWrap {
+  flex: 0 0 auto;
+  width: 9rem;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Two files, one shown at a time: the white mark reads on the dark theme, the
+   black mark on the light theme. Swapping in CSS keeps the correct mark on
+   screen from the very first paint, matching the /40under40 landing page. */
+.logoOnDark {
+  display: none;
+}
+
+:global(html.dark) .logoOnDark {
+  display: block;
+}
+
+:global(html.dark) .logoOnLight {
+  display: none;
+}
+
+.copy {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.cta {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.cta:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 560px) {
+  .banner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .logoWrap {
+    width: 7rem;
+    margin: 0 auto;
+  }
+
+  .copy {
+    flex-direction: column;
+    text-align: center;
+  }
+}
