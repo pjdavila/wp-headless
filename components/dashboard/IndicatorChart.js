@@ -34,31 +34,19 @@ function cutoffDate(rangeKey, latestDate) {
 }
 
 /**
- * Historical chart with indicator picker, 1Y/3Y/5Y/10Y/MAX ranges and a
- * raw/YoY toggle. Every control is a real button/select (keyboard
- * accessible) and a plain-text summary always accompanies the canvas.
+ * Historical chart for an indicator detail page: one series of observations
+ * (already filtered by the page's series selector), 1Y/3Y/5Y/10Y/MAX ranges
+ * and a raw/YoY toggle. A plain-text summary always accompanies the canvas.
  */
-export default function ChartPanel({ indicators }) {
-  const chartable = useMemo(
-    () =>
-      indicators.filter(
-        (entry) =>
-          (entry.status === "ok" || entry.status === "error") &&
-          (entry.observations || []).length > 1,
-      ),
-    [indicators],
-  );
-
-  const [selectedId, setSelectedId] = useState("unemployment-rate");
+export default function IndicatorChart({ indicator, observations, seriesLabel }) {
   const [range, setRange] = useState("5Y");
   const [mode, setMode] = useState("raw");
 
-  const entry =
-    chartable.find((item) => item.id === selectedId) || chartable[0];
-
   const prepared = useMemo(() => {
-    if (!entry) return null;
-    const all = entry.observations;
+    const all = (observations || []).filter((point) =>
+      Number.isFinite(point.value),
+    );
+    if (all.length === 0) return null;
     const latestDate = all[all.length - 1]?.date;
     const cutoff = cutoffDate(range, latestDate);
     const ranged = cutoff ? all.filter((p) => p.date >= cutoff) : all;
@@ -66,7 +54,7 @@ export default function ChartPanel({ indicators }) {
     if (mode === "yoy") {
       // Percent-unit indicators chart the ABSOLUTE YoY difference, which is
       // a percentage-point movement — format axes/tooltips as pp, never %.
-      const isPp = entry.unit === "percent";
+      const isPp = indicator.unit === "percent";
       const points = ranged
         .filter((p) =>
           isPp
@@ -77,23 +65,28 @@ export default function ChartPanel({ indicators }) {
           date: p.date,
           value: isPp ? p.yoyChange : p.yoyChangePct,
         }));
-      return { points, unit: isPp ? "pp" : "percent", isPp };
+      return { points, unit: isPp ? "pp" : "percent", isPp, count: all.length };
     }
     return {
       points: ranged.map((p) => ({ date: p.date, value: p.value })),
-      unit: entry.unit,
+      unit: indicator.unit,
       isPp: false,
+      count: all.length,
     };
-  }, [entry, range, mode]);
+  }, [indicator, observations, range, mode]);
 
-  if (!entry || !prepared) {
+  const heading = seriesLabel
+    ? `${indicator.name} — ${seriesLabel}`
+    : indicator.name;
+
+  if (!prepared || prepared.points.length < 2) {
     return (
-      <section className={styles.chartSection} aria-labelledby="history-title">
-        <h2 id="history-title" className={styles.sectionTitle}>
+      <section className={styles.chartSection} aria-labelledby="indicator-history">
+        <h2 id="indicator-history" className={styles.sectionTitle}>
           Historial
         </h2>
         <p className={styles.sectionSub}>
-          Todavía no hay series con datos suficientes para graficar.
+          Todavía no hay datos suficientes de esta serie para graficar.
         </p>
       </section>
     );
@@ -108,34 +101,20 @@ export default function ChartPanel({ indicators }) {
   const formatY = (value) =>
     isPp ? formatPpChange(value) : formatValue(value, unit);
 
-  const title = `${entry.name}${mode === "yoy" ? " — cambio interanual" : ""}`;
+  const title = `${heading}${mode === "yoy" ? " — cambio interanual" : ""}`;
 
   return (
-    <section className={styles.chartSection} aria-labelledby="history-title">
+    <section className={styles.chartSection} aria-labelledby="indicator-history">
       <div className={styles.chartHeader}>
         <div>
-          <h2 id="history-title" className={styles.sectionTitle}>
+          <h2 id="indicator-history" className={styles.sectionTitle}>
             Historial
           </h2>
           <p className={styles.sectionSub}>
-            {entry.name} · Fuente: {entry.source}
+            {heading} · Fuente: {indicator.source}
           </p>
         </div>
         <div className={styles.chartControls}>
-          <label className={styles.chartSelectLabel}>
-            <span className="sr-only">Indicador</span>
-            <select
-              className={styles.chartSelect}
-              value={entry.id}
-              onChange={(event) => setSelectedId(event.target.value)}
-            >
-              {chartable.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.shortName}
-                </option>
-              ))}
-            </select>
-          </label>
           <div
             className={styles.rangeGroup}
             role="group"
@@ -182,15 +161,15 @@ export default function ChartPanel({ indicators }) {
 
       {points.length > 1 && (
         <p className={styles.chartSummary}>
-          Entre {formatPeriod(first.date, entry.frequency)} y{" "}
-          {formatPeriod(last.date, entry.frequency)}, {entry.shortName} pasó de{" "}
+          Entre {formatPeriod(first.date, indicator.frequency)} y{" "}
+          {formatPeriod(last.date, indicator.frequency)}, {heading} pasó de{" "}
           {formatY(first.value)} a {formatY(last.value)}. Máximo del período:{" "}
           {formatY(maxPoint.value)} (
-          {formatPeriod(maxPoint.date, entry.frequency)}); mínimo:{" "}
+          {formatPeriod(maxPoint.date, indicator.frequency)}); mínimo:{" "}
           {formatY(minPoint.value)} (
-          {formatPeriod(minPoint.date, entry.frequency)}).
+          {formatPeriod(minPoint.date, indicator.frequency)}).
           {mode === "yoy" &&
-            (entry.unit === "percent"
+            (indicator.unit === "percent"
               ? " Valores en puntos porcentuales de cambio interanual."
               : " Valores en cambio porcentual interanual.")}
         </p>

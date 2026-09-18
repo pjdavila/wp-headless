@@ -1,6 +1,7 @@
 import { getIndicator } from "../../../../lib/economy/indicators";
 import { readSnapshot } from "../../../../lib/economy/snapshotStore";
 import { summarizeSnapshot } from "../../../../lib/economy/status";
+import { withCalculations } from "../../../../lib/economy/calculations";
 import {
   verifyEconomyRequest,
   sendPrivateJson,
@@ -36,10 +37,14 @@ export default async function handler(req, res) {
 
   const snapshot = await readSnapshot(indicator.id).catch(() => null);
   const summary = summarizeSnapshot(snapshot, indicator);
+  const observations = withCalculations(
+    snapshot ? snapshot.observations : [],
+    indicator.frequency,
+  );
 
   return sendPrivateJson(res, 200, {
     asOf: new Date().toISOString(),
     ...summary,
-    observations: snapshot ? snapshot.observations : [],
+    observations,
   });
 }

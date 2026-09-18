@@ -8,6 +8,7 @@ import PulseHero from "../components/dashboard/PulseHero";
 import KpiCard from "../components/dashboard/KpiCard";
 import InsightsList from "../components/dashboard/InsightsList";
 import ChartPanel from "../components/dashboard/ChartPanel";
+import SectionNav from "../components/dashboard/SectionNav";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import { useEconomyOverview } from "../lib/useEconomyOverview";
@@ -60,6 +61,8 @@ export default function DashboardPage() {
             </p>
           )}
         </div>
+
+        <SectionNav active="overview" />
 
         {status === "loading" && (
           <div className={styles.stateBlock} role="status" aria-live="polite">
