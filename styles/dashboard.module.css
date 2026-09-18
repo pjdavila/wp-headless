@@ -1,0 +1,539 @@
+/* /dashboard/ — compact financial density, themed via the site's HSL tokens
+   so dark and light modes both work. */
+
+.pageHead {
+  padding: 2.5rem 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--primary) / 0.25);
+  align-self: flex-start;
+}
+
+.pageTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.lastUpdated {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+
+/* ------------------------------------------------------- state blocks */
+
+.stateBlock {
+  border: 1px solid hsl(var(--border) / 0.7);
+  background: hsl(var(--card));
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  margin: 1.5rem 0 4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.stateTitle {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.stateText {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  max-width: 34rem;
+  margin: 0;
+}
+
+.loginBtn {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.15s ease;
+}
+
+.loginBtn:hover {
+  opacity: 0.9;
+}
+
+.loginBtn:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------- pulse hero */
+
+.pulse {
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pulseTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pulseBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.12);
+  border: 1px dashed hsl(var(--primary) / 0.45);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+}
+
+.pulseAsOf {
+  font-size: 0.78rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.pulseMain {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.pulseScoreBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-start;
+}
+
+.pulseScore {
+  font-family: var(--font-serif);
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: hsl(var(--foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+.pulseScale {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.pulseLabel {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground));
+  border-bottom: 2px solid hsl(var(--primary));
+  padding-bottom: 0.15rem;
+}
+
+.pulseSpark {
+  color: hsl(var(--primary));
+  min-width: 0;
+}
+
+.pulseUnavailable {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  max-width: 44rem;
+}
+
+.pulseMeta {
+  border-top: 1px solid hsl(var(--border) / 0.6);
+  padding-top: 0.9rem;
+}
+
+.pulseMethod {
+  margin: 0;
+  font-size: 0.82rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.methodToggle {
+  color: hsl(var(--primary));
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: inherit;
+}
+
+.methodology {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.methodology p {
+  margin: 0;
+}
+
+.methodology ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* --------------------------------------------------------- KPI strip */
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: var(--radius-sm);
+  background: hsl(var(--card));
+  padding: 1rem 1.1rem;
+  transition: border-color 0.15s ease;
+  min-width: 0;
+}
+
+.kpiCard:hover {
+  border-color: hsl(var(--primary) / 0.55);
+  text-decoration: none;
+}
+
+.kpiCard:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.kpiHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kpiName {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.badgePending,
+.badgeStale {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.badgePending {
+  color: hsl(var(--muted-foreground));
+  border: 1px dashed hsl(var(--muted-foreground) / 0.6);
+}
+
+.badgeStale {
+  color: hsl(38 92% 40%);
+  border: 1px solid hsl(38 92% 40% / 0.5);
+  background: hsl(38 92% 50% / 0.12);
+}
+
+.dark .badgeStale {
+  color: hsl(43 96% 62%);
+  border-color: hsl(43 96% 62% / 0.5);
+  background: hsl(43 96% 56% / 0.12);
+}
+
+.kpiValueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.kpiValue {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.05;
+  color: hsl(var(--foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+.kpiChange {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.changeUp {
+  color: hsl(var(--positive));
+}
+
+.changeDown {
+  color: hsl(var(--destructive));
+}
+
+.changeFlat {
+  color: hsl(var(--muted-foreground));
+}
+
+.kpiPeriod {
+  font-size: 0.78rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.kpiSpark {
+  color: hsl(var(--primary));
+  margin-top: 0.25rem;
+}
+
+.kpiSource {
+  font-size: 0.7rem;
+  color: hsl(var(--muted-foreground) / 0.85);
+  border-top: 1px solid hsl(var(--border) / 0.5);
+  padding-top: 0.45rem;
+  margin-top: 0.35rem;
+}
+
+.kpiPending {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground));
+  padding: 0.45rem 0 0.1rem;
+}
+
+/* ---------------------------------------------------------- insights */
+
+.insights {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+
+.sectionSub {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 1rem;
+}
+
+.insightList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid hsl(var(--border) / 0.7);
+}
+
+.insightItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 0.25rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.insightBody {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.insightDir {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.insightTag {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------- chart */
+
+.chartSection {
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.chartControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.chartSelect {
+  font: inherit;
+  font-size: 0.85rem;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+}
+
+.rangeGroup {
+  display: inline-flex;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.rangeBtn {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.4rem 0.7rem;
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+  border-right: 1px solid hsl(var(--border));
+}
+
+.rangeBtn:last-child {
+  border-right: none;
+}
+
+.rangeBtnActive {
+  background: hsl(var(--primary) / 0.15);
+  color: hsl(var(--primary));
+}
+
+.rangeBtn:focus-visible,
+.chartSelect:focus-visible,
+.methodToggle:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 1px;
+}
+
+.chartSkeleton {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+  border: 1px dashed hsl(var(--border));
+  border-radius: var(--radius-sm);
+}
+
+.chartSummary {
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  border-top: 1px solid hsl(var(--border) / 0.6);
+  padding-top: 0.8rem;
+}
+
+.footnote {
+  font-size: 0.78rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 3.5rem;
+  max-width: 46rem;
+}
+
+/* -------------------------------------------------------- responsive */
+
+@media (max-width: 960px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pulseMain {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+  .pulse,
+  .chartSection {
+    padding: 1.1rem 1.1rem;
+  }
+  .pulseScore {
+    font-size: 3rem;
+  }
+  .insightItem {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+}

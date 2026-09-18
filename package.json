@@ -32,6 +32,7 @@
     "@tailwindcss/postcss": "^4.2.2",
     "@wpengine/atlas-next": "^1.0.0",
     "autoprefixer": "^10.4.27",
+    "echarts": "^6.1.0",
     "firebase": "^12.11.0",
     "firebase-admin": "^14.4.0",
     "graphql": "^16.10.0",

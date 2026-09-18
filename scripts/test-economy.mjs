@@ -12,6 +12,8 @@ import {
   yearAgoDate,
 } from "../lib/economy/calculations.js";
 import { computeFreshness } from "../lib/economy/status.js";
+import { computePulse } from "../lib/economy/pulse.js";
+import { computeInsights } from "../lib/economy/insights.js";
 
 /**
  * Targeted regression tests for the economic data layer (no framework —
@@ -310,6 +312,265 @@ assert.equal(yearAgoDate("2026-07-01"), "2025-07-01");
   );
   assert.equal(pending.observations.length, 0);
   assert.equal(pending.latest, null);
+}
+
+// --- pulse -----------------------------------------------------------------
+
+{
+  // Entry shape mirrors what /api/economy/overview passes to computePulse.
+  const makeEntry = (id, points, overrides = {}) => ({
+    id,
+    shortName: id,
+    unit: "people",
+    higherIs: "positive",
+    status: "ok",
+    stale: false,
+    points: withCalculations(points, "monthly"),
+    ...overrides,
+  });
+
+  // Fewer than minContributors live → no score, honest reason
+  {
+    const sparse = computePulse({
+      "unemployment-rate": makeEntry(
+        "unemployment-rate",
+        monthlyPoints(2024, 1, 30),
+      ),
+    });
+    assert.equal(sparse.ok, false);
+    assert.equal(sparse.reason, "insufficient-contributors");
+    assert.equal(sparse.contributorsLive, 1);
+  }
+
+  // Four live contributors → score, renormalized weights summing to 1,
+  // stale contributors excluded from the calc entirely.
+  // Unemployment starts flat then falls (a constant-rate linear series has
+  // constant YoY → z≈0, which would make the direction assertion noise).
+  const flatThen = (rest) =>
+    monthlyPoints(2024, 1, 30, 6).map((p, i) => ({
+      ...p,
+      value: i < 24 ? 6 : rest[i - 24],
+    }));
+  const liveSet = () => ({
+    "unemployment-rate": makeEntry(
+      "unemployment-rate",
+      flatThen([5.6, 5.2, 4.8, 4.4, 4.0, 3.6]),
+      { unit: "percent", higherIs: "negative" },
+    ),
+    "total-employment": makeEntry(
+      "total-employment",
+      monthlyPoints(2024, 1, 30, 1000),
+    ),
+    "employment-by-industry": makeEntry(
+      "employment-by-industry",
+      monthlyPoints(2024, 1, 30, 900),
+    ),
+    "labor-force": makeEntry("labor-force", monthlyPoints(2024, 1, 30, 1200)),
+    "airport-passengers": makeEntry("airport-passengers", [], {
+      status: "pending",
+      stale: true,
+    }),
+  });
+
+  const pulse = computePulse(liveSet());
+  assert.equal(pulse.ok, true);
+  assert.ok(pulse.score >= 0 && pulse.score <= 100);
+  assert.ok(pulse.history.length > 12);
+  assert.equal(pulse.contributors.length, 4); // pending one dropped
+  const weightSum = pulse.contributors.reduce((sum, c) => sum + c.weight, 0);
+  assert.ok(
+    Math.abs(weightSum - 1) < 0.01,
+    `weights renormalize, got ${weightSum}`,
+  );
+
+  // Direction "down": rising unemployment drags the score vs. falling
+  const worsening = computePulse({
+    ...liveSet(),
+    "unemployment-rate": makeEntry(
+      "unemployment-rate",
+      flatThen([6.4, 6.8, 7.2, 7.6, 8.0, 8.4]),
+      { unit: "percent", higherIs: "negative" },
+    ),
+  });
+  assert.ok(worsening.score < pulse.score, "rising unemployment lowers pulse");
+
+  // Lagged releases: a contributor whose series ends before the latest
+  // period did NOT produce the displayed score, so it must not appear in
+  // the contributor metadata — and the listed weights must still sum to 1.
+  {
+    const lagged = computePulse({
+      ...liveSet(),
+      // labor-force stops 3 months before the other series
+      "labor-force": makeEntry("labor-force", monthlyPoints(2024, 1, 27, 1200)),
+    });
+    assert.equal(lagged.ok, true);
+    assert.ok(
+      !lagged.contributors.some((c) => c.id === "labor-force"),
+      "lagged contributor must be excluded from the metadata",
+    );
+    const sum = lagged.contributors.reduce((s, c) => s + c.weight, 0);
+    assert.ok(
+      Math.abs(sum - 1) < 0.01,
+      `listed weights renormalize, got ${sum}`,
+    );
+  }
+}
+
+// --- insights ---------------------------------------------------------------
+
+{
+  const makeEntry = (id, points, overrides = {}) => ({
+    id,
+    shortName: id,
+    unit: "people",
+    higherIs: "positive",
+    status: "ok",
+    stale: false,
+    points: withCalculations(points, "monthly"),
+    ...overrides,
+  });
+
+  // YoY movers: ranked by magnitude; percent units compare in pp, not %
+  {
+    const big = makeEntry("big-mover", monthlyPoints(2024, 1, 20, 100));
+    const small = makeEntry("small-mover", [
+      ...monthlyPoints(2024, 1, 19, 100),
+      { date: "2025-08-01", value: 100.5 }, // +0.5% YoY vs big's +19%
+    ]);
+    const insights = computeInsights([small, big]);
+    const movers = insights.filter((i) => i.type === "yoy-mover");
+    assert.ok(movers.length >= 2);
+    assert.equal(movers[0].indicatorId, "big-mover");
+  }
+
+  // 12-month extremes: strict — a flat series never claims a high.
+  // NOTE: computeInsights keeps at most one insight per indicator and ranks
+  // YoY movers first, so the "high" entry must have zero YoY change (flat
+  // year-ago value) for its extreme to be the surviving insight.
+  {
+    // 14 flat points at 5, with BOTH the latest point and its year-ago
+    // twin at 7: YoY change is exactly 0 (so no yoy-mover fires and steals
+    // the indicator's one-insight slot), and 7 is strictly above the other
+    // 11 points in the trailing-12 window → 12m-high must fire.
+    const spikePoints = monthlyPoints(2024, 1, 14, 5).map((p) => ({
+      ...p,
+      value: 5,
+    }));
+    spikePoints[1].value = 7; // 2024-02-01, year-ago twin, outside the window
+    spikePoints[13].value = 7; // 2025-02-01, latest
+    const spiked = makeEntry("spiked", spikePoints);
+    const flat = makeEntry(
+      "flat",
+      monthlyPoints(2024, 1, 14, 10).map((p) => ({ ...p, value: 5 })),
+    );
+    const insights = computeInsights([spiked, flat]);
+    assert.ok(
+      insights.some((i) => i.type === "12m-high" && i.indicatorId === "spiked"),
+    );
+    assert.ok(!insights.some((i) => i.indicatorId === "flat"));
+  }
+
+  // Reversals: strict consecutive signs — a mixed leg is never reported
+  // as "tres alzas/bajas consecutivas"
+  {
+    // 3 consecutive declines then 3 consecutive rises; the latest value is
+    // NOT a 12-month extreme, so the reversal rule is what fires (extremes
+    // rank before reversals and each indicator yields at most one insight).
+    const strictUp = makeEntry("strict-reversal", [
+      ...[
+        "2026-01-01|10",
+        "2026-02-01|9",
+        "2026-03-01|8",
+        "2026-04-01|7",
+        "2026-05-01|8",
+        "2026-06-01|9",
+        "2026-07-01|9.5",
+      ].map((s) => {
+        const [date, v] = s.split("|");
+        return { date, value: Number(v) };
+      }),
+    ]);
+    const mixed = makeEntry("mixed-reversal", [
+      ...[
+        "2026-01-01|9",
+        "2026-02-01|8",
+        "2026-03-01|7",
+        "2026-04-01|6",
+        "2026-05-01|16",
+        "2026-06-01|15",
+        "2026-07-01|25",
+      ].map((s) => {
+        const [date, v] = s.split("|");
+        return { date, value: Number(v) };
+      }),
+    ]);
+    const insights = computeInsights([strictUp, mixed]);
+    assert.ok(
+      insights.some(
+        (i) =>
+          i.type === "reversal" &&
+          i.indicatorId === "strict-reversal" &&
+          i.direction === "up",
+      ),
+      "strict 3-vs-3 reversal detected",
+    );
+    assert.ok(
+      !insights.some(
+        (i) => i.type === "reversal" && i.indicatorId === "mixed-reversal",
+      ),
+      "mixed-sign leg must not produce a reversal claim",
+    );
+  }
+
+  // Sentiment respects higherIs; stale entries never generate insights
+  {
+    const badWhenUp = makeEntry("price-like", monthlyPoints(2024, 1, 14, 10), {
+      higherIs: "negative",
+    });
+    const insights = computeInsights([badWhenUp]);
+    // Whatever rule fires for a rising "higher is bad" series (mover or
+    // 12m-high — movers rank first), its sentiment must be negative.
+    assert.ok(insights.length > 0);
+    assert.ok(insights.every((i) => i.sentiment === "negative"));
+
+    const goodWhenUp = makeEntry("jobs-like", monthlyPoints(2024, 1, 14, 10), {
+      higherIs: "positive",
+    });
+    assert.ok(
+      computeInsights([goodWhenUp]).every((i) => i.sentiment === "positive"),
+    );
+
+    const staleEntry = makeEntry("stale-one", monthlyPoints(2024, 1, 14, 10), {
+      stale: true,
+    });
+    assert.equal(
+      computeInsights([staleEntry]).filter((i) => i.indicatorId === "stale-one")
+        .length,
+      0,
+    );
+  }
+
+  // Frequency awareness: an annual series uses a 5-YEAR window, and the
+  // insight carries frequency/windowSize so the UI never calls it "12
+  // meses". Its small YoY is crowded out of the top-2 movers by two bigger
+  // movers, letting the extreme survive as that indicator's one insight.
+  {
+    const bigA = makeEntry("big-a", monthlyPoints(2024, 1, 20, 100));
+    const bigB = makeEntry("big-b", monthlyPoints(2024, 1, 20, 50));
+    const annual = makeEntry(
+      "annual-one",
+      [100, 101, 99, 98, 102, 103].map((value, i) => ({
+        date: `${2021 + i}-01-01`,
+        value,
+      })),
+      { frequency: "annual" },
+    );
+    const insights = computeInsights([bigA, bigB, annual]);
+    const annualInsight = insights.find((i) => i.indicatorId === "annual-one");
+    assert.equal(annualInsight.type, "12m-high");
+    assert.equal(annualInsight.windowSize, 5);
+    assert.equal(annualInsight.frequency, "annual");
+  }
 }
 
 console.log("[test-economy] all assertions passed");
