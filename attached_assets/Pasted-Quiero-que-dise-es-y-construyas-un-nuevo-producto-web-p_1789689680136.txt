@@ -1,0 +1,954 @@
+Quiero que diseñes y construyas un nuevo producto web para **Caribbean Business** llamado:
+
+# Puerto Rico Economic Dashboard
+### Powered by Caribbean Business
+
+El objetivo es crear una plataforma moderna de inteligencia económica de Puerto Rico que consolide datos públicos de múltiples fuentes gubernamentales y los presente de una manera visual, rápida y fácil de entender.
+
+No quiero simplemente un dashboard administrativo con cards. Quiero que se sienta como un **producto editorial premium de inteligencia económica**, inspirado conceptualmente en productos como Bloomberg, Reuters, Financial Times y dashboards económicos modernos, pero manteniendo una identidad propia de Caribbean Business.
+
+## 1. OBJETIVO DEL PRODUCTO
+
+El usuario debe poder entrar y, en menos de 30 segundos, contestar:
+
+**“¿Cómo está la economía de Puerto Rico ahora mismo?”**
+
+El dashboard debe combinar:
+
+- Indicadores económicos
+- Series históricas
+- Comparaciones
+- Tendencias
+- Insights automáticos
+- Fuentes verificables
+- Contexto editorial
+- Eventualmente análisis mediante AI
+
+Debe ser extremadamente rápido, responsive, SEO-friendly y diseñado principalmente para web pública.
+
+---
+
+# 2. STACK
+
+Evalúa primero el repositorio y stack existente antes de implementar.
+
+Preferencia:
+
+- Astro si el proyecto actual utiliza Astro
+- TypeScript
+- Tailwind CSS
+- Componentes reutilizables
+- Charts modernos y altamente interactivos
+- Server-side rendering / static generation donde tenga sentido
+- API interna desacoplada del frontend
+
+Para gráficas evalúa:
+
+- Apache ECharts
+- Recharts
+- Observable Plot
+- D3 solamente donde realmente haga falta
+
+Selecciona la librería que mejor balancee:
+
+- Performance
+- Interactividad
+- Responsive
+- Accessibility
+- Calidad visual
+- Bundle size
+
+No uses Three.js para charts normales.
+
+---
+
+# 3. DATA ARCHITECTURE
+
+La arquitectura debe estar preparada para consumir múltiples fuentes públicas.
+
+Fuentes iniciales:
+
+### Federal
+
+BLS
+- Unemployment
+- Employment
+- Labor Force
+- Employment by Industry
+- Wages
+
+U.S. Census
+- Population
+- Household Income
+- Per Capita Income
+- Poverty
+- Housing
+- Businesses
+- Employment
+- Payroll
+
+EIA
+- Electricity prices
+- Electricity consumption
+- Electricity generation
+- Generation by source
+- Renewable energy
+
+### Puerto Rico
+
+Instituto de Estadísticas de Puerto Rico
+- Economic indicators
+- PMI
+- CPI
+- Cement production
+- Cement sales
+- Trade statistics
+
+Junta de Planificación
+- GNP
+- GDP
+- Personal Income
+- Personal Consumption
+- Investment
+- Imports
+- Exports
+
+Departamento de Hacienda
+- IVU collections
+- General Fund revenue
+- Individual income tax
+- Corporate income tax
+- Excise taxes
+
+Puerto Rico Tourism Company
+- Airport passengers
+- Hotel occupancy
+- Visitors
+- Cruise passengers
+- Tourism employment
+
+OCIF — future phase
+- Commercial loans
+- Consumer loans
+- Mortgages
+- Auto loans
+- Deposits
+- Banking activity
+
+---
+
+# 4. IMPORTANT DATA RULE
+
+DO NOT hardcode economic numbers into frontend components.
+
+Create a normalized data layer.
+
+Every economic observation should follow a model similar to:
+
+```typescript
+interface EconomicObservation {
+  indicatorId: string;
+  name: string;
+  date: string;
+  value: number;
+  unit: string;
+
+  frequency:
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "quarterly"
+    | "annual";
+
+  geography: string;
+  source: string;
+  sourceUrl?: string;
+
+  seasonallyAdjusted?: boolean;
+
+  previousValue?: number;
+  momChange?: number;
+  yoyChange?: number;
+
+  updatedAt: string;
+}
+```
+
+Create separate metadata for indicators:
+
+```typescript
+interface EconomicIndicator {
+  id: string;
+  name: string;
+  shortName: string;
+  description: string;
+  category: string;
+  unit: string;
+  frequency: string;
+
+  source: string;
+  sourceUrl: string;
+
+  methodology?: string;
+
+  higherIs?: "positive" | "negative" | "neutral";
+}
+```
+
+The frontend should only interact with our normalized internal API/data service.
+
+---
+
+# 5. MVP INDICATORS
+
+Build the architecture around these initial indicators:
+
+### ECONOMY
+
+1. GNP / Economic Growth
+2. Personal Income
+
+### JOBS
+
+3. Unemployment Rate
+4. Labor Force
+5. Total Employment
+6. Employment by Industry
+
+### CONSUMER
+
+7. CPI / Inflation
+8. IVU Collections
+
+### BUSINESS
+
+9. Puerto Rico Manufacturing PMI
+10. Cement Sales
+
+### ENERGY
+
+11. Commercial Electricity Price
+12. Electricity Consumption
+
+### TOURISM
+
+13. Airport Passengers
+14. Hotel Occupancy
+
+### TRADE
+
+15. Exports vs Imports
+
+Do not invent missing data.
+
+If a source cannot initially be integrated automatically, create the adapter/interface and clearly identify it as pending.
+
+---
+
+# 6. DATA ADAPTER SYSTEM
+
+I want each provider isolated.
+
+Example:
+
+```text
+/data
+   /providers
+      bls.ts
+      census.ts
+      eia.ts
+      estadisticas-pr.ts
+      hacienda.ts
+      planning-board.ts
+      tourism.ts
+
+   normalize.ts
+   indicators.ts
+   calculations.ts
+```
+
+Each provider should expose standardized functions.
+
+For example:
+
+```typescript
+getLatest()
+getSeries()
+getMetadata()
+```
+
+Provider-specific implementation details should NEVER leak into UI components.
+
+---
+
+# 7. CACHE
+
+Government APIs should not be called every time a visitor opens the website.
+
+Create a caching strategy.
+
+Preferred architecture:
+
+Public Data Sources
+↓
+Scheduled ingestion
+↓
+Normalization
+↓
+Cache / Database
+↓
+Internal Economic API
+↓
+Frontend
+
+If Cloudflare infrastructure already exists in the project, evaluate:
+
+- Cloudflare Workers
+- Cron Triggers
+- KV
+- D1
+- R2
+
+For time-series structured economic data, evaluate whether D1 is more appropriate than KV.
+
+Do not blindly use KV for everything.
+
+---
+
+# 8. HOMEPAGE
+
+The dashboard homepage should immediately communicate the state of Puerto Rico's economy.
+
+Desktop layout should feel editorial, data-heavy and premium.
+
+Top area:
+
+CARIBBEAN BUSINESS
+
+# Puerto Rico Economic Dashboard
+
+Subtitle:
+
+**Real-time perspective on Puerto Rico's economy, powered by public data and Caribbean Business intelligence.**
+
+Display:
+
+LAST UPDATED
+September XX, 2026
+
+---
+
+# 9. ECONOMIC PULSE
+
+Create a hero module:
+
+## PUERTO RICO ECONOMIC PULSE
+
+Example UI:
+
+72.4
+
+▲ +2.3
+
+Improving
+
+Include a historical sparkline.
+
+IMPORTANT:
+
+For V1, do NOT pretend that this score is an established economic indicator.
+
+Build the component and calculation framework but clearly label it:
+
+**CB Economic Pulse — Experimental**
+
+Create documentation explaining which indicators would contribute to the index.
+
+Do not create arbitrary weights without documenting them.
+
+---
+
+# 10. TOP KPI STRIP
+
+Under the hero create six major indicators:
+
+JOBS
+
+Unemployment
+6.0%
+
+CONSUMER
+
+IVU
++X.X%
+
+BUSINESS
+
+PMI
+XX.X
+
+CONSTRUCTION
+
+Cement Sales
++X.X%
+
+TOURISM
+
+Passengers
++X.X%
+
+ENERGY
+
+Commercial Electricity
+XX.X ¢/kWh
+
+Each should include:
+
+- Latest value
+- Change
+- Direction arrow
+- Date
+- Small sparkline
+- Source
+
+Clicking one opens the full indicator page.
+
+Do not hardcode these example values.
+
+---
+
+# 11. WHAT'S MOVING PUERTO RICO
+
+Create an editorial/data module:
+
+## What's Moving Puerto Rico
+
+Automatically identify statistically interesting changes.
+
+Example structure:
+
+↑ Employment continues growing
+
+Total employment increased X% compared with last year.
+
+↓ Electricity prices decline
+
+Commercial electricity costs fell X%.
+
+↑ Tourism strengthens
+
+Airport passenger traffic increased X%.
+
+These insights MUST be generated from actual underlying observations.
+
+For V1 create deterministic logic, NOT an LLM dependency.
+
+Example rules:
+
+- largest YoY increases
+- largest YoY decreases
+- new 12-month highs
+- new 12-month lows
+- trend reversals
+- acceleration/deceleration
+
+The output must always include the underlying indicator and period.
+
+---
+
+# 12. MAIN CHART
+
+Create a large interactive chart.
+
+Controls:
+
+1Y
+3Y
+5Y
+10Y
+MAX
+
+Allow:
+
+- Hover tooltip
+- Compare periods
+- YoY toggle
+- Raw value toggle
+- Responsive mobile interaction
+
+Charts should feel financial/economic, not like generic SaaS analytics.
+
+---
+
+# 13. ECONOMIC SECTIONS
+
+Navigation:
+
+Overview
+
+Jobs
+
+Consumer
+
+Business
+
+Construction
+
+Tourism
+
+Energy
+
+Trade
+
+Housing
+
+Government
+
+Each section gets its own dashboard.
+
+Example:
+
+/economy/jobs
+/economy/consumer
+/economy/tourism
+/economy/energy
+
+---
+
+# 14. INDICATOR DETAIL PAGE
+
+Every economic indicator needs its own indexable URL.
+
+Example:
+
+/economy/jobs/unemployment-rate
+
+Page structure:
+
+Unemployment Rate
+
+6.0%
+
+▲ +0.2 pts MoM
+▼ -0.3 pts YoY
+
+Updated: July 2026
+
+[CHART]
+
+1Y | 5Y | 10Y | MAX
+
+Then:
+
+## What this means
+
+Short automatically generated factual explanation.
+
+## Historical Data
+
+Table:
+
+Date
+Value
+MoM
+YoY
+
+## About this indicator
+
+Description.
+
+## Source
+
+Bureau of Labor Statistics
+
+Last retrieved:
+XXXX
+
+## Methodology
+
+Explain what the number represents.
+
+---
+
+# 15. MUNICIPAL DATA
+
+Prepare the architecture for a future:
+
+## Puerto Rico Economic Map
+
+Interactive map containing all 78 municipalities.
+
+Potential indicators:
+
+Population
+Income
+Poverty
+Unemployment
+Home Value
+Rent
+Businesses
+Employment
+
+Primary source:
+
+Census ACS / Census business datasets.
+
+Do not prioritize building the full map before the core dashboard works.
+
+---
+
+# 16. PUERTO RICO VS UNITED STATES
+
+Build reusable comparison capability.
+
+Example:
+
+Commercial Electricity
+
+Puerto Rico
+XX.X ¢
+
+United States
+XX.X ¢
+
+Difference
++XX%
+
+Other possible comparisons:
+
+Inflation
+Employment
+Income
+Energy
+Housing
+Labor participation
+
+Never compare incompatible methodologies or periods.
+
+---
+
+# 17. AI — FUTURE FEATURE
+
+Prepare the UI and architecture for:
+
+## Ask CB Intelligence
+
+Search/input:
+
+**Ask anything about Puerto Rico's economy**
+
+Example queries:
+
+"How has construction performed since 2019?"
+
+"Is consumer spending slowing?"
+
+"Which industries are adding jobs?"
+
+"Compare employment before and after COVID."
+
+DO NOT build a fake chatbot.
+
+For V1 create the component and architecture placeholder.
+
+Eventually this agent will query our normalized economic database and must cite the indicators used to produce each response.
+
+---
+
+# 18. CARIBBEAN BUSINESS CONTENT
+
+Prepare the data model to associate CB articles with indicators.
+
+Example:
+
+Electricity Price
+
+Related Caribbean Business coverage:
+
+Article
+Article
+Article
+
+Eventually articles could be automatically associated using:
+
+- tags
+- categories
+- entities
+- semantic similarity
+
+For now create the component interface.
+
+---
+
+# 19. SEO
+
+This product must be heavily optimized for Google.
+
+Every indicator page needs:
+
+Unique title
+Meta description
+Canonical
+OpenGraph
+Twitter metadata
+Schema.org Dataset where applicable
+Breadcrumb schema
+
+Generate meaningful URLs.
+
+Examples:
+
+/economy/puerto-rico-unemployment-rate
+
+/economy/puerto-rico-inflation
+
+/economy/puerto-rico-electricity-prices
+
+/economy/puerto-rico-tourism
+
+/economy/puerto-rico-employment
+
+Pages must remain crawlable without requiring client-side JavaScript to render the primary content.
+
+---
+
+# 20. SOURCES AND TRUST
+
+This is critical.
+
+Every indicator must visibly show:
+
+SOURCE
+Bureau of Labor Statistics
+
+UPDATED
+July 2026
+
+RETRIEVED
+September XX, 2026
+
+Provide a link to the original government source.
+
+Never display economic data without source metadata.
+
+If data becomes stale, show:
+
+Data last updated X months ago
+
+Do not silently imply it is current.
+
+---
+
+# 21. DESIGN
+
+Visual direction:
+
+Premium financial publication.
+
+Think:
+
+Bloomberg data density
++
+Financial Times editorial clarity
++
+modern Caribbean Business identity
+
+But DO NOT copy any specific website.
+
+Avoid:
+
+Generic SaaS dashboard
+Huge rounded cards everywhere
+Excessive gradients
+Excessive shadows
+Huge whitespace
+Cartoon icons
+AI-generated-looking UI
+Rainbow charts
+
+Prefer:
+
+Strong typography
+Compact information density
+Thin dividers
+Clear hierarchy
+Small sparklines
+Excellent tables
+Professional financial charts
+Subtle animations
+Dark/light mode
+
+Numbers should be the visual protagonists.
+
+Desktop should take advantage of screen width.
+
+Mobile must remain excellent.
+
+---
+
+# 22. PERFORMANCE
+
+Targets:
+
+Lighthouse Performance > 90
+
+LCP < 2.5 seconds
+
+CLS < 0.1
+
+Avoid shipping large JavaScript bundles simply to render static economic data.
+
+Lazy-load expensive interactive visualization components where appropriate.
+
+---
+
+# 23. ACCESSIBILITY
+
+Charts cannot communicate exclusively through color.
+
+Include:
+
+ARIA labels
+keyboard navigation
+accessible tables
+descriptive chart summaries
+sufficient contrast
+
+---
+
+# 24. PROJECT PHASES
+
+Do not try to implement everything simultaneously.
+
+Work in this order.
+
+### PHASE 1 — Audit
+
+Inspect the existing repository.
+
+Report:
+
+- Current framework
+- Current architecture
+- Existing components
+- Existing styling
+- Deployment environment
+- Available Cloudflare infrastructure
+- Recommended chart library
+- Recommended database/cache
+
+Do not make destructive changes.
+
+### PHASE 2 — Architecture
+
+Implement:
+
+- Data model
+- Provider adapters
+- Normalization
+- Internal API
+- Caching
+- Indicator registry
+
+### PHASE 3 — REAL DATA
+
+Connect first:
+
+BLS
+EIA
+Census
+
+Use REAL API data.
+
+Do not fabricate values.
+
+Then investigate and integrate:
+
+Instituto de Estadísticas
+Hacienda
+Junta de Planificación
+Tourism
+
+For sources without clean APIs, document the safest ingestion method.
+
+### PHASE 4 — UI
+
+Build:
+
+- Overview
+- KPI strip
+- Economic Pulse component
+- Main chart
+- What's Moving PR
+- Category sections
+- Indicator detail pages
+
+### PHASE 5 — Quality
+
+Test:
+
+- Data accuracy
+- Source attribution
+- Responsive
+- SEO
+- Accessibility
+- Performance
+- Error states
+- Missing data
+- Stale data
+
+---
+
+# 25. IMPORTANT IMPLEMENTATION RULES
+
+1. Never invent economic data.
+
+2. Never hardcode fake production values.
+
+3. Keep provider logic outside UI components.
+
+4. Store raw values whenever possible and calculate display formatting separately.
+
+5. Preserve historical observations.
+
+6. Store source and retrieval timestamps.
+
+7. Be explicit about seasonal adjustment.
+
+8. Be explicit about monthly vs quarterly vs annual data.
+
+9. Avoid comparing incompatible periods.
+
+10. Build everything so additional indicators can be added primarily through configuration instead of creating new custom pages every time.
+
+11. If an API requires credentials, use environment variables.
+
+12. Never expose API keys client-side.
+
+13. Gracefully handle unavailable government APIs.
+
+14. A failed source should not crash the dashboard.
+
+15. Document every external data integration.
+
+---
+
+# 26. FIRST DELIVERABLE
+
+Before implementing the entire project:
+
+1. Audit the repository.
+2. Propose the final technical architecture.
+3. Identify which of the 15 MVP indicators can immediately use live APIs.
+4. Identify exact APIs/endpoints/series required.
+5. Identify which indicators require Excel/CSV ingestion.
+6. Propose database schema.
+7. Propose caching/update schedules.
+8. Create the initial dashboard wireframe/layout.
+9. Show me the plan.
+
+After that, begin implementing the foundation and the first working dashboard using REAL DATA.
+
+The goal is not to produce a prototype full of placeholders.
+
+The goal is to build the foundation of a production-ready **Puerto Rico economic intelligence platform for Caribbean Business** that can eventually contain hundreds of indicators.
