@@ -6,3 +6,4 @@
 - [Self-generated absolute URLs](self-generated-urls.md) — the site-URL env var points at the CMS, and `/api/x` 308-redirects without a trailing slash. Both bite outbound links.
 - [Faust build and dev cache](faust-build-dev-cache.md) — never run `faust build` while the dev workflow is active; both write `.next` and can leave every route returning 500.
 - [Economy data provider APIs](economy-data-layer.md) — verified external facts: Census ACS now requires a key, BEA PR personal-income table unverified, monthly federal releases lag ~2 months (90d staleness).
+- [indicadores.pr CKAN portal](indicadores-pr-ckan.md) — PR gov series are live CSVs via CKAN; broken TLS chain needs the bundled RapidSSL intermediate (expires Nov 2027).

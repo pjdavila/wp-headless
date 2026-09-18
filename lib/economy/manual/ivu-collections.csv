@@ -1,0 +1,31 @@
+# IVU (sales & use tax) — Total SUT Collections, monthly, millions of USD.
+# source: Hacienda, "Distribución Mensual Recaudos IVU" FY2024-25 (june_fy25, rev. 09.12.25)
+#   and FY2025-26 (distribucion_de_recaudos_mensuales-_ivu-junio_2026.pdf, dated June 9, 2026),
+#   https://hacienda.pr.gov/inversionistas/estadisticas-y-recaudos-statistics-and-revenues/ingresos-del-impuesto-sobre-ventas-y-uso-ivu-sales-and-use-tax-sut-revenues
+# The PDFs publish thousands of dollars; values below are divided by 1,000.
+# Transcribed 2026-09-18.
+date,value
+2024-07-01,306.988
+2024-08-01,311.278
+2024-09-01,293.276
+2024-10-01,301.385
+2024-11-01,303.583
+2024-12-01,314.446
+2025-01-01,368.251
+2025-02-01,301.822
+2025-03-01,298.519
+2025-04-01,340.913
+2025-05-01,314.243
+2025-06-01,297.603
+2025-07-01,305.826
+2025-08-01,325.873
+2025-09-01,330.434
+2025-10-01,299.311
+2025-11-01,291.023
+2025-12-01,328.995
+2026-01-01,376.801
+2026-02-01,320.823
+2026-03-01,321.425
+2026-04-01,356.701
+2026-05-01,312.291
+2026-06-01,332.458

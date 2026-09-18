@@ -14,6 +14,21 @@ import {
 import { computeFreshness } from "../lib/economy/status.js";
 import { computePulse } from "../lib/economy/pulse.js";
 import { computeInsights } from "../lib/economy/insights.js";
+import {
+  parseCsv,
+  parseSourceDate,
+  normalizeHeader,
+  findColumns,
+  observationsFromCsv,
+} from "../lib/economy/providers/csv.js";
+import {
+  parseManualCsv,
+  createManualProvider,
+} from "../lib/economy/providers/manual-file.js";
+import {
+  isPendingSourceError,
+  PendingSourceError,
+} from "../lib/economy/providers/pending.js";
 
 /**
  * Targeted regression tests for the economic data layer (no framework —
@@ -571,6 +586,145 @@ assert.equal(yearAgoDate("2026-07-01"), "2025-07-01");
     assert.equal(annualInsight.windowSize, 5);
     assert.equal(annualInsight.frequency, "annual");
   }
+}
+
+// --- CSV/date helpers (government-report providers) ------------------------
+
+// parseCsv: quotes, escaped quotes, CRLF, trailing newline variants
+{
+  const rows = parseCsv('a,"b,1","c""x"\r\n1,2,3\nlast,row,');
+  assert.deepEqual(rows[0], ["a", "b,1", 'c"x']);
+  assert.deepEqual(rows[1], ["1", "2", "3"]);
+  assert.deepEqual(rows[2], ["last", "row", ""]);
+}
+
+// parseSourceDate: every format the publishers use
+{
+  assert.equal(parseSourceDate("2026-04-01"), "2026-04-01");
+  assert.equal(parseSourceDate("2026-04"), "2026-04-01");
+  assert.equal(parseSourceDate("2026"), "2026-01-01");
+  assert.equal(parseSourceDate("5/1/2010"), "2010-05-01");
+  assert.equal(parseSourceDate("7/1/26"), "2026-07-01");
+  assert.equal(parseSourceDate("12/1/84"), "1984-12-01");
+  assert.equal(parseSourceDate("abril-26"), "2026-04-01");
+  assert.equal(parseSourceDate("Diciembre-2015"), "2015-12-01");
+  assert.equal(parseSourceDate("Código"), null);
+  assert.equal(parseSourceDate(""), null);
+  assert.equal(parseSourceDate("13/1/2026"), null); // month 13 is invalid
+}
+
+// header matching: exact by default, endsWith survives mojibake prefixes
+{
+  const header = ["Date", "Nm.pasajeros salientes", "Pasajeros salientes SJU"];
+  assert.equal(
+    normalizeHeader("Todos los artículos  y servicios"),
+    "todos los articulos y servicios",
+  );
+  assert.deepEqual(findColumns(header, "Pasajeros salientes"), []);
+  assert.deepEqual(
+    findColumns(header, "pasajeros salientes", { mode: "endsWith" }),
+    [1],
+  );
+}
+
+// observationsFromCsv: header located by column name, junk rows skipped
+{
+  const csv = [
+    "Puerto Rico Manufacturing - Purchasing Managers Index (PRM-PMI),,,",
+    ",PMI,General,New Orders",
+    "5/1/2010,55.1,45.7,61.7",
+    "6/1/2010,53.8,57.9,50",
+    "* footnote,1,2,3",
+  ].join("\n");
+  const out = observationsFromCsv(csv, { column: "PMI" });
+  assert.equal(out.length, 2);
+  assert.deepEqual(out[0], { date: "2010-05-01", value: 55.1 });
+}
+
+// multi-column sum with scale and series tagging (trade / passengers shape)
+{
+  const csv = "date,Total\n1/1/26,4513698017\n2/1/26,4407730357";
+  const out = observationsFromCsv(csv, {
+    column: "Total",
+    series: "exports",
+    valueScale: 0.000001,
+  });
+  assert.deepEqual(out[0], {
+    date: "2026-01-01",
+    value: 4513.698017,
+    series: "exports",
+  });
+  const summed = observationsFromCsv("Date,A,B\n3/1/2026,10,5", {
+    columns: ["A", "B"],
+  });
+  assert.equal(summed[0].value, 15);
+  assert.throws(
+    () => observationsFromCsv(csv, { column: "Nope" }),
+    /not found/,
+  );
+}
+
+// --- manual-upload providers ------------------------------------------------
+
+// parseManualCsv: comments, header, ISO and spanish dates, optional series
+{
+  const rows = parseManualCsv(
+    [
+      "# source: somewhere",
+      "date,value",
+      "2025-07-01,305.826",
+      "agosto-2025,325.873",
+      ",9", // blank date is skipped, not an error
+    ].join("\n"),
+  );
+  assert.equal(rows.length, 2);
+  assert.deepEqual(rows[0], { date: "2025-07-01", value: 305.826 });
+  assert.equal(rows[1].date, "2025-08-01");
+  assert.throws(() => parseManualCsv("2025-07-01,abc"), /non-numeric value/);
+}
+
+// missing manual file → PendingSourceError (ingest reports "pending")
+{
+  const provider = createManualProvider({
+    id: "test-manual",
+    name: "Test Manual",
+    publisherUrl: "https://example.com",
+    sourceDocs: "some PDF",
+  });
+  await assert.rejects(
+    () => provider.getSeries({ id: "no-such-indicator" }),
+    (err) => isPendingSourceError(err) && err instanceof PendingSourceError,
+  );
+}
+
+// --- provider registry smoke test --------------------------------------------
+
+// Every registry indicator resolves to a provider implementing the interface;
+// importing the registry also proves runtime assets (the bundled indicadores.pr
+// CA certificate) are present in a clean checkout.
+{
+  const { getProvider } = await import("../lib/economy/providers/index.js");
+  const { listIndicators } = await import("../lib/economy/indicators.js");
+  for (const indicator of listIndicators()) {
+    const provider = getProvider(indicator.provider);
+    assert.ok(provider, `no provider registered for "${indicator.provider}"`);
+    assert.equal(typeof provider.getSeries, "function");
+    assert.equal(typeof provider.getMetadata, "function");
+    assert.equal(typeof provider.getLatest, "function");
+  }
+  assert.ok(getProvider("estadisticas-pr"));
+}
+
+// seeded manual files parse and cover their indicators
+{
+  const ivu = parseManualCsv(
+    (await import("node:fs")).readFileSync(
+      new URL("../lib/economy/manual/ivu-collections.csv", import.meta.url),
+      "utf8",
+    ),
+  );
+  assert.ok(ivu.length >= 12);
+  assert.ok(ivu.every((p) => p.value > 0 && p.value < 1000)); // millions
 }
 
 console.log("[test-economy] all assertions passed");

@@ -1,0 +1,15 @@
+# Hotel occupancy rate, island-wide TOTAL, percent of available rooms.
+# source: Puerto Rico Tourism Company, "Selected Lodging Properties" monthly
+#   report (Occupancy and Inbound Tourism — selected lodgings endorsed by the
+#   PRTC), https://tourism.pr.gov/wp-content/uploads/2025/09/selected-lodgs-monthly-report.pdf
+#   (report created 2026-05-18, covers Jan–Mar 2026 and Jan–Mar 2025).
+# Each monthly report carries only the current year-to-date months plus the
+# same months a year earlier; the snapshot pipeline accumulates history as
+# new reports are transcribed. Transcribed 2026-09-18.
+date,value
+2025-01-01,84
+2025-02-01,90
+2025-03-01,93
+2026-01-01,87
+2026-02-01,91
+2026-03-01,90
