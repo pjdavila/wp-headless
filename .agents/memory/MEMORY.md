@@ -5,3 +5,4 @@
 - [Faust standalone page SSR](faust-standalone-page-ssr.md) — `Page.queries` never reaches the server HTML on a `pages/` route; fetch in `getStaticProps` when it must be indexable.
 - [Self-generated absolute URLs](self-generated-urls.md) — the site-URL env var points at the CMS, and `/api/x` 308-redirects without a trailing slash. Both bite outbound links.
 - [Faust build and dev cache](faust-build-dev-cache.md) — never run `faust build` while the dev workflow is active; both write `.next` and can leave every route returning 500.
+- [Economy data provider APIs](economy-data-layer.md) — verified external facts: Census ACS now requires a key, BEA PR personal-income table unverified, monthly federal releases lag ~2 months (90d staleness).

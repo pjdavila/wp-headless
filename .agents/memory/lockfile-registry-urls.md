@@ -21,7 +21,12 @@ going with a half-populated `node_modules`, and the build then fails with a
 "command not found" for a CLI that should have been installed.
 
 **How to apply:** grep the lockfile for the proxy hostname after any dependency
-change; rewrite to the public registry with a plain substitution. Integrity hashes
+change; rewrite to the public registry with a plain substitution. The host has
+appeared as BOTH `package-firewall.replit.local` and
+`package-firewall.replit.internal` (URLs look like
+`http://package-firewall.replit.internal/npm/<pkg>/-/<file>.tgz` — the path
+after `/npm/` is the registry path verbatim), so grep for `package-firewall`
+rather than one exact host. Integrity hashes
 are content-based, so they stay valid and no reinstall is required. A local
 `npm ci` still works afterwards because npm transparently redirects public-registry
 URLs back through the proxy at request time. Beware: a later plain `npm install`
