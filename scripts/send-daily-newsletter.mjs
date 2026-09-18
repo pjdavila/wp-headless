@@ -2,6 +2,7 @@ import {
   fetchLeadPostsLast24h,
   buildDailyNewsletterHtml,
   sendDailyNewsletterCampaign,
+  sendNewsletterFailureAlert,
   formatEnglishDate,
 } from "../lib/dailyNewsletter.js";
 
@@ -13,6 +14,12 @@ async function main() {
     posts = await fetchLeadPostsLast24h();
   } catch (err) {
     console.error("[daily-newsletter] Failed to fetch posts:", err.message);
+    // Alert is best-effort and must never mask the original failure.
+    await sendNewsletterFailureAlert({
+      step: "wordpress-fetch",
+      error: err.message,
+      trigger: "scheduled-script",
+    }).catch(() => {});
     process.exit(1);
   }
 
@@ -46,6 +53,11 @@ async function main() {
     process.exit(0);
   } catch (err) {
     console.error("[daily-newsletter] Send failed:", err.message);
+    await sendNewsletterFailureAlert({
+      step: "moosend-send",
+      error: err.message,
+      trigger: "scheduled-script",
+    }).catch(() => {});
     process.exit(1);
   }
 }

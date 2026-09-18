@@ -2,6 +2,7 @@ import {
   fetchLeadPostsLast24h,
   buildDailyNewsletterHtml,
   sendDailyNewsletterCampaign,
+  sendNewsletterFailureAlert,
   formatEnglishDate,
 } from "../../lib/dailyNewsletter";
 
@@ -27,6 +28,12 @@ export default async function handler(req, res) {
   try {
     posts = await fetchLeadPostsLast24h();
   } catch (err) {
+    // Alert is best-effort and must never mask the original failure.
+    await sendNewsletterFailureAlert({
+      step: "wordpress-fetch",
+      error: err.message,
+      trigger: "http-endpoint",
+    }).catch(() => {});
     return res.status(502).json({ ok: false, error: err.message });
   }
 
@@ -52,6 +59,11 @@ export default async function handler(req, res) {
       .status(200)
       .json({ ok: true, sent: true, count: posts.length, campaignId });
   } catch (err) {
+    await sendNewsletterFailureAlert({
+      step: "moosend-send",
+      error: err.message,
+      trigger: "http-endpoint",
+    }).catch(() => {});
     return res.status(502).json({ ok: false, sent: false, error: err.message });
   }
 }
