@@ -18,6 +18,9 @@
 # misc
 .DS_Store
 *.pem
+# Public CA intermediate bundled for the indicadores.pr provider (not a secret;
+# the government site serves an incomplete TLS chain — see that module's docs).
+!lib/economy/providers/certs/*.pem
 
 # debug
 npm-debug.log*
