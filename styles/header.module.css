@@ -452,6 +452,17 @@
   flex-direction: column;
 }
 
+/* Wide submenus (many children, e.g. News) flow into two columns. */
+.navSubmenuWide {
+  min-width: 460px;
+}
+
+.navItem:hover .navSubmenuWide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 0.25rem;
+}
+
 .navItem:hover > .navLink {
   color: hsl(var(--foreground));
   background-color: hsl(var(--muted));

@@ -322,7 +322,11 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                       {cat.name}
                       <ChevronIcon />
                     </Link>
-                    <div className={style.navSubmenu}>
+                    <div
+                      className={`${style.navSubmenu} ${
+                        cat.children.length >= 8 ? style.navSubmenuWide : ""
+                      }`}
+                    >
                       {cat.children.map((child) => (
                         <Link
                           key={child.slug}
