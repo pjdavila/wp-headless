@@ -46,7 +46,9 @@
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   outline: none;
-  transition: border-color 0.18s, box-shadow 0.18s;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
   box-sizing: border-box;
 }
 
@@ -99,6 +101,17 @@
   border-radius: calc(var(--radius) - 2px);
 }
 
+.formInfo {
+  font-size: 0.85rem;
+  color: hsl(var(--primary));
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  background: hsl(var(--primary) / 0.08);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: calc(var(--radius) - 2px);
+  line-height: 1.5;
+}
+
 .consentField {
   display: flex;
   flex-direction: column;
@@ -136,7 +149,9 @@
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   cursor: pointer;
-  transition: opacity 0.18s, transform 0.1s;
+  transition:
+    opacity 0.18s,
+    transform 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +184,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .disclaimer {

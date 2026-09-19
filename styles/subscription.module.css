@@ -1,0 +1,38 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0;
+  flex-wrap: wrap;
+}
+
+.priceAmount {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+}
+
+.pricePeriod {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.cancelNotice {
+  font-size: 0.85rem;
+  color: hsl(45 93% 60%);
+  margin: 0 0 1.25rem;
+  padding: 0.65rem 0.85rem;
+  background: hsl(45 93% 47% / 0.08);
+  border: 1px solid hsl(45 93% 47% / 0.3);
+  border-radius: calc(var(--radius) - 2px);
+  line-height: 1.5;
+}

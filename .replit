@@ -16,6 +16,8 @@ RECOMBEE_REGION = "ca-east"
 MOOSEND_LIST_ID = "6bab64cd-1fd8-4d35-b7e3-4bb791fc7575"
 FORTY_UNDER_40_WEBHOOK_URL = "https://portal.vnmedia.co/api/forms-webhook/40-under-40-caribbean-business"
 
+[userenv.development]
+
 [workflows]
 runButton = "Project"
 

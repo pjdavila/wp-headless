@@ -39,6 +39,16 @@ module.exports = withAtlasConfig(
           destination: "/magazine/",
           permanent: true,
         },
+        {
+          source: "/suscripcion-impresa",
+          destination: "/subscription/",
+          permanent: true,
+        },
+        {
+          source: "/suscripcion-impresa/",
+          destination: "/subscription/",
+          permanent: true,
+        },
       ];
     },
   }),

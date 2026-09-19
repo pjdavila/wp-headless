@@ -41,6 +41,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "recombee-api-client": "^6.1.0",
+    "stripe": "^22.6.2",
     "tailwindcss": "^4.2.2",
     "video.js": "^8.23.7",
     "videojs-contrib-ads": "^7.5.2",
