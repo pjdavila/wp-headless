@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { auth } from "../lib/firebase";
 import { PR_MUNICIPALITIES } from "../lib/puertoRicoMunicipalities";
 import styles from "../styles/print-edition-form.module.css";
 
@@ -14,8 +15,8 @@ const INITIAL_FORM = {
   website: "",
 };
 
-export default function PrintSubscriptionForm() {
-  const [form, setForm] = useState(INITIAL_FORM);
+export default function PrintSubscriptionForm({ userEmail }) {
+  const [form, setForm] = useState({ ...INITIAL_FORM, email: userEmail || "" });
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
@@ -36,7 +37,10 @@ export default function PrintSubscriptionForm() {
     if (!form.fullName.trim() || form.fullName.trim().length < 2) {
       errors.fullName = "Enter your full name.";
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    // The email comes locked from the signed-in account. If the account has
+    // no email at all, let the request through so the server can answer with
+    // its clearer "account has no verified email" message.
+    if (userEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
       errors.email = "Invalid email.";
     }
     if (!form.phone.trim() || form.phone.trim().length < 7) {
@@ -71,13 +75,28 @@ export default function PrintSubscriptionForm() {
     setStatus("loading");
 
     try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error("Please sign in again to continue.");
+      }
+      const idToken = await currentUser.getIdToken();
+
       const res = await fetch("/api/print-subscription-checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
         body: JSON.stringify(form),
       });
 
       const data = await res.json().catch(() => ({}));
+
+      if (res.status === 401) {
+        throw new Error(
+          "Your session expired. Please sign out and sign in again.",
+        );
+      }
 
       if (!res.ok || !data?.url) {
         if (data?.fields) setFieldErrors(data.fields);
@@ -145,8 +164,8 @@ export default function PrintSubscriptionForm() {
             inputMode="email"
             className={`${styles.input} ${fieldErrors.email ? styles.inputError : ""}`}
             value={form.email}
-            onChange={(e) => update("email", e.target.value)}
-            disabled={isLoading}
+            readOnly
+            disabled
             required
           />
           {fieldErrors.email && (

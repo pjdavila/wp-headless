@@ -4,6 +4,7 @@ import {
   getMonthlyPriceId,
   getSiteOrigin,
 } from "../../lib/stripePrint";
+import { verifyEconomyRequest } from "../../lib/firebaseAdmin";
 import {
   createRateLimiter,
   getClientIp,
@@ -33,8 +34,23 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
+  // A subscription is tied to a verified account: the caller must present a
+  // valid Firebase ID token, and its email is the one used for the checkout.
+  const authResult = await verifyEconomyRequest(req);
+  if (!authResult.ok) {
+    return res
+      .status(authResult.status)
+      .json({ error: "Please sign in to subscribe." });
+  }
+  const tokenEmail = (authResult.user.email || "").trim().toLowerCase();
+  if (!tokenEmail || !isValidEmail(tokenEmail)) {
+    return res.status(400).json({
+      error: "Your account has no verified email. Please sign in again.",
+    });
+  }
+
   const fullName = sanitize(body.fullName, 120);
-  const email = sanitize(body.email, 200).toLowerCase();
+  const email = tokenEmail;
   const phone = sanitize(body.phone, 40);
   const addressLine1 = sanitize(body.addressLine1, 200);
   const addressLine2 = sanitize(body.addressLine2, 200);
@@ -73,6 +89,7 @@ export default async function handler(req, res) {
   const origin = getSiteOrigin(req);
   const metadata = {
     source: "suscripcion-impresa",
+    firebaseUid: authResult.user.sub,
     fullName,
     email,
     phone,

@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import Header from "../components/Header";
@@ -7,6 +8,8 @@ import SeoHead from "../components/SeoHead";
 import { BreadcrumbJsonLd } from "../components/JsonLd";
 import PrintSubscriptionForm from "../components/PrintSubscriptionForm";
 import ManageSubscriptionForm from "../components/ManageSubscriptionForm";
+import AuthModal from "../components/AuthModal";
+import { useAuth } from "../lib/useAuth";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import layout from "../styles/edicion-impresa.module.css";
@@ -45,6 +48,8 @@ function safeJsonLd(obj) {
 
 export default function PrintSubscriptionPage() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useQuery(HEADER_MENU_QUERY) || {};
 
@@ -156,7 +161,24 @@ export default function PrintSubscriptionPage() {
                       you can try again whenever you're ready.
                     </p>
                   )}
-                  <PrintSubscriptionForm />
+                  {!authLoading && !user ? (
+                    <div className={styles.authGate}>
+                      <p className={styles.authGateText}>
+                        To subscribe you need a Caribbean Business account.
+                        Sign in or create one for free — it takes less than a
+                        minute.
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.authGateBtn}
+                        onClick={() => setAuthModalOpen(true)}
+                      >
+                        Sign in or create account
+                      </button>
+                    </div>
+                  ) : user ? (
+                    <PrintSubscriptionForm userEmail={user.email} />
+                  ) : null}
                 </>
               )}
             </section>
@@ -181,6 +203,8 @@ export default function PrintSubscriptionPage() {
       </main>
 
       <Footer />
+
+      {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
     </>
   );
 }
