@@ -15,7 +15,16 @@ import style from "../styles/header.module.css";
 
 function MenuIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="3" y1="6" x2="21" y2="6" />
       <line x1="3" y1="12" x2="21" y2="12" />
       <line x1="3" y1="18" x2="21" y2="18" />
@@ -25,7 +34,16 @@ function MenuIcon() {
 
 function CloseIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
@@ -34,7 +52,16 @@ function CloseIcon() {
 
 function UserIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
     </svg>
@@ -43,7 +70,16 @@ function UserIcon() {
 
 function SearchIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="11" cy="11" r="7" />
       <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
@@ -97,15 +133,24 @@ function buildNavItems(categories) {
   const topLevel = filtered.filter((c) => !c.parentId);
   const items = topLevel.map((cat) => {
     const children = (cat.children?.nodes || []).filter(
-      (ch) => !SKIP_SLUGS.includes(ch.slug)
+      (ch) => !SKIP_SLUGS.includes(ch.slug),
     );
     return { ...cat, uri: NAV_URI_OVERRIDES[cat.slug] || cat.uri, children };
   });
-  items.sort((a, b) => (b.slug === "news") - (a.slug === "news") || (b.children.length > 0) - (a.children.length > 0));
+  items.sort(
+    (a, b) =>
+      (b.slug === "news") - (a.slug === "news") ||
+      (b.children.length > 0) - (a.children.length > 0),
+  );
   return items;
 }
 
-export default function Header({ siteTitle, siteDescription, menuItems, categories }) {
+export default function Header({
+  siteTitle,
+  siteDescription,
+  menuItems,
+  categories,
+}) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -134,7 +179,9 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
   useEffect(() => {
     if (!searchOpen) return;
     const inputs = document.querySelectorAll("[data-header-search-input]");
-    const visibleInput = Array.from(inputs).find((el) => el.offsetParent !== null);
+    const visibleInput = Array.from(inputs).find(
+      (el) => el.offsetParent !== null,
+    );
     if (visibleInput) visibleInput.focus();
     const handleClick = (e) => {
       if (!e.target.closest("[data-search-wrap]")) {
@@ -252,7 +299,10 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 data-search-wrap
               >
                 {searchOpen && (
-                  <form className={style.searchForm} onSubmit={handleHeaderSearch}>
+                  <form
+                    className={style.searchForm}
+                    onSubmit={handleHeaderSearch}
+                  >
                     <input
                       type="search"
                       className={style.searchInput}
@@ -274,8 +324,8 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                 </button>
               </div>
               <ThemeToggle />
-              {!loading && (
-                user ? (
+              {!loading &&
+                (user ? (
                   <div className={style.authWrap} ref={dropdownRef}>
                     <button
                       className={style.avatarBtn}
@@ -283,15 +333,32 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                       aria-label="Account menu"
                     >
                       {user.photoURL ? (
-                        <img src={user.photoURL} alt="" className={style.avatarImg} referrerPolicy="no-referrer" />
+                        <img
+                          src={user.photoURL}
+                          alt=""
+                          className={style.avatarImg}
+                          referrerPolicy="no-referrer"
+                        />
                       ) : (
-                        <span className={style.avatarInitial}>{getInitials(user)}</span>
+                        <span className={style.avatarInitial}>
+                          {getInitials(user)}
+                        </span>
                       )}
                     </button>
                     {dropdownOpen && (
                       <div className={style.dropdown}>
                         <div className={style.dropdownEmail}>{user.email}</div>
-                        <button className={style.dropdownBtn} onClick={handleSignOut}>
+                        <Link
+                          href="/account/"
+                          className={style.dropdownBtn}
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          Manage My Subscription
+                        </Link>
+                        <button
+                          className={style.dropdownBtn}
+                          onClick={handleSignOut}
+                        >
                           Sign Out
                         </button>
                       </div>
@@ -306,8 +373,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                     <UserIcon />
                     <span className={style.loginLabel}>Sign In</span>
                   </button>
-                )
-              )}
+                ))}
             </div>
           </div>
         </div>
@@ -344,7 +410,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                       {cat.name}
                     </Link>
                   </li>
-                )
+                ),
               )}
               <li className={style.navItem}>
                 <Link href="/latest-news" className={style.navLink}>
@@ -364,7 +430,6 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
             </ul>
           </div>
         </nav>
-
       </header>
 
       {drawerOpen && (
@@ -382,7 +447,10 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
               </button>
             </div>
             <nav className={style.drawerNav}>
-              <form className={style.drawerSearchForm} onSubmit={handleDrawerSearch}>
+              <form
+                className={style.drawerSearchForm}
+                onSubmit={handleDrawerSearch}
+              >
                 <span className={style.drawerSearchIcon}>
                   <SearchIcon />
                 </span>
@@ -400,10 +468,12 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   <div key={cat.slug} className={style.drawerGroup}>
                     <button
                       className={style.drawerGroupToggle}
-                      onClick={() => setDrawerExpandedSlugs((prev) => ({
-                        ...prev,
-                        [cat.slug]: !prev[cat.slug],
-                      }))}
+                      onClick={() =>
+                        setDrawerExpandedSlugs((prev) => ({
+                          ...prev,
+                          [cat.slug]: !prev[cat.slug],
+                        }))
+                      }
                     >
                       <span>{cat.name}</span>
                       <ChevronIcon open={!!drawerExpandedSlugs[cat.slug]} />
@@ -439,7 +509,7 @@ export default function Header({ siteTitle, siteDescription, menuItems, categori
                   >
                     {cat.name}
                   </Link>
-                )
+                ),
               )}
               <Link
                 href="/latest-news"

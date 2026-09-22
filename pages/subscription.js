@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
@@ -7,9 +8,8 @@ import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
 import { BreadcrumbJsonLd } from "../components/JsonLd";
 import PrintSubscriptionForm from "../components/PrintSubscriptionForm";
-import ManageSubscriptionForm from "../components/ManageSubscriptionForm";
 import AuthModal from "../components/AuthModal";
-import { useAuth } from "../lib/useAuth";
+import { usePrintSubscriptionStatus } from "../lib/usePrintSubscriptionStatus";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import layout from "../styles/edicion-impresa.module.css";
@@ -48,7 +48,6 @@ function safeJsonLd(obj) {
 
 export default function PrintSubscriptionPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const siteDataQuery = useQuery(SITE_DATA_QUERY) || {};
   const headerMenuDataQuery = useQuery(HEADER_MENU_QUERY) || {};
@@ -59,7 +58,11 @@ export default function PrintSubscriptionPage() {
 
   const success = router.query.success === "1";
   const canceled = router.query.canceled === "1";
-  const portalInvalid = router.query.portal === "invalid";
+
+  // Signed-in visitors are checked for a live print subscription: existing
+  // subscribers get pointed to My Account instead of a second subscribe form.
+  // A failed check falls back to the normal form.
+  const { user, authLoading, subState } = usePrintSubscriptionStatus(success);
 
   return (
     <>
@@ -143,9 +146,29 @@ export default function PrintSubscriptionPage() {
                   <p className={formStyles.successText}>
                     Thank you for subscribing to the print edition. You'll
                     receive a confirmation email with your plan details. To
-                    update your card or cancel, use the &ldquo;Manage
-                    subscription&rdquo; section below.
+                    update your card or cancel, visit{" "}
+                    <Link href="/account/">Manage My Subscription</Link>{" "}
+                    anytime.
                   </p>
+                </div>
+              ) : user &&
+                subState.status === "ready" &&
+                subState.subscription ? (
+                <div className={styles.planCard}>
+                  <p className={styles.planBadge} role="status">
+                    Active
+                  </p>
+                  <h2 className={layout.formTitle}>
+                    You're already subscribed
+                  </h2>
+                  <p className={styles.planDetail}>
+                    This account has an active print edition subscription. You
+                    can review your plan, update your payment method or cancel
+                    from the Manage My Subscription page.
+                  </p>
+                  <Link href="/account/" className={styles.planButton}>
+                    Manage My Subscription
+                  </Link>
                 </div>
               ) : (
                 <>
@@ -164,9 +187,8 @@ export default function PrintSubscriptionPage() {
                   {!authLoading && !user ? (
                     <div className={styles.authGate}>
                       <p className={styles.authGateText}>
-                        To subscribe you need a Caribbean Business account.
-                        Sign in or create one for free — it takes less than a
-                        minute.
+                        To subscribe you need a Caribbean Business account. Sign
+                        in or create one for free — it takes less than a minute.
                       </p>
                       <button
                         type="button"
@@ -176,27 +198,15 @@ export default function PrintSubscriptionPage() {
                         Sign in or create account
                       </button>
                     </div>
+                  ) : user && subState.status === "loading" ? (
+                    <p className={styles.planLoading} role="status">
+                      Checking your subscription…
+                    </p>
                   ) : user ? (
                     <PrintSubscriptionForm userEmail={user.email} />
                   ) : null}
                 </>
               )}
-            </section>
-
-            <section className={layout.formCard}>
-              <h2 className={layout.formTitle}>Manage subscription</h2>
-              <p className={layout.formSubtitle}>
-                Already a subscriber? Enter the email you subscribed with and
-                we'll send you a secure link to update your payment method or
-                cancel your plan.
-              </p>
-              {portalInvalid && (
-                <p className={styles.cancelNotice} role="status">
-                  That management link has expired or is invalid. Request a new
-                  one by entering your email below.
-                </p>
-              )}
-              <ManageSubscriptionForm />
             </section>
           </div>
         </div>

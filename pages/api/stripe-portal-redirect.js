@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   const origin = getSiteOrigin(req);
-  const pageUrl = `${origin}/subscription/`;
+  const pageUrl = `${origin}/account/`;
 
   const ip = getClientIp(req);
   if (!checkRateLimit(ip)) {

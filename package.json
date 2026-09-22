@@ -16,6 +16,7 @@
     "send-newsletter": "node scripts/send-daily-newsletter.mjs",
     "ingest-economy": "node scripts/ingest-economy.mjs",
     "test:economy": "node scripts/test-economy.mjs",
+    "test:print-subscription": "node scripts/test-print-subscription-access.mjs",
     "format": "prettier . --write",
     "test:format": "prettier . --check"
   },

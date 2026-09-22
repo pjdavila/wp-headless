@@ -69,3 +69,90 @@
 .authGateBtn:hover {
   filter: brightness(1.08);
 }
+
+.planCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: hsl(150 60% 45%);
+  background: hsl(150 60% 45% / 0.12);
+  border: 1px solid hsl(150 60% 45% / 0.35);
+  border-radius: 999px;
+  margin: 0;
+}
+
+.planBadgeWarning {
+  color: hsl(45 93% 60%);
+  background: hsl(45 93% 47% / 0.08);
+  border-color: hsl(45 93% 47% / 0.3);
+}
+
+.planName {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.planDetail {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+  margin: 0;
+}
+
+.planButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: hsl(225 15% 10%);
+  background: hsl(45 93% 60%);
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.planButton:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.planButton:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.planHint {
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+  margin: 0;
+}
+
+.planError {
+  font-size: 0.85rem;
+  color: hsl(0 72% 62%);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.planLoading {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
