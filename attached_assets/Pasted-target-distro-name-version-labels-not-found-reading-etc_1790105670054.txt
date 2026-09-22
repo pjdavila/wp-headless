@@ -1,0 +1,45 @@
+target distro name/version labels not found, reading /etc/os-release file
+[2mBuilder version: v2.71.0[0m
+[1m[0m
+[1mNode.js Setup:[0m
+  Detecting Node.js version
+[2m    Searching for the Node.js version in package.json => engines or .nvmrc[0m
+[2m    [0m
+[2m    Using Node.js ">=22.9.0 <23.0.0" from the package.json engines field[0m
+  Installing Node.js
+  [34mnodejs[0m: [32mReusing[0m cached layer
+[2m    Node.js v22.23.2 installed because it is the latest version that matches the constraint ">=22.9.0 <23.0.0"[0m
+[1m[0m
+[1mnpm Setup:[0m
+  Detecting npm version
+[2m    Searching for the npm version in:[0m
+[2m    	 1. package.json => engines[0m
+[2m    	 2. package.json => packageManager[0m
+[2m    [0m
+[2m    Using npm ">=11.5.0 <12.0.0" from package.json engines field[0m
+[2m    [0m
+  Installing npm
+  [34mnpm[0m: [32mReusing[0m cached layer
+[2m    npm v11.19.0 installed because it is the latest version that matches the constraint ">=11.5.0 <12.0.0"[0m
+[1m[0m
+[1mnpm Install Packages:[0m
+  package-lock.json file found, running: "npm ci"
+  
+[2m╔═ Install Output: ═══════════════════════════════════[0m
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@8.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated jssha@2.4.2: jsSHA versions < 3.0.0 will no longer receive feature updates
+npm warn deprecated glob@11.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm error code ENOTFOUND
+npm error syscall getaddrinfo
+npm error errno ENOTFOUND
+npm error network request to http://package-firewall.replit.internal/npm/stripe/-/stripe-22.6.2.tgz failed, reason: getaddrinfo ENOTFOUND package-firewall.replit.internal
+npm error network This is a problem related to network connectivity.
+npm error network In most cases you are behind a proxy or have bad network settings.
+npm error network
+npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly.  See: 'npm help config'
+npm error A complete log of this run can be found in: /layers/atlas-buildpacks_npm-install/npm-install/_logs/2026-09-22T13_40_03_184Z-debug-0.log
+[2m╚═════════════════════════════════════════════════════[0m
+
+[31;1mnpm ci failed: exit status 1[0m
+[31;1mERROR: [0mfailed to build: exit status 1
