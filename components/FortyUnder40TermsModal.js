@@ -134,9 +134,6 @@ export default function FortyUnder40TermsModal({ isOpen, onClose, returnFocusRef
               Las nominaciones deberán ser sometidas mediante la plataforma oficial establecida por
               Caribbean Business.
             </p>
-            <p>
-              Las nominaciones deberán ser sometidas en o antes del 25 de septiembre de 2026.
-            </p>
             <p>La información presentada deberá ser veraz, completa y verificable.</p>
             <p>
               Los nominadores deberán proporcionar información requerida en la convocatoria, esta

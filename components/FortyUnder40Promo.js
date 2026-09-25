@@ -32,7 +32,6 @@ export default function FortyUnder40Promo() {
               →
             </span>
           </Link>
-          <span className={styles.deadline}>Nominations close September 25, 2026</span>
         </div>
       </div>
     </section>

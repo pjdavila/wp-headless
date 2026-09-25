@@ -122,15 +122,6 @@
   outline-offset: 3px;
 }
 
-.deadline {
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground) / 0.85);
-  margin: 0;
-}
-
 .divider {
   width: 100%;
   max-width: 46rem;

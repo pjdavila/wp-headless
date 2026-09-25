@@ -103,12 +103,6 @@
   transform: translateX(2px);
 }
 
-.deadline {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: hsl(var(--muted-foreground));
-}
-
 @media (max-width: 720px) {
   .banner {
     grid-template-columns: 1fr;

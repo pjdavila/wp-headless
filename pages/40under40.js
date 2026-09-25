@@ -143,7 +143,6 @@ export default function FortyUnder40Page() {
               Read the terms and conditions
             </button>
           </p>
-          <p className={styles.deadline}>Entries are open · nomination period ends on September 25, 2026</p>
 
           <div className={styles.divider} aria-hidden="true" />
         </section>
