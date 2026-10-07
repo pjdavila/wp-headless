@@ -13,6 +13,12 @@ import {
   saveUpload,
   validateUpload,
 } from "../../lib/fortyUnder40Files";
+import {
+  missingRequiredLetterError,
+  requiredLetterStored,
+  REQUIRED_RECOMMENDATION_FIELD,
+  STORAGE_FAILED_ERROR,
+} from "../../lib/fortyUnder40Required";
 
 // Attachments arrive base64-encoded inside the JSON body, so the default 1 MB
 // body limit has to cover three 5 MB recommendation letters plus ~33% base64
@@ -223,6 +229,8 @@ export default async function handler(req, res) {
     }
     uploads[field] = result;
   }
+  const missingLetter = missingRequiredLetterError(uploads, errors);
+  if (missingLetter) errors[REQUIRED_RECOMMENDATION_FIELD] = missingLetter;
 
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({ error: "Please review the highlighted fields.", fields: errors });
@@ -291,6 +299,14 @@ export default async function handler(req, res) {
     if (record.storedName) {
       stored[field] = record;
     }
+  }
+
+  // The first letter is required: never acknowledge an application whose
+  // required letter could not be stored anywhere — the applicant would think
+  // it was received. Ask them to retry instead.
+  if (!requiredLetterStored(stored)) {
+    console.error(`40under40 required letter could not be stored (application ${id})`);
+    return res.status(503).json({ error: STORAGE_FAILED_ERROR });
   }
 
   const recommendationUrls = Object.fromEntries(

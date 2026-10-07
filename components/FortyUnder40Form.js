@@ -130,6 +130,11 @@ export default function FortyUnder40Form() {
         errors.linkedin = "Please enter a valid URL.";
       }
     }
+    if (index === 2) {
+      if (!files.recommendation1) {
+        errors.recommendation1 = "Please upload at least one recommendation letter.";
+      }
+    }
     if (index === 3) {
       if (!form.consent) errors.consent = "Please accept the terms to submit.";
     }
@@ -475,7 +480,8 @@ export default function FortyUnder40Form() {
       {step === 2 && (
         <div className={styles.step}>
           <p className={styles.stepIntro}>
-            You can upload up to three recommendation letters. Optional, PDF, up to 5 MB each.
+            One recommendation letter is required. You can add up to two more (optional). PDF,
+            up to 5 MB each.
           </p>
 
           {RECOMMENDATION_FIELDS.map((field, i) => (
@@ -483,6 +489,7 @@ export default function FortyUnder40Form() {
               key={field}
               id={field}
               label={`Recommendation letter ${i + 1}`}
+              required={i === 0}
               hint="PDF · up to 5 MB"
               accept="application/pdf"
               inputRef={recommendationInputRefs[field]}
@@ -515,7 +522,7 @@ export default function FortyUnder40Form() {
               <SummaryRow
                 key={field}
                 label={`Recommendation letter ${i + 1}`}
-                value={files[field] ? files[field].name : "Not included"}
+                value={files[field] ? files[field].name : i === 0 ? "Missing (required)" : "Not included"}
               />
             ))}
           </dl>
@@ -602,11 +609,16 @@ function SummaryRow({ label, value }) {
   );
 }
 
-function FileField({ id, label, hint, accept, inputRef, file, error, disabled, onSelect, onRemove }) {
+function FileField({ id, label, required = false, hint, accept, inputRef, file, error, disabled, onSelect, onRemove }) {
   return (
     <div className={styles.field}>
       <label htmlFor={id} className={styles.label}>
-        {label} <span className={styles.optional}>(optional)</span>
+        {label}{" "}
+        {required ? (
+          <span className={styles.required}>*</span>
+        ) : (
+          <span className={styles.optional}>(optional)</span>
+        )}
       </label>
 
       {file ? (
