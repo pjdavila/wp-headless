@@ -14,9 +14,8 @@ import {
   validateUpload,
 } from "../../lib/fortyUnder40Files";
 import {
-  missingRequiredLetterError,
-  requiredLetterStored,
-  REQUIRED_RECOMMENDATION_FIELD,
+  missingRequiredLetterErrors,
+  requiredLettersStored,
   STORAGE_FAILED_ERROR,
 } from "../../lib/fortyUnder40Required";
 
@@ -229,8 +228,7 @@ export default async function handler(req, res) {
     }
     uploads[field] = result;
   }
-  const missingLetter = missingRequiredLetterError(uploads, errors);
-  if (missingLetter) errors[REQUIRED_RECOMMENDATION_FIELD] = missingLetter;
+  Object.assign(errors, missingRequiredLetterErrors(uploads, errors));
 
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({ error: "Please review the highlighted fields.", fields: errors });
@@ -301,11 +299,14 @@ export default async function handler(req, res) {
     }
   }
 
-  // The first letter is required: never acknowledge an application whose
-  // required letter could not be stored anywhere — the applicant would think
-  // it was received. Ask them to retry instead.
-  if (!requiredLetterStored(stored)) {
-    console.error(`40under40 required letter could not be stored (application ${id})`);
+  // All three letters are required: never acknowledge an application whose
+  // letters could not all be stored — the applicant would think they were
+  // received. Ask them to retry instead.
+  if (!requiredLettersStored(stored)) {
+    const lost = Object.keys(uploads).filter((field) => !stored[field]);
+    console.error(
+      `40under40 required letters could not be stored (application ${id}): ${lost.join(", ")}`,
+    );
     return res.status(503).json({ error: STORAGE_FAILED_ERROR });
   }
 

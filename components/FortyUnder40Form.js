@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { PR_MUNICIPALITIES } from "../lib/puertoRicoMunicipalities";
 import FortyUnder40TermsModal from "./FortyUnder40TermsModal";
+import { missingRequiredLetterErrors } from "../lib/fortyUnder40Required";
 import styles from "../styles/forty-under-40-form.module.css";
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
@@ -131,9 +132,7 @@ export default function FortyUnder40Form() {
       }
     }
     if (index === 2) {
-      if (!files.recommendation1) {
-        errors.recommendation1 = "Please upload at least one recommendation letter.";
-      }
+      Object.assign(errors, missingRequiredLetterErrors(files));
     }
     if (index === 3) {
       if (!form.consent) errors.consent = "Please accept the terms to submit.";
@@ -480,8 +479,7 @@ export default function FortyUnder40Form() {
       {step === 2 && (
         <div className={styles.step}>
           <p className={styles.stepIntro}>
-            One recommendation letter is required. You can add up to two more (optional). PDF,
-            up to 5 MB each.
+            Three recommendation letters are required. PDF, up to 5 MB each.
           </p>
 
           {RECOMMENDATION_FIELDS.map((field, i) => (
@@ -489,7 +487,7 @@ export default function FortyUnder40Form() {
               key={field}
               id={field}
               label={`Recommendation letter ${i + 1}`}
-              required={i === 0}
+              required
               hint="PDF · up to 5 MB"
               accept="application/pdf"
               inputRef={recommendationInputRefs[field]}
@@ -522,7 +520,7 @@ export default function FortyUnder40Form() {
               <SummaryRow
                 key={field}
                 label={`Recommendation letter ${i + 1}`}
-                value={files[field] ? files[field].name : i === 0 ? "Missing (required)" : "Not included"}
+                value={files[field] ? files[field].name : "Missing (required)"}
               />
             ))}
           </dl>
