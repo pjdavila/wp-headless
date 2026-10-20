@@ -1,0 +1,49 @@
+nstrucciones para el Replit del formulario de Caribbean Business
+1. Adónde y cómo se manda
+
+Se manda un POST a la dirección de entrada que aparece en la pantalla del portal. Termina en /api/forms-webhook/40-under-40-caribbean-business.
+La clave va en la cabecera x-form-secret: <clave> y se toma de un secret, por ejemplo PORTAL_FORMS_SECRET.
+El envío lo hace el servidor del sitio, nunca el navegador del visitante, para que la clave no quede expuesta.
+Se manda como multipart/form-data si lleva archivos. Si no lleva archivos, también sirve JSON (máximo 2 MB).
+2. Campos de texto (con estos nombres)
+
+Campo	Qué es
+id	Obligatorio. Identificador único y fijo de la nominación. Se usa para reconocer los reenvíos
+event	Por ejemplo application.created
+submittedAt	Fecha en ISO, por ejemplo 2026-10-20T14:00:00.000Z
+program	40under40
+applicantType	nominate o self
+nominatorName, nominatorEmail	Datos de quien nomina
+name, email, phone	Datos del nominado
+jobTitle, company, town, country	Puesto, empresa, pueblo, país
+linkedin, bio	Enlace de LinkedIn y biografía
+consent	true / false
+ipPrefix, userAgent	Datos técnicos (opcionales)
+Si se manda un campo que no está en la lista, no se pierde: el portal lo guarda en la ficha como dato adicional.
+
+3. Archivos: adjunto directo o enlace
+
+Archivo adjunto	O como enlace	Formato	Tamaño
+photo	photoUrl	JPG, PNG o WEBP	5 MB adjunto / 25 MB por enlace
+resume	resumeUrl	Solo PDF	igual
+recommendation1	recommendation1Url	Solo PDF	igual
+recommendation2	recommendation2Url	Solo PDF	igual
+recommendation3	recommendation3Url	Solo PDF	igual
+Máximo 8 archivos por envío.
+El portal revisa lo que de verdad contiene el archivo, no su extensión. Un PDF que no sea PDF de verdad se rechaza con un aviso, pero el resto del envío se guarda igual.
+Los enlaces solo se aceptan de estos dominios: caribbeanbusiness.com, vnmedia.co, Jotform y Google Drive. Tienen que poder bajarse sin iniciar sesión, por ejemplo con un enlace firmado que dure al menos unos minutos.
+Si llega un archivo con otro nombre de campo, se guarda como «archivo extra» en vez de perderse. Aun así, lo correcto es usar los nombres de la tabla.
+4. Qué contesta el portal
+
+Respuesta	Qué significa	Qué hacer
+201	Nominación nueva guardada. Incluye entryId, files y warnings	Nada
+200 con duplicate: true	Ese id ya existía. Solo se añadieron los archivos que faltaban (addedFiles). No se duplica la ficha ni se manda otro correo	Nada
+401	Clave mala o dirección equivocada	Revisar la clave
+413	Un archivo adjunto pasa de 5 MB	Mandarlo como enlace
+400	El envío llegó mal armado	Revisar el código
+500	Fallo del portal	Reintentar más tarde con el mismo id
+Conviene que el sitio registre el campo warnings de la respuesta: ahí avisa si algún archivo no se pudo guardar.
+
+5. Reenvíos Se puede reenviar la misma nominación (con el mismo id) todas las veces que haga falta. Es seguro: no crea fichas repetidas, no cambia los datos ya guardados y solo añade los archivos que faltaban.
+
+Algo pendiente para el otro Replit: que reenvíe las 10 nominaciones que perdieron las cartas, con su mismo id y todos sus archivos. También hay que revisar por qué hasta ahora no está mandando ni la foto ni el resumé: ninguna de las 15 nominaciones en producción tiene archivos.
