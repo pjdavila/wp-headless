@@ -26,6 +26,9 @@ const COLUMNS = [
   "recommendation3Name",
   "recommendation3Url",
   "webhookStatus",
+  "webhookHttpStatus",
+  "webhookEntryId",
+  "webhookWarnings",
   "ipPrefix",
   "userAgent",
 ];
@@ -80,6 +83,9 @@ async function toRow(record, origin) {
     recommendation3Name: record.recommendation3?.originalName || "",
     recommendation3Url: await fileUrl(record.recommendation3, origin),
     webhookStatus: record.webhook?.status || "",
+    webhookHttpStatus: record.webhook?.httpStatus || "",
+    webhookEntryId: record.webhook?.entryId || "",
+    webhookWarnings: (record.webhook?.warnings || []).join(" | "),
     ipPrefix: record.ipPrefix,
     userAgent: record.userAgent,
   };

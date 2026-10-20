@@ -29,3 +29,15 @@ After deleting an object from the bucket, its public URL kept returning `200`
 from the Cloudflare edge. Publicly served objects therefore need a short
 `Cache-Control` max-age if they may ever need to be revoked; a long
 `immutable` TTL should be reserved for content meant to live forever.
+
+# Production files may not be in the Replit-configured bucket
+
+The R2_* values in Replit and in WP Engine are set separately and may point at
+different buckets. Separately, the upload code silently falls back to local disk
+when R2 fails or is unset, and on WP Engine that disk is wiped on every deploy.
+
+**Why:** a recovery/resend of 40 Under 40 letters run from Replit found none of
+the production letters in the bucket configured here.
+
+**How to apply:** before any recovery from R2 run in Replit, confirm which
+bucket WP Engine writes to. Treat local disk in production as non-durable.

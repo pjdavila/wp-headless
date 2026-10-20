@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { isValidMunicipality } from "../../lib/puertoRicoMunicipalities";
 import { sendWelcomeEmail } from "../../lib/welcomeEmail";
 import { appendApplication } from "../../lib/fortyUnder40Store";
-import { sendFortyUnder40Webhook } from "../../lib/fortyUnder40Webhook";
+import { PORTAL_EVENT, sendFortyUnder40Webhook } from "../../lib/fortyUnder40Webhook";
 import {
   isCloudflareStorageConfigured,
   uploadToCloudflare,
@@ -93,6 +93,17 @@ function isValidHttpUrl(value) {
   }
 }
 
+function describeDelivery(webhook) {
+  if (webhook.status === "ok") {
+    const parts = [`ok (HTTP ${webhook.httpStatus})`];
+    if (webhook.duplicate) parts.push("duplicate");
+    if (webhook.entryId) parts.push(`entry ${webhook.entryId}`);
+    return parts.join(" · ");
+  }
+  if (webhook.status === "skipped") return `skipped — ${webhook.reason || "not configured"}`;
+  return `FAILED — ${webhook.error || "unknown error"}`;
+}
+
 async function notifyTeam({ application, recommendationUrls, webhook }) {
   const notifyEmail =
     process.env.FORTY_UNDER_40_NOTIFY_EMAIL || process.env.PRINT_EDITION_NOTIFY_EMAIL;
@@ -122,7 +133,8 @@ async function notifyTeam({ application, recommendationUrls, webhook }) {
         url ? `<a href="${escapeHtml(url)}">${escapeHtml(doc?.originalName || `recommendation${i + 1}.pdf`)}</a>` : "—",
       ];
     }),
-    ["Webhook", webhook.status],
+    ["Portal delivery", describeDelivery(webhook)],
+    ...(webhook.warnings?.length ? [["Portal warnings", webhook.warnings.join(" | ")]] : []),
     ["IP (prefix)", application.ipPrefix],
     ["User-Agent", application.userAgent],
   ]
@@ -339,11 +351,11 @@ export default async function handler(req, res) {
     userAgent,
   };
 
-  // The filesystem is ephemeral on WPE Atlas, so the webhook receives the
-  // document bytes inline as well as a signed link — the consumer can archive
-  // the file even after the local copy is gone.
+  // The filesystem is ephemeral on WPE Atlas, so the portal receives the
+  // document bytes as real attachments; links are added only for hosts the
+  // portal accepts (see lib/fortyUnder40Webhook.js).
   const webhook = await sendFortyUnder40Webhook({
-    event: "40under40.application.created",
+    event: PORTAL_EVENT,
     submittedAt: application.createdAt,
     application: {
       id,
@@ -371,7 +383,7 @@ export default async function handler(req, res) {
         contentType: record.contentType,
         size: record.size,
         url: recommendationUrls[field],
-        contentBase64: uploads[field].buffer.toString("base64"),
+        buffer: uploads[field].buffer,
       };
     }).filter(Boolean),
     source: { ipPrefix, userAgent },
