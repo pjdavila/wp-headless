@@ -628,12 +628,117 @@
 }
 
 
+/* ---------- View-all links and archive pages ---------- */
+
+.viewAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.viewAll:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.archiveHead {
+  margin-bottom: 1.75rem;
+}
+
+.backLink {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.backLink:hover {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.archiveMeta {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.shortsArchiveGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+.pagination {
+  margin-top: 2.5rem;
+}
+
+.paginationList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pageLink,
+.pageCurrent,
+.pageDisabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.85rem;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: hsl(var(--foreground));
+  background: hsl(var(--card));
+}
+
+.pageLink:hover {
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.pageCurrent {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.pageDisabled {
+  color: hsl(var(--muted-foreground));
+  opacity: 0.5;
+}
+
+.pageGap {
+  padding: 0 0.25rem;
+  color: hsl(var(--muted-foreground));
+}
+
 @media (max-width: 1024px) {
   .videoGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .shortsRow {
+  .shortsRow,
+  .shortsArchiveGrid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -660,7 +765,8 @@
     width: 120px;
   }
 
-  .shortsRow {
+  .shortsRow,
+  .shortsArchiveGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -678,8 +784,17 @@
     grid-template-columns: 1fr;
   }
 
-  .shortsRow {
+  .shortsRow,
+  .shortsArchiveGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pageLink,
+  .pageCurrent,
+  .pageDisabled {
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.6rem;
   }
 
   .featuredMain {

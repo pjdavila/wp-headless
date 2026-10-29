@@ -23,7 +23,24 @@ module.exports = withAtlasConfig(
     devIndicators: false,
     trailingSlash: true,
     async redirects() {
+      // Old /dashboard/<section>/ routes → closest tab of the rebuilt board.
+      const dashboardSections = [
+        ["overview", "/dashboard/"],
+        ["jobs", "/dashboard/"],
+        ["consumer", "/dashboard/"],
+        ["business", "/dashboard/"],
+        ["government", "/dashboard/"],
+        ["tourism", "/dashboard/?tab=turismo"],
+        ["energy", "/dashboard/?tab=energia"],
+        ["trade", "/dashboard/?tab=ciencias-vivas"],
+        ["construction", "/dashboard/?tab=bienes-raices"],
+        ["housing", "/dashboard/?tab=bienes-raices"],
+      ].flatMap(([slug, destination]) => [
+        { source: `/dashboard/${slug}`, destination, permanent: true },
+        { source: `/dashboard/${slug}/`, destination, permanent: true },
+      ]);
       return [
+        ...dashboardSections,
         {
           source: "/summit",
           destination: "https://summit.caribbean.business/",

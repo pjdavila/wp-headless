@@ -18,9 +18,9 @@ echarts.use([
 
 /**
  * The interactive historical chart. Loaded exclusively via next/dynamic
- * (ssr: false) from ChartPanel, so the ECharts bundle never blocks first
+ * (ssr: false) from IndicatorChart, so the ECharts bundle never blocks first
  * paint. Colors follow the site's CSS variables and update live when the
- * theme toggles; the ARIA component plus ChartPanel's text summary keep it
+ * theme toggles; the ARIA component plus the indicator page's table keep it
  * accessible without relying on color.
  */
 export default function EconomicChart({ title, points, formatY }) {

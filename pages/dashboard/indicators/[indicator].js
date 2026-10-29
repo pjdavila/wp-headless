@@ -4,7 +4,6 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import SeoHead from "../../../components/SeoHead";
 import AuthModal from "../../../components/AuthModal";
-import SectionNav from "../../../components/dashboard/SectionNav";
 import DashboardBreadcrumbs from "../../../components/dashboard/DashboardBreadcrumbs";
 import IndicatorChart from "../../../components/dashboard/IndicatorChart";
 import IndicatorTable from "../../../components/dashboard/IndicatorTable";
@@ -16,7 +15,9 @@ import { SITE_DATA_QUERY } from "../../../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../../../queries/MenuQueries";
 import { useEconomyApi } from "../../../lib/useEconomyApi";
 import { INDICATORS, getIndicator } from "../../../lib/economy/indicators";
-import { sectionForIndicator, sectionPath } from "../../../lib/economy/sections";
+import { TAB_FOR_CATEGORY } from "../../../lib/economy/board/liveMap";
+import { tabHref } from "../../../lib/economy/board/tabs";
+import { UI } from "../../../lib/economy/board/i18n";
 import { buildWhatItMeans } from "../../../lib/economy/summary";
 import {
   formatValue,
@@ -59,19 +60,23 @@ export default function IndicatorPage({ indicator }) {
     indicator.providerConfig?.primarySeries || null,
   );
 
-  const section = sectionForIndicator(indicator);
+  // Closest tab of /dashboard/ for breadcrumbs (the board is Spanish by
+  // default; this page is not translated).
+  const tabKey = TAB_FOR_CATEGORY[indicator.category] || null;
+  const section = tabKey
+    ? { name: UI.tabs[tabKey].es, href: tabHref(tabKey) }
+    : null;
 
   const hasData =
-    Boolean(data?.latest) && (data?.status === "ok" || data?.status === "error");
+    Boolean(data?.latest) &&
+    (data?.status === "ok" || data?.status === "error");
 
   // Series dimension (only multi-series indicators carry one).
   const seriesOptions = useMemo(() => {
     const configured = indicator.providerConfig?.series;
     if (configured && configured.length > 1) return configured;
     const keys = new Set(
-      (data?.observations || [])
-        .map((point) => point.series)
-        .filter(Boolean),
+      (data?.observations || []).map((point) => point.series).filter(Boolean),
     );
     if (keys.size < 2) return null;
     return [...keys].map((key) => ({ key, label: key }));
@@ -125,9 +130,7 @@ export default function IndicatorPage({ indicator }) {
         <DashboardBreadcrumbs
           items={[
             { label: "Tablero Económico", href: "/dashboard/" },
-            ...(section
-              ? [{ label: section.name, href: sectionPath(section.slug) }]
-              : []),
+            ...(section ? [{ label: section.name, href: section.href }] : []),
             { label: indicator.shortName },
           ]}
         />
@@ -137,8 +140,6 @@ export default function IndicatorPage({ indicator }) {
           <h1 className={styles.pageTitle}>{indicator.name}</h1>
           <p className={styles.leadText}>{indicator.description}</p>
         </div>
-
-        <SectionNav active={section ? section.slug : "overview"} />
 
         {status === "loading" && (
           <div className={styles.stateBlock} role="status" aria-live="polite">
@@ -215,7 +216,8 @@ export default function IndicatorPage({ indicator }) {
                 <div className={styles.statGrid}>
                   <div className={styles.statBox}>
                     <span className={styles.statLabel}>
-                      Último valor · {formatPeriod(latest.date, indicator.frequency)}
+                      Último valor ·{" "}
+                      {formatPeriod(latest.date, indicator.frequency)}
                       {latest.preliminary ? " · preliminar" : ""}
                     </span>
                     <span className={styles.statValue}>

@@ -85,9 +85,9 @@ export default function VideoDetailPage() {
     setError(false);
 
     Promise.all([
-      fetch("/api/astro-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
+      fetch("/api/astro-playlist/?all=1").then((r) => r.json()).catch(() => ({ videos: [] })),
       fetch("/api/cbtv-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
-      fetch("/api/shorts-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
+      fetch("/api/shorts-playlist/?all=1").then((r) => r.json()).catch(() => ({ videos: [] })),
       fetch("/api/featured-video-playlist").then((r) => r.json()).catch(() => ({ videos: [] })),
     ])
       .then(([metro, cbtv, shorts, featured]) => {

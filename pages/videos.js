@@ -7,37 +7,13 @@ import Footer from "../components/Footer";
 import SeoHead from "../components/SeoHead";
 import VideoModal from "../components/VideoModal";
 import { videoPath } from "../lib/videoUrl";
+import { formatDuration, formatDate, getThumb } from "../lib/videoDisplay";
+import { ASTRO_PLAYLISTS, fetchPlaylist } from "../lib/astroPlaylist";
+import { archivePageHref } from "../lib/videoArchiveConfig";
+import PlayIcon from "../components/videos/PlayIcon";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
 import styles from "../styles/videos-page.module.css";
-
-function formatDuration(seconds) {
-  if (!seconds) return "";
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function PlayIcon({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M8 5v14l11-7z" />
-    </svg>
-  );
-}
-
-function getThumb(video, minWidth) {
-  return video.images?.find((img) => img.width >= minWidth)?.src || video.image;
-}
 
 function categorizeVideos(videos) {
   const regular = [];
@@ -89,12 +65,15 @@ function FeaturedSection({ videos }) {
             priority
           />
         </h2>
+        <Link href={archivePageHref("archive", 1)} className={styles.viewAll}>
+          View all videos &rarr;
+        </Link>
       </div>
       <div className={styles.featuredGrid}>
         <Link href={videoPath(hero)} className={styles.featuredMain}>
           <div className={styles.featuredThumbWrap}>
             {heroThumb && (
-              <img src={heroThumb} alt={hero.title} className={styles.featuredThumb} />
+              <img src={heroThumb} alt={hero.title} className={styles.featuredThumb} referrerPolicy="no-referrer" />
             )}
             <div className={styles.featuredOverlay} />
             <div className={styles.playOverlay}>
@@ -124,7 +103,7 @@ function FeaturedSection({ videos }) {
                 <Link key={v.mediaid} href={videoPath(v)} className={styles.sideCard}>
                   <div className={styles.sideThumbWrap}>
                     {thumb && (
-                      <img src={thumb} alt={v.title} className={styles.sideThumb} loading="lazy" />
+                      <img src={thumb} alt={v.title} className={styles.sideThumb} loading="lazy" referrerPolicy="no-referrer" />
                     )}
                     <div className={styles.sidePlayOverlay}>
                       <PlayIcon className={styles.sidePlayIcon} />
@@ -163,6 +142,9 @@ function MoreVideosSection({ videos }) {
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>More Videos</h2>
+        <Link href={archivePageHref("archive", 1)} className={styles.viewAll}>
+          View all videos &rarr;
+        </Link>
       </div>
       <div className={styles.videoGrid}>
         {videos.map((v) => {
@@ -171,7 +153,7 @@ function MoreVideosSection({ videos }) {
             <Link key={v.mediaid} href={videoPath(v)} className={styles.gridCard}>
               <div className={styles.gridThumbWrap}>
                 {thumb && (
-                  <img src={thumb} alt={v.title} className={styles.gridThumb} loading="lazy" />
+                  <img src={thumb} alt={v.title} className={styles.gridThumb} loading="lazy" referrerPolicy="no-referrer" />
                 )}
                 <div className={styles.gridPlayOverlay}>
                   <PlayIcon className={styles.gridPlayIcon} />
@@ -215,7 +197,7 @@ function FinishlineSection({ videos }) {
             <Link key={v.mediaid} href={videoPath(v)} className={styles.podcastCard}>
               <div className={styles.podcastThumbWrap}>
                 {thumb && (
-                  <img src={thumb} alt={v.title} className={styles.podcastThumb} loading="lazy" />
+                  <img src={thumb} alt={v.title} className={styles.podcastThumb} loading="lazy" referrerPolicy="no-referrer" />
                 )}
                 <div className={styles.podcastPlayOverlay}>
                   <PlayIcon className={styles.podcastPlayIcon} />
@@ -254,6 +236,9 @@ function ShortsSection({ videos }) {
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>Short Videos</h2>
+        <Link href={archivePageHref("shorts", 1)} className={styles.viewAll}>
+          View all shorts &rarr;
+        </Link>
       </div>
       <div className={styles.shortsRow}>
         {videos.map((v, i) => {
@@ -268,7 +253,7 @@ function ShortsSection({ videos }) {
             >
               <div className={styles.shortThumbWrap}>
                 {thumb && (
-                  <img src={thumb} alt={v.title} className={styles.shortThumb} loading="lazy" />
+                  <img src={thumb} alt={v.title} className={styles.shortThumb} loading="lazy" referrerPolicy="no-referrer" />
                 )}
                 <div className={styles.shortPlayOverlay}>
                   <PlayIcon className={styles.gridPlayIcon} />
@@ -351,41 +336,15 @@ VideosPage.queries = [
   { query: HEADER_MENU_QUERY },
 ];
 
-const CBTV_PLAYLIST_URL =
-  "https://astrovms.com/api/v2/playlists/4f09e496-05a8-4600-acad-8ff9b7334189";
-const SHORTS_PLAYLIST_URL =
-  "https://astrovms.com/api/v2/playlists/114eca46-0831-4b00-9c14-74a99e16951d";
-
-function normalizePlaylist(data) {
-  return (data.playlist || []).map((item) => ({
-    mediaid: item.mediaid,
-    title: item.title,
-    image: item.image,
-    images: item.images || [],
-    duration: item.duration || 0,
-    link: item.link,
-    tags: item.tags || "",
-    pubDate: item.pubdate ? new Date(item.pubdate * 1000).toISOString() : null,
-    description: item.description || "",
-    sources: Array.isArray(item.sources) ? item.sources : [],
-  }));
-}
-
 export async function getStaticProps(context) {
   const { getNextStaticProps } = await import("@faustwp/core");
 
   let videos = [];
   let shortsVideos = [];
 
-  const fetchPlaylist = async (url) => {
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return normalizePlaylist(await res.json());
-  };
-
   const [cbtvResult, shortsResult] = await Promise.allSettled([
-    fetchPlaylist(CBTV_PLAYLIST_URL),
-    fetchPlaylist(SHORTS_PLAYLIST_URL),
+    fetchPlaylist(ASTRO_PLAYLISTS.cbtv),
+    fetchPlaylist(ASTRO_PLAYLISTS.shorts),
   ]);
 
   if (cbtvResult.status === "fulfilled") videos = cbtvResult.value;

@@ -1,0 +1,1617 @@
+{
+ "charts": {
+  "eai": {
+   "kind": "line",
+   "fmt": "idx",
+   "t": {
+    "en": "Economic Activity Index",
+    "es": "Índice de Actividad Económica"
+   },
+   "sub": {
+    "en": "Index, January 1980 = 100 · monthly, seasonally adjusted",
+    "es": "Índice, enero 1980 = 100 · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "eai",
+     "n": {
+      "en": "EAI",
+      "es": "IAE"
+     }
+    }
+   ],
+   "note": {
+    "en": "The island’s only monthly read on total activity, built from payroll jobs, cement, gasoline and electricity. DDEC took it over from the Economic Development Bank in November 2025. It has moved sideways near 127–128 since early 2024.",
+    "es": "La única lectura mensual de la actividad total, construida con empleo asalariado, cemento, gasolina y electricidad. El DDEC lo asumió del Banco de Desarrollo Económico en noviembre de 2025. Se mueve de lado, cerca de 127–128, desde principios de 2024."
+   }
+  },
+  "eai_yoy": {
+   "kind": "col",
+   "signed": true,
+   "fmt": "pct",
+   "t": {
+    "en": "Economic Activity Index, change from a year earlier",
+    "es": "Índice de Actividad Económica, cambio interanual"
+   },
+   "sub": {
+    "en": "Percent · monthly",
+    "es": "Por ciento · mensual"
+   },
+   "series": [
+    {
+     "ref": "eai_yoy",
+     "n": {
+      "en": "Change",
+      "es": "Cambio"
+     }
+    }
+   ]
+  },
+  "gnp": {
+   "kind": "col",
+   "signed": true,
+   "fmt": "pct",
+   "range": false,
+   "t": {
+    "en": "Real GNP growth by fiscal year",
+    "es": "Crecimiento real del Producto Bruto por año fiscal"
+   },
+   "sub": {
+    "en": "Percent · fiscal year runs July–June · FY2025 preliminary, FY2026–27 projections revised Sept. 16, 2026",
+    "es": "Por ciento · el año fiscal corre de julio a junio · AF2025 preliminar, AF2026–27 proyecciones revisadas el 16 de sept. de 2026"
+   },
+   "series": [
+    {
+     "ref": "real_gnp_growth_fy",
+     "n": {
+      "en": "Real GNP",
+      "es": "Producto Bruto real"
+     }
+    }
+   ],
+   "proj": [
+    "FY2026",
+    "FY2027"
+   ],
+   "note": {
+    "en": "GNP, not GDP, is Puerto Rico’s headline measure because profits of mainland-owned plants inflate GDP. History here is transcribed from Planning Board announcements of different dates and mixes vintages; the production build would read the Board’s statistical appendix directly.",
+    "es": "El Producto Bruto, no el PIB, es la medida principal de Puerto Rico porque las ganancias de plantas de capital externo inflan el PIB. El historial se transcribió de anuncios de la Junta de distintas fechas y mezcla revisiones; la versión final leerá el Apéndice Estadístico directamente."
+   }
+  },
+  "gdp_bea": {
+   "kind": "col",
+   "signed": true,
+   "fmt": "pct",
+   "range": false,
+   "force": "discontinued",
+   "t": {
+    "en": "Real GDP growth (BEA)",
+    "es": "Crecimiento real del PIB (BEA)"
+   },
+   "sub": {
+    "en": "Percent · calendar year · final release Sept. 16, 2025",
+    "es": "Por ciento · año natural · publicación final 16 de sept. de 2025"
+   },
+   "series": [
+    {
+     "ref": "real_gdp_growth_bea",
+     "n": {
+      "en": "Real GDP",
+      "es": "PIB real"
+     }
+    }
+   ],
+   "note": {
+    "en": "BEA announced it will no longer produce Puerto Rico GDP after the 2023 estimates. The federal series ends here, which raises the value of a credible local nowcast.",
+    "es": "El BEA anunció que no producirá más el PIB de Puerto Rico tras los estimados de 2023. La serie federal termina aquí, lo que aumenta el valor de un estimado local creíble."
+   }
+  },
+  "ur": {
+   "kind": "line",
+   "fmt": "pct",
+   "t": {
+    "en": "Unemployment rate",
+    "es": "Tasa de desempleo"
+   },
+   "sub": {
+    "en": "Percent of labor force · monthly, seasonally adjusted",
+    "es": "Por ciento de la fuerza laboral · mensual, ajustada estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "unemployment_rate",
+     "n": {
+      "en": "Unemployment rate",
+      "es": "Tasa de desempleo"
+     }
+    }
+   ],
+   "note": {
+    "en": "After a record low of 5.4% in late 2024, the rate has drifted up and reached 6.0% in July 2026. March and April 2020 were not published.",
+    "es": "Tras un mínimo histórico de 5.4% a fines de 2024, la tasa ha subido poco a poco hasta 6.0% en julio de 2026. Marzo y abril de 2020 no se publicaron."
+   }
+  },
+  "jobs": {
+   "kind": "line",
+   "fmt": "k",
+   "t": {
+    "en": "Nonfarm payroll employment",
+    "es": "Empleo asalariado no agrícola"
+   },
+   "sub": {
+    "en": "Thousands of jobs · monthly, seasonally adjusted · July 2026 preliminary",
+    "es": "Miles de empleos · mensual, ajustado estacionalmente · julio 2026 preliminar"
+   },
+   "series": [
+    {
+     "ref": "nonfarm_employment",
+     "n": {
+      "en": "Payroll jobs",
+      "es": "Empleo asalariado"
+     }
+    }
+   ]
+  },
+  "sectors": {
+   "kind": "line",
+   "fmt": "k",
+   "t": {
+    "en": "Jobs in three bellwether sectors",
+    "es": "Empleo en tres sectores clave"
+   },
+   "sub": {
+    "en": "Thousands of jobs · monthly, seasonally adjusted",
+    "es": "Miles de empleos · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "leisure_hospitality_employment",
+     "n": {
+      "en": "Leisure & hospitality",
+      "es": "Recreación y alojamiento"
+     }
+    },
+    {
+     "ref": "manufacturing_employment",
+     "n": {
+      "en": "Manufacturing",
+      "es": "Manufactura"
+     }
+    },
+    {
+     "ref": "construction_employment",
+     "n": {
+      "en": "Construction",
+      "es": "Construcción"
+     }
+    }
+   ]
+  },
+  "c_jobs": {
+   "kind": "line",
+   "fmt": "k",
+   "h": 150,
+   "t": {
+    "en": "Payroll employment",
+    "es": "Empleo asalariado"
+   },
+   "sub": {
+    "en": "Thousands · DDEC series",
+    "es": "Miles · serie del DDEC"
+   },
+   "series": [
+    {
+     "ref": "eai_payroll_employment",
+     "n": {
+      "en": "Jobs",
+      "es": "Empleos"
+     }
+    }
+   ]
+  },
+  "c_cement": {
+   "kind": "line",
+   "fmt": "int",
+   "h": 150,
+   "t": {
+    "en": "Cement sales",
+    "es": "Ventas de cemento"
+   },
+   "sub": {
+    "en": "Thousands of 94-lb bags",
+    "es": "Miles de sacos de 94 lb"
+   },
+   "series": [
+    {
+     "ref": "eai_cement_sales",
+     "n": {
+      "en": "Cement",
+      "es": "Cemento"
+     }
+    }
+   ]
+  },
+  "c_gas": {
+   "kind": "line",
+   "fmt": "num1",
+   "h": 150,
+   "t": {
+    "en": "Gasoline consumption",
+    "es": "Consumo de gasolina"
+   },
+   "sub": {
+    "en": "Millions of gallons",
+    "es": "Millones de galones"
+   },
+   "series": [
+    {
+     "ref": "eai_gasoline_consumption",
+     "n": {
+      "en": "Gasoline",
+      "es": "Gasolina"
+     }
+    }
+   ]
+  },
+  "c_elec": {
+   "kind": "line",
+   "fmt": "int",
+   "h": 150,
+   "t": {
+    "en": "Electric power generation",
+    "es": "Generación de energía eléctrica"
+   },
+   "sub": {
+    "en": "Millions of kWh",
+    "es": "Millones de kWh"
+   },
+   "series": [
+    {
+     "ref": "eai_electric_generation",
+     "n": {
+      "en": "Generation",
+      "es": "Generación"
+     }
+    }
+   ]
+  },
+  "cpi": {
+   "kind": "col",
+   "fmt": "pct",
+   "range": false,
+   "t": {
+    "en": "Consumer price inflation",
+    "es": "Inflación al consumidor"
+   },
+   "sub": {
+    "en": "Percent change from a year earlier · quarterly average",
+    "es": "Cambio porcentual interanual · promedio trimestral"
+   },
+   "series": [
+    {
+     "ref": "cpi_inflation_quarterly",
+     "n": {
+      "en": "Inflation",
+      "es": "Inflación"
+     }
+    }
+   ],
+   "note": {
+    "en": "Inflation jumped to 4.3% in the second quarter of 2026 from 1.0% a year earlier. The monthly reading for July was 4.0%, with private transportation up 10.1%.",
+    "es": "La inflación saltó a 4.3% en el segundo trimestre de 2026, desde 1.0% un año antes. La lectura mensual de julio fue 4.0%, con la transportación privada 10.1% más cara."
+   }
+  },
+  "retail": {
+   "kind": "col",
+   "fmt": "usdM",
+   "range": false,
+   "t": {
+    "en": "Retail sales",
+    "es": "Ventas al detal"
+   },
+   "sub": {
+    "en": "Millions of dollars · monthly · fiscal 2026",
+    "es": "Millones de dólares · mensual · año fiscal 2026"
+   },
+   "series": [
+    {
+     "ref": "cons_retail_sales_monthly",
+     "n": {
+      "en": "Retail sales",
+      "es": "Ventas al detal"
+     }
+    }
+   ]
+  },
+  "retail_sector": {
+   "kind": "hbar",
+   "fmt": "usdM",
+   "bref": "cons_retail_sales_by_sector_apr2026",
+   "top": 8,
+   "t": {
+    "en": "Where retail dollars went, April 2026",
+    "es": "A dónde fue el gasto al detal, abril 2026"
+   },
+   "sub": {
+    "en": "Millions of dollars · eight largest of 18 sectors",
+    "es": "Millones de dólares · ocho mayores de 18 sectores"
+   }
+  },
+  "bankr": {
+   "kind": "col",
+   "fmt": "int",
+   "range": false,
+   "t": {
+    "en": "Bankruptcy filings",
+    "es": "Radicaciones de quiebra"
+   },
+   "sub": {
+    "en": "Filings · quarterly",
+    "es": "Casos · trimestral"
+   },
+   "series": [
+    {
+     "ref": "bankruptcies_quarterly",
+     "n": {
+      "en": "Filings",
+      "es": "Quiebras"
+     }
+    }
+   ]
+  },
+  "gf": {
+   "kind": "overlay",
+   "mode": "fy",
+   "fmt": "usdM",
+   "ref": "general_fund_net_revenues_monthly",
+   "t": {
+    "en": "General Fund net revenues by month",
+    "es": "Ingresos netos al Fondo General por mes"
+   },
+   "sub": {
+    "en": "Millions of dollars · fiscal 2026 against fiscal 2025",
+    "es": "Millones de dólares · año fiscal 2026 frente a 2025"
+   },
+   "note": {
+    "en": "Fiscal 2026 closed at $13,913 million, $874 million (6.7%) above the original certified projection and 2.0% above fiscal 2025. June alone brought in $2,045 million.",
+    "es": "El año fiscal 2026 cerró en $13,913 millones, $874 millones (6.7%) sobre la proyección certificada original y 2.0% sobre el año fiscal 2025. Solo junio aportó $2,045 millones."
+   }
+  },
+  "sut": {
+   "kind": "overlay",
+   "mode": "fy",
+   "fmt": "usdM",
+   "ref": "sut_general_fund_monthly",
+   "t": {
+    "en": "Sales and use tax (IVU) to the General Fund",
+    "es": "IVU al Fondo General"
+   },
+   "sub": {
+    "en": "Millions of dollars · fiscal 2026 against fiscal 2025",
+    "es": "Millones de dólares · año fiscal 2026 frente a 2025"
+   }
+  },
+  "pop": {
+   "kind": "line",
+   "fmt": "compact",
+   "range": false,
+   "t": {
+    "en": "Population",
+    "es": "Población"
+   },
+   "sub": {
+    "en": "Residents · annual, July 1",
+    "es": "Residentes · anual, 1 de julio"
+   },
+   "series": [
+    {
+     "ref": "population",
+     "n": {
+      "en": "Population",
+      "es": "Población"
+     }
+    }
+   ],
+   "note": {
+    "en": "Puerto Rico has lost about 640,000 residents since its 2004 peak of 3.83 million. The 2025 estimate is 3,184,835, and 26% of residents are 65 or older.",
+    "es": "Puerto Rico ha perdido cerca de 640,000 residentes desde su máximo de 3.83 millones en 2004. El estimado de 2025 es 3,184,835, y el 26% de los residentes tiene 65 años o más."
+   }
+  },
+  "mfg_jobs": {
+   "kind": "line",
+   "fmt": "k",
+   "t": {
+    "en": "Manufacturing employment",
+    "es": "Empleo en manufactura"
+   },
+   "sub": {
+    "en": "Thousands of jobs · monthly, seasonally adjusted",
+    "es": "Miles de empleos · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "manufacturing_employment",
+     "n": {
+      "en": "Manufacturing",
+      "es": "Manufactura"
+     }
+    }
+   ]
+  },
+  "ls_jobs": {
+   "kind": "col",
+   "fmt": "int",
+   "range": false,
+   "t": {
+    "en": "Pharma and medical device jobs",
+    "es": "Empleo en farmacéutica y dispositivos médicos"
+   },
+   "sub": {
+    "en": "Employees · annual average (BLS QCEW via DDEC)",
+    "es": "Empleados · promedio anual (BLS QCEW vía DDEC)"
+   },
+   "series": [
+    {
+     "ref": "pharma_employment",
+     "n": {
+      "en": "Pharmaceuticals",
+      "es": "Farmacéutica"
+     }
+    },
+    {
+     "ref": "meddev_employment",
+     "n": {
+      "en": "Medical devices",
+      "es": "Dispositivos médicos"
+     }
+    }
+   ],
+   "note": {
+    "en": "Devices added about 2,700 jobs between 2020 and 2024 and now employ slightly more people than pharma, which has been flat.",
+    "es": "Dispositivos médicos añadió unos 2,700 empleos entre 2020 y 2024 y ya emplea un poco más que la farmacéutica, que se ha mantenido estable."
+   }
+  },
+  "ls_pay": {
+   "kind": "col",
+   "fmt": "usd",
+   "range": false,
+   "t": {
+    "en": "Average annual pay",
+    "es": "Paga anual promedio"
+   },
+   "sub": {
+    "en": "Dollars per employee",
+    "es": "Dólares por empleado"
+   },
+   "series": [
+    {
+     "ref": "pharma_avg_annual_pay",
+     "n": {
+      "en": "Pharmaceuticals",
+      "es": "Farmacéutica"
+     }
+    },
+    {
+     "ref": "meddev_avg_annual_pay",
+     "n": {
+      "en": "Medical devices",
+      "es": "Dispositivos médicos"
+     }
+    }
+   ]
+  },
+  "trade": {
+   "kind": "line",
+   "fmt": "usdB",
+   "range": false,
+   "t": {
+    "en": "Manufacturing exports and imports",
+    "es": "Exportaciones e importaciones de manufactura"
+   },
+   "sub": {
+    "en": "Billions of dollars · fiscal year",
+    "es": "Miles de millones de dólares · año fiscal"
+   },
+   "series": [
+    {
+     "ref": "manufacturing_exports_fy_bn",
+     "n": {
+      "en": "Exports",
+      "es": "Exportaciones"
+     }
+    },
+    {
+     "ref": "manufacturing_imports_fy_bn",
+     "n": {
+      "en": "Imports",
+      "es": "Importaciones"
+     }
+    }
+   ]
+  },
+  "exp_sector": {
+   "kind": "hbar",
+   "fmt": "usdM",
+   "bref": "manufacturing_exports_by_sector",
+   "t": {
+    "en": "Manufacturing exports by sector, fiscal 2024",
+    "es": "Exportaciones de manufactura por sector, año fiscal 2024"
+   },
+   "sub": {
+    "en": "Millions of dollars",
+    "es": "Millones de dólares"
+   }
+  },
+  "exp_dest": {
+   "kind": "hbar",
+   "fmt": "pct0",
+   "bref": "pharma_exports_by_destination",
+   "t": {
+    "en": "Where pharmaceutical exports go, fiscal 2024",
+    "es": "Destino de las exportaciones farmacéuticas, año fiscal 2024"
+   },
+   "sub": {
+    "en": "Percent of pharmaceutical exports",
+    "es": "Por ciento de las exportaciones farmacéuticas"
+   }
+  },
+  "price": {
+   "kind": "line",
+   "fmt": "cents",
+   "range": false,
+   "t": {
+    "en": "Average retail electricity price",
+    "es": "Precio promedio de la electricidad"
+   },
+   "sub": {
+    "en": "Cents per kWh · all sectors · annual",
+    "es": "Centavos por kWh · todos los sectores · anual"
+   },
+   "series": [
+    {
+     "ref": "pr_elec_price_all",
+     "n": {
+      "en": "Puerto Rico",
+      "es": "Puerto Rico"
+     }
+    },
+    {
+     "ref": "us_elec_price_all",
+     "n": {
+      "en": "United States",
+      "es": "Estados Unidos"
+     }
+    }
+   ],
+   "note": {
+    "en": "Puerto Rico paid 24.10¢ per kWh in 2024 against a U.S. average of 12.94¢. The gap widens whenever oil prices rise, as in 2022.",
+    "es": "Puerto Rico pagó 24.10¢ por kWh en 2024 frente a un promedio de 12.94¢ en Estados Unidos. La brecha crece cuando sube el petróleo, como en 2022."
+   }
+  },
+  "genmix": {
+   "kind": "col",
+   "stacked": true,
+   "fmt": "num2",
+   "range": false,
+   "t": {
+    "en": "Electricity generation by fuel",
+    "es": "Generación eléctrica por combustible"
+   },
+   "sub": {
+    "en": "Billion kWh · annual · renewables include hydro",
+    "es": "Miles de millones de kWh · anual · renovables incluyen hidro"
+   },
+   "series": [
+    {
+     "ref": "pr_generation_oil",
+     "n": {
+      "en": "Oil",
+      "es": "Petróleo"
+     }
+    },
+    {
+     "ref": "pr_generation_natural_gas",
+     "n": {
+      "en": "Natural gas",
+      "es": "Gas natural"
+     }
+    },
+    {
+     "ref": "pr_generation_coal",
+     "n": {
+      "en": "Coal",
+      "es": "Carbón"
+     }
+    },
+    {
+     "refs": [
+      "pr_generation_nonhydro_renewables",
+      "pr_generation_hydro"
+     ],
+     "n": {
+      "en": "Renewables",
+      "es": "Renovables"
+     }
+    }
+   ],
+   "note": {
+    "en": "Utility-scale figures as charted by the Congressional Research Service from EIA data. The 2023 fossil values repeat 2022, which looks like a carry-forward at the source. Rooftop solar is not included.",
+    "es": "Cifras a escala de utilidad según gráficas del Congressional Research Service con datos de la EIA. Los valores fósiles de 2023 repiten los de 2022, lo que sugiere un arrastre en la fuente. No incluye solar en techos."
+   }
+  },
+  "gen_m": {
+   "kind": "line",
+   "fmt": "int",
+   "t": {
+    "en": "Electric power generation",
+    "es": "Generación de energía eléctrica"
+   },
+   "sub": {
+    "en": "Millions of kWh · monthly, seasonally adjusted",
+    "es": "Millones de kWh · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "eai_electric_generation",
+     "n": {
+      "en": "Generation",
+      "es": "Generación"
+     }
+    }
+   ]
+  },
+  "sales_sector": {
+   "kind": "col",
+   "stacked": true,
+   "fmt": "num2",
+   "scale": 0.000001,
+   "range": false,
+   "t": {
+    "en": "Electricity sales by customer class",
+    "es": "Ventas de electricidad por clase de cliente"
+   },
+   "sub": {
+    "en": "Million MWh · annual",
+    "es": "Millones de MWh · anual"
+   },
+   "series": [
+    {
+     "ref": "pr_elec_sales_residential",
+     "n": {
+      "en": "Residential",
+      "es": "Residencial"
+     }
+    },
+    {
+     "ref": "pr_elec_sales_commercial",
+     "n": {
+      "en": "Commercial",
+      "es": "Comercial"
+     }
+    },
+    {
+     "ref": "pr_elec_sales_industrial",
+     "n": {
+      "en": "Industrial",
+      "es": "Industrial"
+     }
+    }
+   ]
+  },
+  "capacity": {
+   "kind": "hbar",
+   "fmt": "pct0",
+   "bref": "capacity_mix",
+   "t": {
+    "en": "Generating capacity by source, December 2024",
+    "es": "Capacidad de generación por fuente, diciembre 2024"
+   },
+   "sub": {
+    "en": "Percent of capacity · shares are rounded at the source and sum to 101",
+    "es": "Por ciento de la capacidad · la fuente redondea y suman 101"
+   }
+  },
+  "fedgrid": {
+   "kind": "hbar",
+   "fmt": "usdB",
+   "items": [
+    [
+     "Awarded",
+     13.2
+    ],
+    [
+     "Obligated",
+     11.1
+    ],
+    [
+     "Disbursed",
+     2.7
+    ]
+   ],
+   "src": "GAO-26-107772",
+   "urlFrom": "fema_grid_obligated",
+   "period": {
+    "en": "As of December 2025",
+    "es": "A diciembre de 2025"
+   },
+   "t": {
+    "en": "FEMA money for the grid: awarded, obligated, spent",
+    "es": "Fondos de FEMA para la red: adjudicado, obligado, gastado"
+   },
+   "sub": {
+    "en": "Billions of dollars · as of December 2025",
+    "es": "Miles de millones de dólares · a diciembre de 2025"
+   },
+   "note": {
+    "en": "Eight years after Hurricane Maria, $2.7 billion of $13.2 billion awarded had reached PREPA, and nine permanent projects were complete.",
+    "es": "Ocho años después del huracán María, $2,700 millones de $13,200 millones adjudicados habían llegado a la AEE, con nueve proyectos permanentes completados."
+   }
+  },
+  "pax": {
+   "kind": "overlay",
+   "mode": "cy",
+   "fmt": "compact",
+   "ref": "tour_sju_pax_total_asur",
+   "t": {
+    "en": "Passengers at Luis Muñoz Marín airport (SJU)",
+    "es": "Pasajeros en el aeropuerto Luis Muñoz Marín (SJU)"
+   },
+   "sub": {
+    "en": "Arrivals plus departures · monthly",
+    "es": "Llegadas más salidas · mensual"
+   },
+   "note": {
+    "en": "Traffic has run below 2025 every month since spring. January–August 2026 is down 3.4% after Spirit Airlines’ closure removed seats; scheduled seats for September–December are up 9.9%.",
+    "es": "El tráfico ha estado por debajo de 2025 cada mes desde la primavera. Enero–agosto de 2026 baja 3.4% tras el cierre de Spirit Airlines; los asientos programados para septiembre–diciembre suben 9.9%."
+   }
+  },
+  "lodging": {
+   "kind": "col",
+   "stacked": true,
+   "fmt": "usdM",
+   "range": false,
+   "t": {
+    "en": "Lodging revenue: hotels and short-term rentals",
+    "es": "Ingresos de alojamiento: hoteles y alquileres a corto plazo"
+   },
+   "sub": {
+    "en": "Millions of dollars · monthly · rounded as published",
+    "es": "Millones de dólares · mensual · redondeado según publicado"
+   },
+   "series": [
+    {
+     "ref": "tour_hotel_revenue",
+     "n": {
+      "en": "Hotels",
+      "es": "Hoteles"
+     }
+    },
+    {
+     "ref": "tour_rental_revenue",
+     "n": {
+      "en": "Short-term rentals",
+      "es": "Alquileres a corto plazo"
+     }
+    }
+   ]
+  },
+  "nights": {
+   "kind": "line",
+   "fmt": "compact",
+   "range": false,
+   "t": {
+    "en": "Nights sold: hotels against rentals",
+    "es": "Noches vendidas: hoteles frente a alquileres"
+   },
+   "sub": {
+    "en": "Room nights and listing nights · monthly",
+    "es": "Noches de habitación y de alquiler · mensual"
+   },
+   "series": [
+    {
+     "ref": "tour_hotel_room_nights",
+     "n": {
+      "en": "Hotels",
+      "es": "Hoteles"
+     }
+    },
+    {
+     "ref": "tour_str_rental_nights",
+     "n": {
+      "en": "Short-term rentals",
+      "es": "Alquileres a corto plazo"
+     }
+    }
+   ],
+   "note": {
+    "en": "In July 2026 short-term rentals sold more nights than hotels for the first time in this series: 408,000 against 394,000.",
+    "es": "En julio de 2026 los alquileres a corto plazo vendieron más noches que los hoteles por primera vez en esta serie: 408,000 frente a 394,000."
+   }
+  },
+  "occ": {
+   "kind": "line",
+   "fmt": "pct0",
+   "range": false,
+   "t": {
+    "en": "Occupancy",
+    "es": "Ocupación"
+   },
+   "sub": {
+    "en": "Percent · monthly",
+    "es": "Por ciento · mensual"
+   },
+   "series": [
+    {
+     "ref": "tour_hotel_occupancy",
+     "n": {
+      "en": "Hotels",
+      "es": "Hoteles"
+     }
+    },
+    {
+     "ref": "tour_rental_occupancy",
+     "n": {
+      "en": "Short-term rentals",
+      "es": "Alquileres a corto plazo"
+     }
+    }
+   ]
+  },
+  "lh_jobs": {
+   "kind": "line",
+   "fmt": "k",
+   "t": {
+    "en": "Leisure and hospitality jobs",
+    "es": "Empleo en recreación y alojamiento"
+   },
+   "sub": {
+    "en": "Thousands of jobs · monthly, seasonally adjusted",
+    "es": "Miles de empleos · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "leisure_hospitality_employment",
+     "n": {
+      "en": "Leisure & hospitality",
+      "es": "Recreación y alojamiento"
+     }
+    }
+   ]
+  },
+  "pace": {
+   "kind": "col",
+   "signed": true,
+   "fmt": "pct0",
+   "bref": "tour_hotel_pace_yoy",
+   "t": {
+    "en": "Hotel bookings on the books against last year",
+    "es": "Reservas hoteleras en libros frente al año pasado"
+   },
+   "sub": {
+    "en": "Percent change · as of early September 2026",
+    "es": "Cambio porcentual · a principios de septiembre de 2026"
+   },
+   "note": {
+    "en": "A soft autumn, then a strong holiday season: pace is 10–14% behind for September and October and 20–23% ahead for December and January.",
+    "es": "Un otoño flojo y luego unas fiestas fuertes: el ritmo va 10–14% por debajo en septiembre y octubre y 20–23% por encima en diciembre y enero."
+   }
+  },
+  "roomtax": {
+   "kind": "hbar",
+   "fmt": "usdM",
+   "bref": "tour_room_tax_mix",
+   "t": {
+    "en": "Who collects the room tax",
+    "es": "Quién recauda el impuesto de habitación"
+   },
+   "sub": {
+    "en": "Millions of dollars · fiscal 2026, July–March",
+    "es": "Millones de dólares · año fiscal 2026, julio–marzo"
+   }
+  },
+  "hpi": {
+   "kind": "line",
+   "fmt": "idx",
+   "range": false,
+   "t": {
+    "en": "House price index",
+    "es": "Índice de precios de vivienda"
+   },
+   "sub": {
+    "en": "FHFA all-transactions index, 1995 Q1 = 100 · quarterly, not seasonally adjusted",
+    "es": "Índice FHFA de todas las transacciones, 1995 T1 = 100 · trimestral, sin ajuste estacional"
+   },
+   "series": [
+    {
+     "ref": "fhfa_hpi_at_pr_quarterly",
+     "n": {
+      "en": "House price index",
+      "es": "Índice de precios"
+     }
+    }
+   ],
+   "note": {
+    "en": "Prices have risen about 50% since 2015 on this index. The Puerto Rico series is thin and revised heavily from quarter to quarter, so single readings such as the 2026 Q1 spike should not be quoted on their own.",
+    "es": "Los precios han subido cerca de 50% desde 2015 según este índice. La serie de Puerto Rico es pequeña y se revisa mucho de un trimestre a otro, así que lecturas aisladas como el pico del primer trimestre de 2026 no deben citarse por sí solas."
+   }
+  },
+  "constr_jobs": {
+   "kind": "line",
+   "fmt": "k",
+   "t": {
+    "en": "Construction employment",
+    "es": "Empleo en construcción"
+   },
+   "sub": {
+    "en": "Thousands of jobs · monthly, seasonally adjusted",
+    "es": "Miles de empleos · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "construction_employment",
+     "n": {
+      "en": "Construction",
+      "es": "Construcción"
+     }
+    }
+   ],
+   "note": {
+    "en": "Construction payrolls have grown by about 12,000 since 2019 on reconstruction work, and at 39,300 are still 1.3% above a year ago.",
+    "es": "El empleo en construcción ha crecido unos 12,000 puestos desde 2019 por la reconstrucción y, con 39,300, sigue 1.3% sobre el año pasado."
+   }
+  },
+  "cement": {
+   "kind": "line",
+   "fmt": "int",
+   "t": {
+    "en": "Cement sales",
+    "es": "Ventas de cemento"
+   },
+   "sub": {
+    "en": "Thousands of 94-lb bags · monthly, seasonally adjusted",
+    "es": "Miles de sacos de 94 lb · mensual, ajustado estacionalmente"
+   },
+   "series": [
+    {
+     "ref": "eai_cement_sales",
+     "n": {
+      "en": "Cement",
+      "es": "Cemento"
+     }
+    }
+   ]
+  },
+  "invest": {
+   "kind": "col",
+   "stacked": true,
+   "fmt": "usdM",
+   "range": false,
+   "t": {
+    "en": "Construction investment, private and public",
+    "es": "Inversión en construcción, privada y pública"
+   },
+   "sub": {
+    "en": "Millions of current dollars · fiscal year · Planning Board",
+    "es": "Millones de dólares corrientes · año fiscal · Junta de Planificación"
+   },
+   "series": [
+    {
+     "ref": "jp_invest_private",
+     "n": {
+      "en": "Private",
+      "es": "Privada"
+     }
+    },
+    {
+     "ref": "jp_invest_public",
+     "n": {
+      "en": "Public",
+      "es": "Pública"
+     }
+    }
+   ],
+   "note": {
+    "en": "The FY2018–19 spike is post-Maria emergency work. Total investment reached $5.7 billion in FY2023 and the Board reports real growth of 4.5% in FY2025; the FY2024–25 dollar detail has not been published in a readable form.",
+    "es": "El pico de AF2018–19 es el trabajo de emergencia tras María. La inversión total llegó a $5,727 millones en AF2023 y la Junta reporta crecimiento real de 4.5% en AF2025; el detalle en dólares de AF2024–25 no se ha publicado en formato legible."
+   }
+  },
+  "permits": {
+   "kind": "col",
+   "fmt": "int",
+   "range": false,
+   "t": {
+    "en": "Construction permits issued",
+    "es": "Permisos de construcción expedidos"
+   },
+   "sub": {
+    "en": "Permits, all uses · fiscal year · Planning Board",
+    "es": "Permisos, todos los usos · año fiscal · Junta de Planificación"
+   },
+   "series": [
+    {
+     "ref": "jp_construction_permits_fy",
+     "n": {
+      "en": "Permits",
+      "es": "Permisos"
+     }
+    }
+   ]
+  },
+  "loans": {
+   "kind": "line",
+   "fmt": "int",
+   "range": false,
+   "t": {
+    "en": "Real estate lending",
+    "es": "Préstamos hipotecarios"
+   },
+   "sub": {
+    "en": "Number of loans · quarterly · OCIF data via AAFAF",
+    "es": "Número de préstamos · trimestral · datos de OCIF vía AAFAF"
+   },
+   "series": [
+    {
+     "ref": "aafaf_real_estate_loan_originations",
+     "n": {
+      "en": "Originations, all real estate loans",
+      "es": "Originaciones, todos los préstamos"
+     }
+    },
+    {
+     "ref": "aafaf_housing_loan_closings",
+     "n": {
+      "en": "Housing loan closings",
+      "es": "Cierres de préstamos de vivienda"
+     }
+    }
+   ]
+  },
+  "forecl": {
+   "kind": "col",
+   "fmt": "int",
+   "range": false,
+   "t": {
+    "en": "Residential foreclosures",
+    "es": "Ejecuciones hipotecarias residenciales"
+   },
+   "sub": {
+    "en": "Foreclosures · quarterly",
+    "es": "Ejecuciones · trimestral"
+   },
+   "series": [
+    {
+     "ref": "aafaf_residential_foreclosures",
+     "n": {
+      "en": "Foreclosures",
+      "es": "Ejecuciones"
+     }
+    }
+   ],
+   "note": {
+    "en": "Foreclosures fell to 129 in the fourth quarter of 2025, 48% fewer than a year earlier and a sixth of the early-2023 pace.",
+    "es": "Las ejecuciones bajaron a 129 en el cuarto trimestre de 2025, 48% menos que un año antes y una sexta parte del ritmo de principios de 2023."
+   }
+  },
+  "cdbg": {
+   "kind": "hbar",
+   "fmt": "usdB",
+   "items": [
+    [
+     "Allocated",
+     20.6
+    ],
+    [
+     "Unspent",
+     15.3
+    ]
+   ],
+   "src": "HUD Office of Inspector General",
+   "urlFrom": "cdbg_dr_pr_total_allocation",
+   "period": {
+    "en": "As of November 2025",
+    "es": "A noviembre de 2025"
+   },
+   "t": {
+    "en": "HUD disaster recovery funds (CDBG-DR and MIT)",
+    "es": "Fondos de recuperación de HUD (CDBG-DR y MIT)"
+   },
+   "sub": {
+    "en": "Billions of dollars · as of November 2025",
+    "es": "Miles de millones de dólares · a noviembre de 2025"
+   },
+   "note": {
+    "en": "About $5.3 billion of the $20.6 billion allocated had been spent, by subtraction. The R3 home repair and reconstruction program had delivered 7,003 homes by May 2026 from a $2.9 billion allocation.",
+    "es": "Por diferencia, se habían gastado unos $5,300 millones de los $20,600 millones asignados. El programa R3 de reparación y reconstrucción había entregado 7,003 viviendas a mayo de 2026 de una asignación de $2,900 millones."
+   }
+  },
+  "auto_m": {
+   "kind": "overlay",
+   "mode": "cy",
+   "fmt": "int",
+   "ref": "auto_new_vehicle_sales_monthly",
+   "t": {
+    "en": "New vehicle sales by month",
+    "es": "Ventas de vehículos nuevos por mes"
+   },
+   "sub": {
+    "en": "Units · 2026 against 2025",
+    "es": "Unidades · 2026 frente a 2025"
+   }
+  },
+  "auto_a": {
+   "kind": "col",
+   "fmt": "int",
+   "range": false,
+   "t": {
+    "en": "New vehicle sales by year",
+    "es": "Ventas de vehículos nuevos por año"
+   },
+   "sub": {
+    "en": "Units · 2026 is GUIA’s forecast as revised in August",
+    "es": "Unidades · 2026 es el pronóstico de GUIA revisado en agosto"
+   },
+   "series": [
+    {
+     "ref": "auto_new_vehicle_sales_annual",
+     "n": {
+      "en": "Units sold",
+      "es": "Unidades vendidas"
+     }
+    }
+   ],
+   "extra": [
+    [
+     "2026",
+     100500
+    ]
+   ],
+   "proj": [
+    "2026"
+   ],
+   "note": {
+    "en": "At 100,500 units, 2026 would be the weakest year since 2020 and 22% below the 2021 peak.",
+    "es": "Con 100,500 unidades, 2026 sería el año más débil desde 2020 y 22% por debajo del máximo de 2021."
+   }
+  },
+  "brands": {
+   "kind": "hbar",
+   "fmt": "int",
+   "bref": "auto_brand_units_2025",
+   "t": {
+    "en": "Top ten brands, 2025",
+    "es": "Diez marcas principales, 2025"
+   },
+   "sub": {
+    "en": "Units sold",
+    "es": "Unidades vendidas"
+   }
+  },
+  "electrified": {
+   "kind": "hbar",
+   "fmt": "int",
+   "bref": "auto_electrified_mix_2025",
+   "t": {
+    "en": "Electrified vehicles sold, 2025",
+    "es": "Vehículos electrificados vendidos, 2025"
+   },
+   "sub": {
+    "en": "Units · 7.9% of all new vehicles",
+    "es": "Unidades · 7.9% de los vehículos nuevos"
+   }
+  }
+ },
+ "tr": {
+  "Pharmaceuticals and medicines (3254)": {
+   "es": "Farmacéuticos y medicinas (3254)"
+  },
+  "Medical equipment and supplies (3391)": {
+   "es": "Equipo y suministros médicos (3391)"
+  },
+  "Electrical equipment and components (335)": {
+   "es": "Equipo eléctrico y componentes (335)"
+  },
+  "Computer and electronic products (334)": {
+   "es": "Computadoras y electrónicos (334)"
+  },
+  "Food (311)": {
+   "es": "Alimentos (311)"
+  },
+  "Machinery (333)": {
+   "es": "Maquinaria (333)"
+  },
+  "Transportation equipment (336)": {
+   "es": "Equipo de transportación (336)"
+  },
+  "Other sectors": {
+   "es": "Otros sectores"
+  },
+  "United States": {
+   "es": "Estados Unidos"
+  },
+  "Netherlands": {
+   "es": "Países Bajos"
+  },
+  "Spain": {
+   "es": "España"
+  },
+  "Belgium": {
+   "es": "Bélgica"
+  },
+  "Japan": {
+   "es": "Japón"
+  },
+  "Italy": {
+   "es": "Italia"
+  },
+  "China": {
+   "es": "China"
+  },
+  "South Korea": {
+   "es": "Corea del Sur"
+  },
+  "Mexico": {
+   "es": "México"
+  },
+  "Other countries": {
+   "es": "Otros países"
+  },
+  "Petroleum": {
+   "es": "Petróleo"
+  },
+  "Natural gas": {
+   "es": "Gas natural"
+  },
+  "Coal": {
+   "es": "Carbón"
+  },
+  "Renewables": {
+   "es": "Renovables"
+  },
+  "Hotels without casinos": {
+   "es": "Hoteles sin casino"
+  },
+  "Hotels with casinos": {
+   "es": "Hoteles con casino"
+  },
+  "Rental booking platforms": {
+   "es": "Plataformas de alquiler"
+  },
+  "West Coast": {
+   "es": "Costa oeste"
+  },
+  "San Juan municipality": {
+   "es": "Municipio de San Juan"
+  },
+  "South": {
+   "es": "Sur"
+  },
+  "Híbridos no enchufables": {
+   "en": "Hybrids (non plug-in)"
+  },
+  "Híbridos enchufables": {
+   "en": "Plug-in hybrids"
+  },
+  "Eléctricos": {
+   "en": "Battery electric"
+  },
+  "Tiendas por departamento y otros artículos misceláneos": {
+   "en": "Department stores & misc. goods"
+  },
+  "Supermercados y tiendas de bebidas alcohólicas": {
+   "en": "Supermarkets & liquor stores"
+  },
+  "Farmacias y droguerías": {
+   "en": "Pharmacies & drugstores"
+  },
+  "Vehículos de motor nuevos y usados": {
+   "en": "New & used motor vehicles"
+  },
+  "Restaurantes y lugares de bebidas alcohólicas": {
+   "en": "Restaurants & bars"
+  },
+  "Gasolineras y tiendas de conveniencia": {
+   "en": "Gas stations & convenience"
+  },
+  "Distribuidores de combustible": {
+   "en": "Fuel dealers"
+  },
+  "Ferreterías y materiales para el hogar": {
+   "en": "Hardware & home materials"
+  },
+  "Sep 2026": {
+   "es": "sep 2026"
+  },
+  "Oct 2026": {
+   "es": "oct 2026"
+  },
+  "Nov 2026": {
+   "es": "nov 2026"
+  },
+  "Dec 2026": {
+   "es": "dic 2026"
+  },
+  "Jan 2027": {
+   "es": "ene 2027"
+  },
+  "Awarded": {
+   "es": "Adjudicado"
+  },
+  "Obligated": {
+   "es": "Obligado"
+  },
+  "Disbursed": {
+   "es": "Desembolsado"
+  },
+  "Allocated": {
+   "es": "Asignado"
+  },
+  "Unspent": {
+   "es": "Sin gastar"
+  }
+ },
+ "briefs": {
+  "pulse": {
+   "h": {
+    "en": "A flat economy, a softer job market and a jump in prices",
+    "es": "Una economía plana, un mercado laboral más flojo y un salto en precios"
+   },
+   "p": {
+    "en": [
+     "Puerto Rico’s economy is moving sideways. The Economic Activity Index stood at 127.7 in July, 0.3% below a year earlier, and on September 16 the Planning Board trimmed its growth projections to 0.3% for fiscal 2026 and 0.2% for fiscal 2027.",
+     "The job market is the spot to watch. Unemployment rose to 6.0% in July from 5.6% in the spring, even as payrolls, at 957,900, remain 0.9% above last year. Prices are the new pressure: inflation reached 4.0% in July, against 1.0% in the second quarter of 2025, led by a 10.1% rise in private transportation.",
+     "Two things are holding up. Hacienda closed fiscal 2026 with $13.9 billion in General Fund revenues, $874 million above the original certified projection, and leisure and hospitality jobs are up 4.9%. Consumers are choosing carefully: retail sales rose 4.0% in June while new vehicle sales are down 13.9% so far this year."
+    ],
+    "es": [
+     "La economía de Puerto Rico se mueve de lado. El Índice de Actividad Económica se ubicó en 127.7 en julio, 0.3% por debajo de un año antes, y el 16 de septiembre la Junta de Planificación recortó sus proyecciones de crecimiento a 0.3% para el año fiscal 2026 y 0.2% para el 2027.",
+     "El mercado laboral es el punto a vigilar. El desempleo subió a 6.0% en julio desde 5.6% en la primavera, aunque el empleo asalariado, con 957,900 puestos, sigue 0.9% sobre el año pasado. Los precios son la nueva presión: la inflación llegó a 4.0% en julio, frente a 1.0% en el segundo trimestre de 2025, impulsada por un alza de 10.1% en la transportación privada.",
+     "Dos cosas se sostienen. Hacienda cerró el año fiscal 2026 con $13,913 millones en ingresos al Fondo General, $874 millones sobre la proyección certificada original, y el empleo en recreación y alojamiento sube 4.9%. El consumidor escoge con cuidado: las ventas al detal crecieron 4.0% en junio, mientras las ventas de vehículos nuevos caen 13.9% en lo que va de año."
+    ]
+   }
+  },
+  "life": {
+   "h": {
+    "en": "The export engine is investing again, but payrolls have not moved yet",
+    "es": "El motor exportador vuelve a invertir, pero el empleo aún no se mueve"
+   },
+   "p": {
+    "en": [
+     "Pharmaceuticals shipped $48.3 billion in fiscal 2024, 74% of everything Puerto Rico exports, and medical devices added $6.0 billion. About 70% of pharmaceutical exports go to the U.S. mainland.",
+     "The sector is small in headcount and large in pay. Pharma employed 13,197 people in 2024 at an average of $85,823, nearly double the manufacturing average of $45,467. Devices added about 2,700 jobs since 2020 and now employ 13,317.",
+     "Reshoring money is arriving: Lilly committed more than $1.2 billion in Carolina, and Amgen $650 million plus a further $300 million in Juncos. Manufacturing payrolls, at 80,800 in July, are only 0.4% above last year, so the projects are not yet visible in jobs."
+    ],
+    "es": [
+     "La farmacéutica exportó $48,328 millones en el año fiscal 2024, el 74% de todo lo que exporta Puerto Rico, y los dispositivos médicos sumaron $6,024 millones. Cerca del 70% de las exportaciones farmacéuticas va a Estados Unidos continental.",
+     "El sector es pequeño en empleo y grande en paga. La farmacéutica empleó a 13,197 personas en 2024 con un promedio de $85,823, casi el doble del promedio de manufactura de $45,467. Dispositivos médicos añadió unos 2,700 empleos desde 2020 y ya emplea a 13,317.",
+     "El dinero del regreso de la manufactura está llegando: Lilly comprometió más de $1,200 millones en Carolina, y Amgen $650 millones más otros $300 millones en Juncos. El empleo en manufactura, con 80,800 en julio, apenas supera en 0.4% al del año pasado, así que los proyectos todavía no se ven en los empleos."
+    ]
+   }
+  },
+  "energy": {
+   "h": {
+    "en": "Expensive, unreliable, and being rebuilt from the rooftops",
+    "es": "Cara, poco confiable y reconstruyéndose desde los techos"
+   },
+   "p": {
+    "en": [
+     "Electricity cost 24.10¢ per kWh in 2024, nearly twice the U.S. average of 12.94¢. Reliability got worse: customers lost 36 hours of service in 2025 excluding major events, 19% more than in 2024, against about 2 hours on the mainland.",
+     "Customers are answering on their own roofs. Rooftop solar reached 1,456 MW across 191,929 systems at the end of 2025, a fifth of all capacity, with about 3,850 new systems a month; 171,372 customers have batteries. Oil still produced about half of utility-scale electricity in 2023.",
+     "Federal money is moving slowly. FEMA had obligated $11.1 billion of $13.2 billion awarded for the grid by December 2025, but $2.7 billion had been disbursed and nine permanent projects finished."
+    ],
+    "es": [
+     "La electricidad costó 24.10¢ por kWh en 2024, casi el doble del promedio de 12.94¢ en Estados Unidos. La confiabilidad empeoró: los clientes perdieron 36 horas de servicio en 2025 sin contar eventos mayores, 19% más que en 2024, frente a unas 2 horas en Estados Unidos continental.",
+     "Los clientes responden desde sus techos. La energía solar en techos llegó a 1,456 MW en 191,929 sistemas al cierre de 2025, una quinta parte de la capacidad, con unos 3,850 sistemas nuevos al mes; 171,372 clientes tienen baterías. El petróleo todavía produjo cerca de la mitad de la electricidad a escala de utilidad en 2023.",
+     "El dinero federal se mueve despacio. FEMA había obligado $11,100 millones de $13,200 millones adjudicados para la red a diciembre de 2025, pero se habían desembolsado $2,700 millones y completado nueve proyectos permanentes."
+    ]
+   }
+  },
+  "tourism": {
+   "h": {
+    "en": "Earning more from fewer arrivals",
+    "es": "Más ingresos con menos llegadas"
+   },
+   "p": {
+    "en": [
+     "Airport traffic is falling while lodging revenue climbs. SJU handled 1.13 million passengers in August, 5.1% fewer than a year earlier, and January–August is down 3.4% after Spirit Airlines’ closure removed seats. Lodging revenue still reached $1.4 billion through July, up 9%, with hotel RevPAR at $258, up 10%.",
+     "Short-term rentals took 51% of lodging nights in July and outsold hotels for the first time in this series. Cruises are the growth story: 1.16 million passengers in San Juan through July, up 33%.",
+     "Bookings point to a soft autumn and a strong holiday season. Hotel pace is 10% behind for September and 14% behind for October, then 20% ahead for December and 23% ahead for January. Scheduled air seats for September–December are up 9.9%."
+    ],
+    "es": [
+     "El tráfico aéreo cae mientras suben los ingresos de alojamiento. SJU manejó 1.13 millones de pasajeros en agosto, 5.1% menos que un año antes, y enero–agosto baja 3.4% tras el cierre de Spirit Airlines. Aun así, los ingresos de alojamiento llegaron a $1,400 millones hasta julio, 9% más, con un RevPAR hotelero de $258, 10% más.",
+     "Los alquileres a corto plazo captaron el 51% de las noches en julio y superaron a los hoteles por primera vez en esta serie. Los cruceros son la historia de crecimiento: 1.16 millones de pasajeros en San Juan hasta julio, 33% más.",
+     "Las reservas apuntan a un otoño flojo y unas fiestas fuertes. El ritmo hotelero va 10% por debajo en septiembre y 14% en octubre, y luego 20% por encima en diciembre y 23% en enero. Los asientos aéreos programados para septiembre–diciembre suben 9.9%."
+    ]
+   }
+  },
+  "re": {
+   "h": {
+    "en": "Prices keep climbing on thin sales, while reconstruction money sits unspent",
+    "es": "Los precios siguen subiendo con pocas ventas, mientras el dinero de la reconstrucción sigue sin gastarse"
+   },
+   "p": {
+    "en": [
+     "The average existing home sold for $238,418 in 2025, 11% more than a year earlier, and a new one for $421,191, up 7.1%. Only 10,247 homes changed hands, 2.5% more than in 2024, and Estudios Técnicos estimates that 64% of families could afford a typical home at the end of 2025.",
+     "Credit is flowing again. Lenders originated 14,269 mortgages in 2025, 9.2% more than in 2024, for $2.86 billion, and residential foreclosures fell to 129 in the fourth quarter, down 48%. Construction payrolls stand at 39,300, 1.3% above last year, and cement sales were flat in July at 1.32 million bags.",
+     "The federal money is the overhang. HUD had allocated $20.6 billion in disaster recovery funds to Puerto Rico by November 2025, and $15.3 billion was still unspent. Private projects are moving anyway: Esencia in Cabo Rojo ($2 billion or more) won approval in August and Hard Rock unveiled an $850 million hotel and casino for San Juan in February."
+    ],
+    "es": [
+     "La vivienda existente promedio se vendió en $238,418 en 2025, 11% más que un año antes, y la nueva en $421,191, 7.1% más. Solo 10,247 viviendas cambiaron de manos, 2.5% más que en 2024, y Estudios Técnicos estima que el 64% de las familias podía costear una vivienda típica al cierre de 2025.",
+     "El crédito fluye de nuevo. Los prestamistas originaron 14,269 hipotecas en 2025, 9.2% más que en 2024, por $2,861 millones, y las ejecuciones residenciales bajaron a 129 en el cuarto trimestre, 48% menos. El empleo en construcción está en 39,300, 1.3% sobre el año pasado, y las ventas de cemento se mantuvieron en julio en 1.32 millones de sacos.",
+     "El dinero federal es el gran pendiente. HUD había asignado $20,600 millones en fondos de recuperación a Puerto Rico a noviembre de 2025, y $15,300 millones seguían sin gastarse. Los proyectos privados avanzan de todos modos: Esencia en Cabo Rojo ($2,000 millones o más) obtuvo aprobación en agosto y Hard Rock presentó en febrero un hotel y casino de $850 millones para San Juan."
+    ]
+   }
+  },
+  "auto": {
+   "h": {
+    "en": "A third straight year of falling sales, with hybrids the exception",
+    "es": "Tercer año seguido de caída en ventas, con los híbridos como excepción"
+   },
+   "p": {
+    "en": [
+     "Dealers sold 7,485 new vehicles in August, 7.9% fewer than a year earlier, and 64,129 through August, down 13.9%. GUIA cut its 2026 forecast in August to 100,500 units from 108,000, which would be 9.6% below 2025 and the weakest year since 2020.",
+     "Electrified vehicles are the bright spot: sales are up 37% this year, hybrids 48%, after reaching 7.9% of the market in 2025. Toyota led 2025 with 30,306 units, about 27% of the market.",
+     "The backdrop is unfriendly. Private transportation prices are up 10.1% from a year ago, excise taxes reach 34% of a vehicle’s cost, and motor vehicle retail sales fell 14.5% in April."
+    ],
+    "es": [
+     "Los concesionarios vendieron 7,485 vehículos nuevos en agosto, 7.9% menos que un año antes, y 64,129 hasta agosto, una baja de 13.9%. GUIA rebajó en agosto su pronóstico para 2026 a 100,500 unidades desde 108,000, lo que sería 9.6% menos que en 2025 y el año más débil desde 2020.",
+     "Los vehículos electrificados son el punto brillante: las ventas suben 37% este año y los híbridos 48%, tras alcanzar 7.9% del mercado en 2025. Toyota lideró 2025 con 30,306 unidades, cerca del 27% del mercado.",
+     "El entorno no ayuda. Los precios de la transportación privada suben 10.1% frente a hace un año, los arbitrios llegan a 34% del costo del vehículo y las ventas al detal de vehículos cayeron 14.5% en abril."
+    ]
+   }
+  }
+ },
+ "feed": [
+  {
+   "d": {
+    "en": "Sep 16",
+    "es": "16 sep"
+   },
+   "t": {
+    "en": "Planning Board trims real GNP projections to 0.3% (FY2026) and 0.2% (FY2027)",
+    "es": "La Junta de Planificación recorta sus proyecciones del Producto Bruto real a 0.3% (AF2026) y 0.2% (AF2027)"
+   },
+   "s": "Junta de Planificación"
+  },
+  {
+   "d": {
+    "en": "Sep 10",
+    "es": "10 sep"
+   },
+   "t": {
+    "en": "Hotel booking pace: down 10–14% for autumn, up 20–23% for the holidays",
+    "es": "Ritmo de reservas hoteleras: baja 10–14% en otoño, sube 20–23% en las fiestas"
+   },
+   "s": "Discover Puerto Rico"
+  },
+  {
+   "d": {
+    "en": "Sep",
+    "es": "sep"
+   },
+   "t": {
+    "en": "August: SJU passengers 1.13 million (−5.1%); new vehicle sales 7,485 (−7.9%); bankruptcies 531 (+12%)",
+    "es": "Agosto: pasajeros en SJU 1.13 millones (−5.1%); vehículos nuevos 7,485 (−7.9%); quiebras 531 (+12%)"
+   },
+   "s": "ASUR · GUIA · Boletín de Puerto Rico"
+  },
+  {
+   "d": {
+    "en": "Aug 28",
+    "es": "28 ago"
+   },
+   "t": {
+    "en": "Economic Activity Index for July: 127.7, down 0.3% from a year earlier",
+    "es": "Índice de Actividad Económica de julio: 127.7, 0.3% menos que un año antes"
+   },
+   "s": "DDEC"
+  },
+  {
+   "d": {
+    "en": "Aug 26",
+    "es": "26 ago"
+   },
+   "t": {
+    "en": "July unemployment rate rises to 6.0%",
+    "es": "La tasa de desempleo de julio sube a 6.0%"
+   },
+   "s": "BLS / DTRH"
+  }
+ ],
+ "pipeline": [
+  {
+   "h": {
+    "en": "Banking and consumer credit",
+    "es": "Banca y crédito al consumidor"
+   },
+   "p": {
+    "en": "Assets, deposits, loan growth and delinquency for banks, cooperativas and consumer lenders.",
+    "es": "Activos, depósitos, crecimiento de préstamos y morosidad de bancos, cooperativas y financieras."
+   },
+   "s": "OCIF · FDIC · COSSEC · SEC EDGAR"
+  },
+  {
+   "h": {
+    "en": "Trade and logistics",
+    "es": "Comercio exterior y logística"
+   },
+   "p": {
+    "en": "Exports and imports by product and partner, containers, air cargo.",
+    "es": "Exportaciones e importaciones por producto y socio, contenedores, carga aérea."
+   },
+   "s": "Census USA Trade · Autoridad de los Puertos · BTS"
+  },
+  {
+   "h": {
+    "en": "Federal funds",
+    "es": "Fondos federales"
+   },
+   "p": {
+    "en": "FEMA and CDBG-DR obligated and disbursed by program and municipio; Medicaid, PAN, Social Security.",
+    "es": "FEMA y CDBG-DR obligados y desembolsados por programa y municipio; Medicaid, PAN, Seguro Social."
+   },
+   "s": "OpenFEMA · COR3 · Vivienda · USASpending"
+  },
+  {
+   "h": {
+    "en": "The 78 municipios",
+    "es": "Los 78 municipios"
+   },
+   "p": {
+    "en": "A profile page per municipality: population, income, jobs, wages, permits, federal funds.",
+    "es": "Una página por municipio: población, ingreso, empleo, salarios, permisos, fondos federales."
+   },
+   "s": "Census · BLS LAUS & QCEW · CRIM"
+  },
+  {
+   "h": {
+    "en": "GNP nowcast and Índice CB",
+    "es": "Estimado del Producto Bruto e Índice CB"
+   },
+   "p": {
+    "en": "A monthly estimate of growth from the fast indicators, with a public track record.",
+    "es": "Un estimado mensual de crecimiento con los indicadores rápidos y un historial público."
+   },
+   "s": {
+    "en": "Own model",
+    "es": "Modelo propio"
+   }
+  }
+ ],
+ "caveats": [
+  {
+   "en": "BEA ended its Puerto Rico GDP program with the 2023 estimates released on September 16, 2025. There is no federal GDP figure for 2024 or later.",
+   "es": "El BEA terminó su programa del PIB de Puerto Rico con los estimados de 2023 publicados el 16 de septiembre de 2025. No hay cifra federal del PIB para 2024 en adelante."
+  },
+  {
+   "en": "DDEC’s payroll employment series (966,000 in July) differs from the BLS series (957,900) because of seasonal adjustment and vintage. Each chart names which one it uses.",
+   "es": "La serie de empleo asalariado del DDEC (966,000 en julio) difiere de la del BLS (957,900) por ajuste estacional y revisión. Cada gráfica indica cuál usa."
+  },
+  {
+   "en": "GNP history is transcribed from Planning Board announcements of different dates and mixes data vintages. The Board’s statistical appendix could not be read by the collection agents.",
+   "es": "El historial del Producto Bruto se transcribió de anuncios de la Junta de Planificación de distintas fechas y mezcla revisiones. Los agentes no pudieron leer el Apéndice Estadístico de la Junta."
+  },
+  {
+   "en": "Monthly CPI figures are DTRH’s as reported in its monthly release; the agency’s downloadable file could not be opened by the agents. The quarterly series comes from AAFAF.",
+   "es": "Las cifras mensuales del IPC son las del DTRH según su informe mensual; los agentes no pudieron abrir el archivo descargable de la agencia. La serie trimestral proviene de AAFAF."
+  },
+  {
+   "en": "GUIA’s twelve monthly figures for 2025 sum to 110,996, against its official annual total of 110,983.",
+   "es": "Las doce cifras mensuales de GUIA para 2025 suman 110,996, frente a su total anual oficial de 110,983."
+  },
+  {
+   "en": "Generation by fuel is read from a Congressional Research Service chart of EIA data; 2023 fossil values repeat 2022.",
+   "es": "La generación por combustible se tomó de una gráfica del Congressional Research Service con datos de la EIA; los valores fósiles de 2023 repiten los de 2022."
+  },
+  {
+   "en": "OCIF has not published 2026 housing sales because of a systems migration, so 2025 is the latest year for sales and prices. Two 2025 averages for existing homes circulate: $238,418 (OCIF) and $223,155 (Estudios Técnicos); the dashboard shows the OCIF figure. FHFA’s Puerto Rico price index is revised heavily each quarter.",
+   "es": "OCIF no ha publicado ventas de vivienda de 2026 por una migración de sistemas, así que 2025 es el último año con ventas y precios. Circulan dos promedios de 2025 para vivienda existente: $238,418 (OCIF) y $223,155 (Estudios Técnicos); el panel muestra la cifra de OCIF. El índice de precios de FHFA para Puerto Rico se revisa mucho cada trimestre."
+  },
+  {
+   "en": "Discover Puerto Rico figures are rounded as published in its research updates. Its full monthly dashboards require a partner login.",
+   "es": "Las cifras de Discover Puerto Rico están redondeadas según sus informes. Sus paneles mensuales completos requieren acceso de socio."
+  },
+  {
+   "en": "Every series was collected by AI agents on September 17–18, 2026 and machine-transcribed. Recent labor figures were cross-checked against BLS. Nothing here has had a human data editor’s sign-off, so do not cite figures from this prototype.",
+   "es": "Todas las series fueron recopiladas por agentes de IA el 17 y 18 de septiembre de 2026 y transcritas por máquina. Las cifras laborales recientes se cotejaron con el BLS. Nada aquí tiene el visto bueno de un editor de datos, así que no cite cifras de este prototipo."
+  }
+ ]
+}
