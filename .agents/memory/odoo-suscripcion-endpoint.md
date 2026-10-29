@@ -21,6 +21,6 @@ The source is the user's description of the endpoint. It is not documented anywh
 
 **Why it matters:** this endpoint creates its own billed subscription. The site's Stripe checkout charges $4.99/month with no trial. Sending every Stripe subscriber to this endpoint would create two subscriptions, each with its own billing.
 
-**Decision (2026-10-29):** the user chose "Odoo charges, remove Stripe" for the print subscription. The signup form posts to Odoo from the server and redirects the subscriber to `payment_url`.
+**Decision (2026-10-29, reversed the same day):** the user first chose Odoo billing, then said "continuemos todo por Stripe, sacar a Odoo de la ecuación". Stripe is the only system for the paid print subscription, and it sends nothing to Odoo. The `/edicion-impresa/` waitlist still posts to the Odoo `/caribbean/impresa` endpoint.
 
-**How to apply:** never post test records to the endpoint without the user's OK, because each one creates a real Odoo subscription. Stripe-based print features (the account section, the admin panel, the webhook) no longer cover new print subscribers.
+**How to apply:** do not wire the `/suscripcion` endpoint unless the user brings Odoo back. Never post test records to it, because each one creates a real Odoo subscription.

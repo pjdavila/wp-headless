@@ -11,4 +11,4 @@
 - [Hybrid economic board](dashboard-hybrid-board.md) — /dashboard/ fixed snapshot only via auth API; live wins only with usable obs; never label fixed as live.
 - [Astro VMS playlists](astro-vms-playlists.md) — playlist API returns 10 items unless paged; thumbnail CDN 403s preview referers (use no-referrer).
 - [Stripe API version quirks](stripe-api-version.md) — period dates live on items; 4-level product expansion rejected on lists; workspace key is live mode.
-- [Odoo /caribbean/suscripcion](odoo-suscripcion-endpoint.md) — creates its own billed Odoo subscription ($5.23, 3-mo trial); 10 req/h per IP; conflicts with Stripe $4.99.
+- [Odoo /caribbean/suscripcion](odoo-suscripcion-endpoint.md) — NOT used: user chose Stripe-only for the paid print subscription; that endpoint bills on its own.
