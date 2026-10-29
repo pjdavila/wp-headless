@@ -11,4 +11,5 @@
 - [Hybrid economic board](dashboard-hybrid-board.md) — /dashboard/ fixed snapshot only via auth API; live wins only with usable obs; never label fixed as live.
 - [Astro VMS playlists](astro-vms-playlists.md) — playlist API returns 10 items unless paged; thumbnail CDN 403s preview referers (use no-referrer).
 - [Stripe API version quirks](stripe-api-version.md) — period dates live on items; 4-level product expansion rejected on lists; workspace key is live mode.
+- [CMS outages break dev start](cms-outage-dev-start.md) — workflow restart fails with "Unable to find a GraphQL endpoint" when cms.vnmedia.co 5xx's; wait for 200 and retry.
 - [Odoo /caribbean/suscripcion](odoo-suscripcion-endpoint.md) — NOT used: user chose Stripe-only for the paid print subscription; that endpoint bills on its own.

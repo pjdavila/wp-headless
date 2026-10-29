@@ -29,7 +29,7 @@ const PAGE_JSON_LD = {
   name: "Print Edition Subscription | Caribbean Business",
   inLanguage: "en",
   description:
-    "Subscribe to the Caribbean Business print edition for $4.99 a month and get it delivered straight to your home anywhere in Puerto Rico.",
+    "Subscribe to the Caribbean Business print edition: your first 3 months are free, then $4.99 a month, delivered straight to your home anywhere in Puerto Rico.",
   isPartOf: {
     "@type": "WebSite",
     name: "Caribbean Business",
@@ -67,8 +67,8 @@ export default function PrintSubscriptionPage() {
   return (
     <>
       <SeoHead
-        title="Print Edition Subscription — $4.99/month"
-        description="Subscribe to the Caribbean Business print edition for $4.99 a month and get it delivered straight to your home anywhere in Puerto Rico."
+        title="Print Edition Subscription — 3 months free, then $4.99/month"
+        description="Subscribe to the Caribbean Business print edition: your first 3 months are free, then $4.99 a month, delivered straight to your home anywhere in Puerto Rico."
         url="/subscription/"
       />
 
@@ -104,9 +104,9 @@ export default function PrintSubscriptionPage() {
               your home in any town in Puerto Rico.
             </p>
             <p className={styles.price}>
-              <span className={styles.priceAmount}>$4.99</span>
+              <span className={styles.priceAmount}>3 months free</span>
               <span className={styles.pricePeriod}>
-                USD / month · cancel anytime
+                then $4.99 USD / month · cancel anytime
               </span>
             </p>
             <ul className={layout.benefits}>
@@ -144,9 +144,10 @@ export default function PrintSubscriptionPage() {
                     Subscription activated!
                   </h2>
                   <p className={formStyles.successText}>
-                    Thank you for subscribing to the print edition. You'll
-                    receive a confirmation email with your plan details. To
-                    update your card or cancel, visit{" "}
+                    Thank you for subscribing to the print edition. If your plan
+                    includes the free trial, nothing is charged for the first 3
+                    months. You'll receive a confirmation email with your plan
+                    details. To update your card or cancel, visit{" "}
                     <Link href="/account/">Manage My Subscription</Link>{" "}
                     anytime.
                   </p>
@@ -174,9 +175,10 @@ export default function PrintSubscriptionPage() {
                 <>
                   <h2 className={layout.formTitle}>Subscribe now</h2>
                   <p className={layout.formSubtitle}>
-                    Fill in your shipping details and we'll take you to Stripe
-                    to complete your payment securely. We only ship within
-                    Puerto Rico.
+                    New subscribers get the first 3 months free. Fill in your
+                    shipping details and we'll take you to Stripe to add your
+                    card securely; the first $4.99 charge comes when the trial
+                    ends. We only ship within Puerto Rico.
                   </p>
                   {canceled && (
                     <p className={styles.cancelNotice} role="status">

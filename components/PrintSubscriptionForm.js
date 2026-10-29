@@ -56,7 +56,7 @@ export default function PrintSubscriptionForm({ userEmail }) {
       errors.zip = "Puerto Rico ZIP code (e.g. 00901).";
     }
     if (!form.consent) {
-      errors.consent = "You must accept the recurring monthly charge.";
+      errors.consent = "You must accept the subscription terms.";
     }
     return errors;
   }
@@ -289,9 +289,10 @@ export default function PrintSubscriptionForm({ userEmail }) {
             disabled={isLoading}
           />
           <span>
-            I accept the recurring $4.99 USD monthly charge, the use of my
-            information to coordinate the print edition delivery, and that I can
-            cancel anytime.
+            I understand that new subscribers get the first 3 months free and
+            that afterwards my card is charged $4.99 USD every month until I
+            cancel. I accept the use of my information to coordinate the print
+            edition delivery, and I can cancel anytime.
           </span>
         </label>
         {fieldErrors.consent && (
@@ -312,7 +313,7 @@ export default function PrintSubscriptionForm({ userEmail }) {
             Redirecting to secure checkout…
           </>
         ) : (
-          "Subscribe — $4.99/month"
+          "Start 3 months free — then $4.99/month"
         )}
       </button>
 

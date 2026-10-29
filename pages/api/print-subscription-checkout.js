@@ -6,6 +6,11 @@ import {
 } from "../../lib/stripePrint";
 import { verifyEconomyRequest } from "../../lib/firebaseAdmin";
 import { upsertPrintSubscriptionCustomer } from "../../lib/printSubscriptionCustomer";
+import { findAccountPrintSubscription } from "../../lib/printSubscriptionAccount";
+import {
+  isTrialEligible,
+  printTrialEnd,
+} from "../../lib/printSubscriptionTrial";
 import {
   createRateLimiter,
   getClientIp,
@@ -123,6 +128,22 @@ export default async function handler(req, res) {
     });
   }
 
+  // 3-month free trial, once per account. Fail explicitly if the history
+  // check fails rather than guessing either way.
+  let trialEnd = null;
+  try {
+    const previous = await findAccountPrintSubscription(stripe, {
+      uid: authResult.user.sub,
+      email,
+    });
+    if (isTrialEligible(previous)) trialEnd = printTrialEnd();
+  } catch (err) {
+    console.error("Print subscription history check failed:", err.message);
+    return res.status(502).json({
+      error: "We couldn't start the payment with Stripe. Please try again.",
+    });
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -134,7 +155,11 @@ export default async function handler(req, res) {
       // would ask twice and could override the validated address.
       customer: customer.id,
       metadata,
-      subscription_data: { metadata },
+      // With a trial, Checkout still collects the card (the default
+      // payment_method_collection "always") and charges when it ends.
+      subscription_data: trialEnd
+        ? { metadata, trial_end: trialEnd }
+        : { metadata },
       success_url: `${origin}/subscription/?success=1`,
       cancel_url: `${origin}/subscription/?canceled=1`,
     });
