@@ -10,3 +10,4 @@
 - [40 Under 40 forms portal](forty-under-40-portal.md) — portal contract source is the team's pasted spec; resends are idempotent by nomination id; never execute a resend without the user's OK.
 - [Hybrid economic board](dashboard-hybrid-board.md) — /dashboard/ fixed snapshot only via auth API; live wins only with usable obs; never label fixed as live.
 - [Astro VMS playlists](astro-vms-playlists.md) — playlist API returns 10 items unless paged; thumbnail CDN 403s preview referers (use no-referrer).
+- [Stripe API version quirks](stripe-api-version.md) — period dates live on items; 4-level product expansion rejected on lists; workspace key is live mode.

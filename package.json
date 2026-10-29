@@ -20,7 +20,8 @@
     "test:40under40": "node scripts/test-40under40-required.mjs && node scripts/test-40under40-portal.mjs",
     "resend:40under40": "node scripts/resend-40under40-letters.mjs",
     "format": "prettier . --write",
-    "test:format": "prettier . --check"
+    "test:format": "prettier . --check",
+    "test:subscriptions-admin": "node scripts/test-subscriptions-admin.mjs"
   },
   "overrides": {
     "websocket-driver": "^0.7.5",
