@@ -5,6 +5,7 @@ import {
   getSiteOrigin,
 } from "../../lib/stripePrint";
 import { verifyEconomyRequest } from "../../lib/firebaseAdmin";
+import { upsertPrintSubscriptionCustomer } from "../../lib/printSubscriptionCustomer";
 import {
   createRateLimiter,
   getClientIp,
@@ -99,15 +100,39 @@ export default async function handler(req, res) {
     zip,
   };
 
+  // Save the form details on the Stripe customer first. If Stripe rejects
+  // them, stop here: never send the subscriber to a checkout whose customer
+  // is missing the shipping address.
+  let customer;
+  try {
+    customer = await upsertPrintSubscriptionCustomer(stripe, {
+      uid: authResult.user.sub,
+      fullName,
+      email,
+      phone,
+      addressLine1,
+      addressLine2,
+      town,
+      zip,
+    });
+  } catch (err) {
+    console.error("Stripe customer save failed:", err.message);
+    return res.status(502).json({
+      error:
+        "We couldn't save your shipping details with Stripe. Please check them and try again.",
+    });
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       locale: "en",
       line_items: [{ price: priceId, quantity: 1 }],
-      customer_email: email,
-      // Only Puerto Rico addresses are accepted for the print edition.
-      shipping_address_collection: { allowed_countries: ["PR"] },
-      phone_number_collection: { enabled: true },
+      // The customer already carries the form's name, phone and PR shipping
+      // address, so Checkout only asks for payment and shows the account
+      // email read-only. No shipping/phone collection here on purpose: it
+      // would ask twice and could override the validated address.
+      customer: customer.id,
       metadata,
       subscription_data: { metadata },
       success_url: `${origin}/subscription/?success=1`,

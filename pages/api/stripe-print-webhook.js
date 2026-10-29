@@ -1,5 +1,4 @@
 import { getStripe, getWebhookSecret } from "../../lib/stripePrint";
-import { sendPrintSubscriptionToOdoo } from "../../lib/odooPrintEdition";
 import {
   appendEventStep,
   appendSubscriptionEvent,
@@ -87,7 +86,10 @@ async function handleCheckoutCompleted(event) {
     type: "activated",
     fullName: sanitize(meta.fullName, 120),
     email: sanitize(
-      meta.email || session.customer_email || "",
+      meta.email ||
+        session.customer_details?.email ||
+        session.customer_email ||
+        "",
       200,
     ).toLowerCase(),
     phone: sanitize(meta.phone, 40),
@@ -104,11 +106,11 @@ async function handleCheckoutCompleted(event) {
     createdAt: new Date().toISOString(),
   };
 
+  // Stripe itself (customer + subscription) is the system of record for paid
+  // print subscribers; nothing is sent to Odoo.
   await runStepsOnce(event.id, [
-    // Primary persistent store: Odoo.
-    ["odoo", () => sendPrintSubscriptionToOdoo(record)],
     // Best-effort local copy (ephemeral filesystem on WPE Atlas). A failure
-    // here is logged but not retried: Odoo and the team email are the
+    // here is logged but not retried: Stripe and the team email are the
     // durable records.
     [
       "record",
