@@ -15,7 +15,7 @@ const INITIAL_FORM = {
   website: "",
 };
 
-export default function PrintSubscriptionForm({ userEmail }) {
+export default function PrintSubscriptionForm({ isSignedIn, userEmail }) {
   const [form, setForm] = useState({ ...INITIAL_FORM, email: userEmail || "" });
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -37,10 +37,13 @@ export default function PrintSubscriptionForm({ userEmail }) {
     if (!form.fullName.trim() || form.fullName.trim().length < 2) {
       errors.fullName = "Enter your full name.";
     }
-    // The email comes locked from the signed-in account. If the account has
-    // no email at all, let the request through so the server can answer with
-    // its clearer "account has no verified email" message.
-    if (userEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    // Signed in: the email comes locked from the account (if the account has
+    // no email at all, the server answers with a clearer message). Guests
+    // type it, and it is where Stripe sends receipts and the welcome email.
+    if (
+      (!isSignedIn || userEmail) &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
+    ) {
       errors.email = "Invalid email.";
     }
     if (!form.phone.trim() || form.phone.trim().length < 7) {
@@ -75,28 +78,26 @@ export default function PrintSubscriptionForm({ userEmail }) {
     setStatus("loading");
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        throw new Error("Please sign in again to continue.");
+      // Signing in is optional. When signed in, the token binds the
+      // subscription to the account; guests subscribe with the form email.
+      const headers = { "Content-Type": "application/json" };
+      if (isSignedIn) {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          throw new Error(
+            "Your session expired. Please sign out and sign in again.",
+          );
+        }
+        headers.Authorization = `Bearer ${await currentUser.getIdToken()}`;
       }
-      const idToken = await currentUser.getIdToken();
 
       const res = await fetch("/api/print-subscription-checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
+        headers,
         body: JSON.stringify(form),
       });
 
       const data = await res.json().catch(() => ({}));
-
-      if (res.status === 401) {
-        throw new Error(
-          "Your session expired. Please sign out and sign in again.",
-        );
-      }
 
       if (!res.ok || !data?.url) {
         if (data?.fields) setFieldErrors(data.fields);
@@ -164,8 +165,9 @@ export default function PrintSubscriptionForm({ userEmail }) {
             inputMode="email"
             className={`${styles.input} ${fieldErrors.email ? styles.inputError : ""}`}
             value={form.email}
-            readOnly
-            disabled
+            onChange={(e) => update("email", e.target.value)}
+            readOnly={isSignedIn}
+            disabled={isSignedIn || isLoading}
             required
           />
           {fieldErrors.email && (
@@ -319,8 +321,8 @@ export default function PrintSubscriptionForm({ userEmail }) {
 
       <p className={styles.disclaimer}>
         Payment is processed securely by Stripe. We only ship to addresses in
-        Puerto Rico. You can cancel anytime from the &ldquo;Manage
-        subscription&rdquo; section on this page.
+        Puerto Rico. You can cancel anytime from My Account (&ldquo;Manage My
+        Subscription&rdquo;).
       </p>
     </form>
   );

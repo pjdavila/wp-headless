@@ -176,6 +176,22 @@ test("Stripe errors propagate so no checkout starts", async () => {
   );
 });
 
+test("guest checkout (no uid) always creates an unbound customer", async () => {
+  const stripe = fakeStripe({
+    listResults: [
+      { id: "cus_owner", metadata: { firebaseUid: "uid-owner" } },
+      { id: "cus_guest", metadata: { source: "suscripcion-impresa" } },
+    ],
+  });
+  const customer = await upsertPrintSubscriptionCustomer(stripe, {
+    ...FORM,
+    uid: null,
+  });
+  assert.equal(customer.id, "cus_new");
+  assert.deepEqual(customer.metadata, { source: "suscripcion-impresa" });
+  assert.ok(!stripe.calls.some(([k]) => k === "update"), "nobody overwritten");
+});
+
 let failed = 0;
 for (const [name, fn] of tests) {
   try {

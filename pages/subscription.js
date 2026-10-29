@@ -186,27 +186,32 @@ export default function PrintSubscriptionPage() {
                       you can try again whenever you're ready.
                     </p>
                   )}
-                  {!authLoading && !user ? (
-                    <div className={styles.authGate}>
-                      <p className={styles.authGateText}>
-                        To subscribe you need a Caribbean Business account. Sign
-                        in or create one for free — it takes less than a minute.
-                      </p>
-                      <button
-                        type="button"
-                        className={styles.authGateBtn}
-                        onClick={() => setAuthModalOpen(true)}
-                      >
-                        Sign in or create account
-                      </button>
-                    </div>
-                  ) : user && subState.status === "loading" ? (
+                  {authLoading || (user && subState.status === "loading") ? (
                     <p className={styles.planLoading} role="status">
-                      Checking your subscription…
+                      {user ? "Checking your subscription…" : "Loading…"}
                     </p>
-                  ) : user ? (
-                    <PrintSubscriptionForm userEmail={user.email} />
-                  ) : null}
+                  ) : (
+                    <>
+                      {!user && (
+                        <p className={styles.guestHint}>
+                          No account needed. Already have one?{" "}
+                          <button
+                            type="button"
+                            className={styles.linkButton}
+                            onClick={() => setAuthModalOpen(true)}
+                          >
+                            Sign in
+                          </button>{" "}
+                          to manage your plan from My Account.
+                        </p>
+                      )}
+                      <PrintSubscriptionForm
+                        key={user ? user.uid : "guest"}
+                        isSignedIn={Boolean(user)}
+                        userEmail={user?.email}
+                      />
+                    </>
+                  )}
                 </>
               )}
             </section>

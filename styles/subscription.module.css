@@ -156,3 +156,20 @@
   color: hsl(var(--muted-foreground));
   margin: 0;
 }
+
+.guestHint {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  cursor: pointer;
+}

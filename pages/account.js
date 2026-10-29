@@ -72,18 +72,34 @@ export default function AccountPage() {
                   Checking your subscription…
                 </p>
               ) : !user ? (
-                <div className={styles.authGate}>
-                  <p className={styles.authGateText}>
-                    Sign in to see your plan and manage your subscription.
-                  </p>
-                  <button
-                    type="button"
-                    className={styles.authGateBtn}
-                    onClick={() => setAuthModalOpen(true)}
+                <>
+                  <div className={styles.authGate}>
+                    <p className={styles.authGateText}>
+                      Sign in to see your plan and manage your subscription.
+                    </p>
+                    <button
+                      type="button"
+                      className={styles.authGateBtn}
+                      onClick={() => setAuthModalOpen(true)}
+                    >
+                      Sign in or create account
+                    </button>
+                  </div>
+                  <p
+                    className={layout.formSubtitle}
+                    style={{ marginTop: "1.5rem" }}
                   >
-                    Sign in or create account
-                  </button>
-                </div>
+                    Subscribed without an account? Enter the email you used and
+                    we'll send you a link to manage your subscription.
+                  </p>
+                  {portalInvalid && (
+                    <p className={styles.cancelNotice} role="status">
+                      That management link has expired or is invalid. Request a
+                      new one by entering your email below.
+                    </p>
+                  )}
+                  <ManageSubscriptionForm />
+                </>
               ) : subState.status === "ready" && subState.subscription ? (
                 <ActiveSubscriptionCard subscription={subState.subscription} />
               ) : (

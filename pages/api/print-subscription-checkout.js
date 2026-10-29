@@ -6,7 +6,7 @@ import {
 } from "../../lib/stripePrint";
 import { verifyEconomyRequest } from "../../lib/firebaseAdmin";
 import { upsertPrintSubscriptionCustomer } from "../../lib/printSubscriptionCustomer";
-import { findAccountPrintSubscription } from "../../lib/printSubscriptionAccount";
+import { findPreviousPrintSubscription } from "../../lib/printSubscriptionAccount";
 import {
   isTrialEligible,
   printTrialEnd,
@@ -40,23 +40,37 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  // A subscription is tied to a verified account: the caller must present a
-  // valid Firebase ID token, and its email is the one used for the checkout.
-  const authResult = await verifyEconomyRequest(req);
-  if (!authResult.ok) {
-    return res
-      .status(authResult.status)
-      .json({ error: "Please sign in to subscribe." });
-  }
-  const tokenEmail = (authResult.user.email || "").trim().toLowerCase();
-  if (!tokenEmail || !isValidEmail(tokenEmail)) {
-    return res.status(400).json({
-      error: "Your account has no verified email. Please sign in again.",
-    });
+  // Subscribing does not require an account. When the visitor is signed in
+  // the client sends a Firebase ID token: the subscription is then bound to
+  // that account (uid in metadata) and the email comes from the token. A
+  // token that is present but invalid is rejected instead of silently
+  // falling back to a guest checkout. Without a token it is a guest
+  // checkout and the email comes from the form.
+  let uid = null;
+  let email;
+  const hasToken = (req.headers.authorization || "").startsWith("Bearer ");
+  if (hasToken) {
+    const authResult = await verifyEconomyRequest(req);
+    if (!authResult.ok) {
+      return res.status(authResult.status).json({
+        error:
+          authResult.status === 401
+            ? "Your session expired. Please sign out and sign in again."
+            : "We couldn't verify your account right now. Please try again.",
+      });
+    }
+    email = (authResult.user.email || "").trim().toLowerCase();
+    if (!email || !isValidEmail(email)) {
+      return res.status(400).json({
+        error: "Your account has no verified email. Please sign in again.",
+      });
+    }
+    uid = authResult.user.sub;
+  } else {
+    email = sanitize(body.email, 200).toLowerCase();
   }
 
   const fullName = sanitize(body.fullName, 120);
-  const email = tokenEmail;
   const phone = sanitize(body.phone, 40);
   const addressLine1 = sanitize(body.addressLine1, 200);
   const addressLine2 = sanitize(body.addressLine2, 200);
@@ -95,7 +109,7 @@ export default async function handler(req, res) {
   const origin = getSiteOrigin(req);
   const metadata = {
     source: "suscripcion-impresa",
-    firebaseUid: authResult.user.sub,
+    ...(uid ? { firebaseUid: uid } : {}),
     fullName,
     email,
     phone,
@@ -111,7 +125,7 @@ export default async function handler(req, res) {
   let customer;
   try {
     customer = await upsertPrintSubscriptionCustomer(stripe, {
-      uid: authResult.user.sub,
+      uid,
       fullName,
       email,
       phone,
@@ -128,12 +142,14 @@ export default async function handler(req, res) {
     });
   }
 
-  // 3-month free trial, once per account. Fail explicitly if the history
-  // check fails rather than guessing either way.
+  // 3-month free trial, once per email/account: no trial if this email (or
+  // this signed-in account) ever had a print subscription. Matching by email
+  // is safe here because it can only deny the trial, never grant access.
+  // Fail explicitly if the history check fails rather than guessing.
   let trialEnd = null;
   try {
-    const previous = await findAccountPrintSubscription(stripe, {
-      uid: authResult.user.sub,
+    const previous = await findPreviousPrintSubscription(stripe, {
+      uid,
       email,
     });
     if (isTrialEligible(previous)) trialEnd = printTrialEnd();
@@ -150,8 +166,8 @@ export default async function handler(req, res) {
       locale: "en",
       line_items: [{ price: priceId, quantity: 1 }],
       // The customer already carries the form's name, phone and PR shipping
-      // address, so Checkout only asks for payment and shows the account
-      // email read-only. No shipping/phone collection here on purpose: it
+      // address, so Checkout only asks for payment and shows the email
+      // read-only. No shipping/phone collection here on purpose: it
       // would ask twice and could override the validated address.
       customer: customer.id,
       metadata,

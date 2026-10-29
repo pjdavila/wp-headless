@@ -8,6 +8,22 @@ import {
   printTrialEnd,
   PRINT_TRIAL_MONTHS,
 } from "../lib/printSubscriptionTrial.js";
+import { findPreviousPrintSubscription } from "../lib/printSubscriptionAccount.js";
+
+function fakeStripe(customers) {
+  return {
+    customers: {
+      async list({ email }) {
+        return { data: customers.filter((c) => c.email === email) };
+      },
+    },
+    subscriptions: {
+      async list({ customer }) {
+        return { data: customers.find((c) => c.id === customer)?.subs || [] };
+      },
+    },
+  };
+}
 
 const iso = (d) => d.toISOString().slice(0, 10);
 
@@ -48,6 +64,56 @@ const tests = [
     () => {
       assert.equal(isTrialEligible(null), true);
       assert.equal(isTrialEligible({ id: "sub_1", status: "canceled" }), false);
+    },
+  ],
+  [
+    "an email that already had a print subscription gets no trial (guest or signed in)",
+    async () => {
+      const stripe = fakeStripe([
+        {
+          id: "cus_a",
+          email: "a@example.com",
+          subs: [
+            { id: "sub_other", created: 3, metadata: { source: "other" } },
+            {
+              id: "sub_print",
+              created: 2,
+              status: "canceled",
+              metadata: { source: "suscripcion-impresa" },
+            },
+          ],
+        },
+      ]);
+      const guest = await findPreviousPrintSubscription(stripe, {
+        uid: null,
+        email: "a@example.com",
+      });
+      assert.equal(guest?.id, "sub_print");
+      assert.equal(isTrialEligible(guest), false);
+      const signedIn = await findPreviousPrintSubscription(stripe, {
+        uid: "uid-x",
+        email: "a@example.com",
+      });
+      assert.equal(signedIn?.id, "sub_print");
+    },
+  ],
+  [
+    "a new email, or one with only unrelated subscriptions, gets the trial",
+    async () => {
+      const stripe = fakeStripe([
+        {
+          id: "cus_b",
+          email: "b@example.com",
+          subs: [{ id: "sub_other", created: 1, metadata: { source: "x" } }],
+        },
+      ]);
+      for (const email of ["b@example.com", "new@example.com"]) {
+        const prev = await findPreviousPrintSubscription(stripe, {
+          uid: null,
+          email,
+        });
+        assert.equal(isTrialEligible(prev), true);
+      }
     },
   ],
 ];
