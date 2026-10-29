@@ -21,4 +21,6 @@ The source is the user's description of the endpoint. It is not documented anywh
 
 **Why it matters:** this endpoint creates its own billed subscription. The site's Stripe checkout charges $4.99/month with no trial. Sending every Stripe subscriber to this endpoint would create two subscriptions, each with its own billing.
 
-**How to apply:** before wiring the endpoint, confirm which system charges the subscriber. Never post test records to it without the user's OK.
+**Decision (2026-10-29):** the user chose "Odoo charges, remove Stripe" for the print subscription. The signup form posts to Odoo from the server and redirects the subscriber to `payment_url`.
+
+**How to apply:** never post test records to the endpoint without the user's OK, because each one creates a real Odoo subscription. Stripe-based print features (the account section, the admin panel, the webhook) no longer cover new print subscribers.
