@@ -1,53 +1,65 @@
+import { createPostCardCache } from "../../lib/recommendationPostCache";
+
 const { getClient, rqs } = require("../../lib/recombee");
 
 const MAX_LEN = 256;
 const ID_RE = /^[a-zA-Z0-9_\-/.]+$/;
-const WP_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://cms.vnmedia.co/cbusiness";
+const WP_URL =
+  process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://cms.vnmedia.co/cbusiness";
 
 function isValidId(val) {
-  return typeof val === "string" && val.length > 0 && val.length <= MAX_LEN && ID_RE.test(val);
+  return (
+    typeof val === "string" &&
+    val.length > 0 &&
+    val.length <= MAX_LEN &&
+    ID_RE.test(val)
+  );
 }
 
-async function fetchPostsBySlug(slugs) {
-  if (!slugs.length) return {};
-
-  const slugIn = slugs.map((s) => `"${s}"`).join(", ");
-  const query = `query GetPostsBySlugs {
-    posts(first: ${slugs.length}, where: { nameIn: [${slugIn}] }) {
-      nodes {
-        slug
-        title
-        excerpt
-        uri
-        date
-        featuredImage { node { sourceUrl altText } }
-        categories { nodes { name slug uri } }
-      }
+const POSTS_BY_SLUGS_QUERY = `query GetPostsBySlugs($slugs: [String], $first: Int) {
+  posts(first: $first, where: { nameIn: $slugs }) {
+    nodes {
+      slug
+      title
+      excerpt
+      uri
+      date
+      featuredImage { node { sourceUrl altText } }
+      categories { nodes { name slug uri } }
     }
-  }`;
-
-  try {
-    const resp = await fetch(`${WP_URL}/graphql`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
-    });
-    const json = await resp.json();
-    const posts = json?.data?.posts?.nodes || [];
-    const map = {};
-    for (const p of posts) {
-      map[p.slug] = p;
-    }
-    return map;
-  } catch (err) {
-    console.error("WP fetch for recommendations error:", err.message);
-    return {};
   }
+}`;
+
+async function fetchPostsBySlugs(slugs) {
+  const resp = await fetch(`${WP_URL}/graphql`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: POSTS_BY_SLUGS_QUERY,
+      variables: { slugs, first: slugs.length },
+    }),
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!resp.ok) throw new Error(`WordPress responded ${resp.status}`);
+  const json = await resp.json();
+  const posts = json?.data?.posts?.nodes;
+  if (!Array.isArray(posts)) {
+    throw new Error(
+      json?.errors?.[0]?.message || "No posts in WordPress response",
+    );
+  }
+  return posts;
 }
+
+// One cache per server process: a recommended post is looked up in WordPress
+// at most about once an hour instead of on every article view.
+const postCardCache = createPostCardCache({ fetchBySlugs: fetchPostsBySlugs });
 
 function mapRecombeeItem(r, wpPost) {
   if (wpPost) {
-    const cat = wpPost.categories?.nodes?.find((c) => c.slug !== "uncategorized") || wpPost.categories?.nodes?.[0];
+    const cat =
+      wpPost.categories?.nodes?.find((c) => c.slug !== "uncategorized") ||
+      wpPost.categories?.nodes?.[0];
     return {
       id: r.id,
       title: wpPost.title || "",
@@ -136,7 +148,8 @@ export default async function handler(req, res) {
         slugsForWp.push(slug);
       }
     }
-    const wpMap = slugsForWp.length > 0 ? await fetchPostsBySlug(slugsForWp) : {};
+    const wpMap =
+      slugsForWp.length > 0 ? await postCardCache.getMany(slugsForWp) : {};
 
     const items = recomms
       .map((r) => {
