@@ -2,37 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { normalizeImageUrl } from "../lib/normalizeImageUrl";
 import { isOptimizableImageUrl, safeImageUrl } from "../lib/imageHosts";
+import { pickLatestEdition } from "../lib/homepageData";
 import styles from "../styles/special-reports-widget.module.css";
 
 const MAX_POSTS = 5;
-
-/**
- * Newest edition = the subcategory that holds the most recently published
- * article. Names are month-based ("August: Hospitals"), so neither alphabetical
- * order nor term creation order can be trusted; the edition is never hardcoded
- * so a new one published in WordPress simply wins on the next revalidation.
- */
-export function pickLatestEdition(editions = []) {
-  let best = null;
-  let bestTime = -Infinity;
-
-  for (const edition of editions) {
-    const posts = (edition?.posts?.nodes || []).filter(Boolean);
-    if (posts.length === 0) continue;
-
-    const latest = posts.reduce((max, post) => {
-      const time = post?.date ? new Date(post.date).getTime() : NaN;
-      return Number.isFinite(time) && time > max ? time : max;
-    }, -Infinity);
-
-    if (latest > bestTime) {
-      bestTime = latest;
-      best = edition;
-    }
-  }
-
-  return best;
-}
 
 function Thumb({ post }) {
   const rawSrc = normalizeImageUrl(post?.featuredImage?.node?.sourceUrl);
@@ -42,7 +15,12 @@ function Thumb({ post }) {
   if (!src) {
     // An article without a featured image still gets a thumb-sized block so the
     // row keeps its alignment with the rest of the list.
-    return <span className={`${styles.thumbWrap} ${styles.thumbEmpty}`} aria-hidden="true" />;
+    return (
+      <span
+        className={`${styles.thumbWrap} ${styles.thumbEmpty}`}
+        aria-hidden="true"
+      />
+    );
   }
 
   return (
@@ -65,12 +43,17 @@ function Thumb({ post }) {
  */
 export default function SpecialReportsWidget({ editions = [] }) {
   const edition = pickLatestEdition(editions);
-  const posts = (edition?.posts?.nodes || []).filter((p) => p?.uri).slice(0, MAX_POSTS);
+  const posts = (edition?.posts?.nodes || [])
+    .filter((p) => p?.uri)
+    .slice(0, MAX_POSTS);
 
   if (!edition || posts.length === 0) return null;
 
   return (
-    <section className={styles.widget} aria-labelledby="special-reports-widget-title">
+    <section
+      className={styles.widget}
+      aria-labelledby="special-reports-widget-title"
+    >
       <div className={styles.header}>
         <span className={styles.eyebrow}>Special Reports</span>
         <h3 className={styles.title} id="special-reports-widget-title">

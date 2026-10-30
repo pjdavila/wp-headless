@@ -13,7 +13,7 @@ export default function Page() {
 
   const { title: siteTitle, description: siteDescription } =
     data.generalSettings;
-  const menuItems = data.primaryMenuItems.nodes;
+  const categories = data.categories?.nodes || [];
 
   return (
     <>
@@ -24,7 +24,7 @@ export default function Page() {
       <Header
         siteTitle={siteTitle}
         siteDescription={siteDescription}
-        menuItems={menuItems}
+        categories={categories}
       />
 
       <main className="container">

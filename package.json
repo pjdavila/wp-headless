@@ -16,6 +16,7 @@
     "send-newsletter": "node scripts/send-daily-newsletter.mjs",
     "ingest-economy": "node scripts/ingest-economy.mjs",
     "test:economy": "node scripts/test-economy.mjs",
+    "test:homepage": "node scripts/test-homepage-data.mjs",
     "test:print-subscription": "node scripts/test-print-subscription-access.mjs && node scripts/test-print-subscription-customer.mjs && node scripts/test-print-subscription-trial.mjs",
     "test:40under40": "node scripts/test-40under40-required.mjs && node scripts/test-40under40-portal.mjs",
     "resend:40under40": "node scripts/resend-40under40-letters.mjs",

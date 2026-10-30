@@ -13,3 +13,4 @@
 - [Stripe API version quirks](stripe-api-version.md) — period dates live on items; 4-level product expansion rejected on lists; workspace key is live mode.
 - [CMS outages break dev start](cms-outage-dev-start.md) — workflow restart fails with "Unable to find a GraphQL endpoint" when cms.vnmedia.co 5xx's; wait for 200 and retry.
 - [Odoo /caribbean/suscripcion](odoo-suscripcion-endpoint.md) — NOT used: user chose Stripe-only for the paid print subscription; that endpoint bills on its own.
+- [Homepage single WP query](homepage-single-query.md) — `/` makes 1 WP request per rebuild; add homepage data to that query, never a new useQuery.

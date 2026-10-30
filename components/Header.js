@@ -127,13 +127,16 @@ const NAV_URI_OVERRIDES = {
   "special-reports": "/special-reports/",
 };
 
-function buildNavItems(categories) {
+// Children come from the flat category list (matched on parentId), in the
+// list's own order, which WordPress returns the same way a nested
+// `children` connection would.
+export function buildNavItems(categories) {
   if (!Array.isArray(categories)) return [];
   const filtered = categories.filter((c) => !SKIP_SLUGS.includes(c.slug));
   const topLevel = filtered.filter((c) => !c.parentId);
   const items = topLevel.map((cat) => {
-    const children = (cat.children?.nodes || []).filter(
-      (ch) => !SKIP_SLUGS.includes(ch.slug),
+    const children = filtered.filter(
+      (ch) => ch.parentId && ch.parentId === cat.id,
     );
     return { ...cat, uri: NAV_URI_OVERRIDES[cat.slug] || cat.uri, children };
   });
@@ -574,34 +577,13 @@ Header.fragments = {
         title
         description
       }
-      primaryMenuItems: menuItems(where: { location: PRIMARY }) {
-        nodes {
-          id
-          uri
-          path
-          label
-          parentId
-          cssClasses
-          menu {
-            node {
-              name
-            }
-          }
-        }
-      }
       categories(first: 100) {
         nodes {
+          id
           name
           slug
           uri
           parentId
-          children(first: 50) {
-            nodes {
-              name
-              slug
-              uri
-            }
-          }
         }
       }
     }
