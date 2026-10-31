@@ -181,7 +181,9 @@ export default async function handler(req, res) {
   try {
     const rawBody = await readRawBody(req);
     const signature = req.headers["stripe-signature"];
-    event = getStripe().webhooks.constructEvent(
+    // Async variant: on Cloudflare Workers Stripe verifies the signature with
+    // Web Crypto, which has no synchronous API. Works the same on Node.
+    event = await getStripe().webhooks.constructEventAsync(
       rawBody,
       signature,
       getWebhookSecret(),

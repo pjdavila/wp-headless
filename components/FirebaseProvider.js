@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { auth, db, getMessagingInstance } from "../lib/firebase";
+import { auth, getMessagingInstance } from "../lib/firebase";
 
-const FirebaseContext = createContext({ auth: null, db: null, messaging: null });
+const FirebaseContext = createContext({ auth: null, messaging: null });
 
 export function FirebaseProvider({ children }) {
   const [messaging, setMessaging] = useState(null);
@@ -27,7 +27,7 @@ export function FirebaseProvider({ children }) {
   }, []);
 
   return (
-    <FirebaseContext.Provider value={{ auth, db, messaging }}>
+    <FirebaseContext.Provider value={{ auth, messaging }}>
       {children}
     </FirebaseContext.Provider>
   );

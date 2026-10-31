@@ -13,6 +13,9 @@
     "wpe-build": "node scripts/generate-firebase-sw.js && faust build",
     "generate": "faust generatePossibleTypes",
     "start": "faust start",
+    "build:cf": "CLOUDFLARE_BUILD=1 opennextjs-cloudflare build",
+    "preview:cf": "npm run build:cf && opennextjs-cloudflare populateCache local && CLOUDFLARE_INCLUDE_PROCESS_ENV=true wrangler dev --port 8788 --ip 0.0.0.0",
+    "deploy:cf": "npm run build:cf && opennextjs-cloudflare deploy",
     "send-newsletter": "node scripts/send-daily-newsletter.mjs",
     "ingest-economy": "node scripts/ingest-economy.mjs",
     "test:economy": "node scripts/test-economy.mjs",
@@ -27,7 +30,8 @@
   },
   "overrides": {
     "websocket-driver": "^0.7.5",
-    "protobufjs": "^7.6.5"
+    "protobufjs": "^7.6.5",
+    "js-sha256": "^1.0.0"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
@@ -41,7 +45,7 @@
     "echarts": "^6.1.0",
     "firebase": "^12.11.0",
     "graphql": "^16.10.0",
-    "next": "^15.5.25",
+    "next": "^15.5.28",
     "postcss": "^8.5.8",
     "prettier": "^3.5.3",
     "react": "^19.1.0",
@@ -54,5 +58,9 @@
     "videojs-contrib-quality-levels": "^4.1.0",
     "videojs-hls-quality-selector": "^2.0.0",
     "videojs-ima": "^2.6.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.15",
+    "wrangler": "^4.156.0"
   }
 }

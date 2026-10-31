@@ -2,10 +2,27 @@ const { withFaust } = require("@faustwp/core");
 const { withAtlasConfig } = require("@wpengine/atlas-next");
 const { REMOTE_IMAGE_PATTERNS } = require("./lib/imageHosts");
 
+// `npm run build:cf` sets CLOUDFLARE_BUILD=1. On Cloudflare Workers the ISR
+// cache is OpenNext's (R2), so WP Engine Atlas's remote cache handler must not
+// be installed. Every other build (WP Engine `wpe-build`, Replit dev) keeps it.
+const isCloudflareBuild = process.env.CLOUDFLARE_BUILD === "1";
+const withPlatformConfig = isCloudflareBuild
+  ? (config) => ({
+      ...config,
+      // On Node, Next's require-hook points an external package's
+      // `next/router` / `next/head` at the same React contexts the page uses.
+      // OpenNext bundles the server with esbuild, so that hook never runs and
+      // FaustProvider throws "NextRouter was not mounted" on every
+      // server-rendered page. Bundling Faust with webpack makes it share the
+      // page's contexts instead.
+      transpilePackages: [...(config.transpilePackages || []), "@faustwp/core"],
+    })
+  : (config) => withAtlasConfig(config);
+
 /**
  * @type {import('next').NextConfig}
  **/
-module.exports = withAtlasConfig(
+module.exports = withPlatformConfig(
   withFaust({
     env: {
       NEXT_PUBLIC_FIREBASE_API_KEY:
