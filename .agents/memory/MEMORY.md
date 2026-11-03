@@ -16,3 +16,4 @@
 - [Cloudflare Workers (OpenNext)](cloudflare-workers-opennext.md) — build in a copy, preview with process env, how to read Worker logs, runtime traps to re-check on upgrades.
 - [Homepage single WP query](homepage-single-query.md) — `/` makes 1 WP request per rebuild; add homepage data to that query, never a new useQuery.
 - [Recombee catalog writers](recombee-catalog.md) — RSS feed (hashed ids, stale, 404 links) vs slug-id items from tracking; app fills only empty props.
+- [Headless browser checks](headless-browser-checks.md) — Chromium at /repl/tools/bin/chromium + puppeteer-core in /tmp for click/timing/ad checks; IMA sample VAST for tests.

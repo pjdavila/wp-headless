@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AdServerSlot from "../AdServerSlot";
 import styles from "../../styles/stickyBottom.module.css";
 
 const STORAGE_KEY = "bj-sticky-bottom-dismissed";
+// Other floating elements (e.g. the article floating video ad) read this
+// CSS variable to stay above the bar instead of covering it.
+const HEIGHT_VAR = "--sticky-bottom-height";
 
 const ZONES = {
   desktop: { zone: "161517", width: 970, height: 90 },
@@ -19,6 +22,7 @@ function pickBreakpoint(width) {
 export default function StickyBottomBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [breakpoint, setBreakpoint] = useState(null);
+  const barRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -33,6 +37,29 @@ export default function StickyBottomBanner() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
+  const visible = !dismissed && !!breakpoint;
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const bar = barRef.current;
+    if (!visible || !bar) {
+      root.style.removeProperty(HEIGHT_VAR);
+      return;
+    }
+    const publish = () =>
+      root.style.setProperty(HEIGHT_VAR, `${bar.offsetHeight}px`);
+    publish();
+    let observer = null;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(publish);
+      observer.observe(bar);
+    }
+    return () => {
+      if (observer) observer.disconnect();
+      root.style.removeProperty(HEIGHT_VAR);
+    };
+  }, [visible, breakpoint]);
+
   const handleClose = () => {
     try {
       sessionStorage.setItem(STORAGE_KEY, "1");
@@ -40,12 +67,12 @@ export default function StickyBottomBanner() {
     setDismissed(true);
   };
 
-  if (dismissed || !breakpoint) return null;
+  if (!visible) return null;
 
   const { zone, width, height } = ZONES[breakpoint];
 
   return (
-    <div className={styles.bar}>
+    <div ref={barRef} className={styles.bar}>
       <button
         type="button"
         className={styles.close}

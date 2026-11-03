@@ -1,50 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import styles from "../styles/live.module.css";
+import { loadImaSdk } from "../lib/imaSdk";
 
 const HLS_URL =
   "https://customer-26ivmji06nmjnfeb.cloudflarestream.com/46a6931105cfccff2208744b4917b222/manifest/video.m3u8";
 const VAST_TAG =
   "https://astrovms.com/api/vast/e707df66-f0cb-468f-be7b-eed24400f467";
-const IMA_SDK_URL = "https://imasdk.googleapis.com/js/sdkloader/ima3.js";
-
-let imaSdkPromise = null;
-
-function loadImaSdk() {
-  if (imaSdkPromise) return imaSdkPromise;
-
-  imaSdkPromise = new Promise((resolve, reject) => {
-    if (typeof window !== "undefined" && window.google?.ima) {
-      resolve();
-      return;
-    }
-    const stale = document.querySelector(`script[src="${IMA_SDK_URL}"]`);
-    if (stale) stale.remove();
-
-    const timeout = setTimeout(() => {
-      reject(new Error("IMA SDK load timed out"));
-    }, 8000);
-
-    const script = document.createElement("script");
-    script.src = IMA_SDK_URL;
-    script.async = true;
-    script.onload = () => {
-      clearTimeout(timeout);
-      window.google?.ima
-        ? resolve()
-        : reject(new Error("IMA SDK loaded but google.ima not available"));
-    };
-    script.onerror = () => {
-      clearTimeout(timeout);
-      reject(new Error("Failed to load IMA SDK"));
-    };
-    document.head.appendChild(script);
-  });
-
-  imaSdkPromise.catch(() => {
-    imaSdkPromise = null;
-  });
-  return imaSdkPromise;
-}
 
 export default function LivePlayer() {
   const videoRef = useRef(null);

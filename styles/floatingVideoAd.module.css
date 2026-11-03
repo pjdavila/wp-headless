@@ -1,0 +1,132 @@
+/* Floating "slider" video ad on article pages. Sits bottom-right, above the
+   sticky bottom banner (which publishes its height as --sticky-bottom-height)
+   and below the header menus and modals (z-index >= 100). The 20px gap
+   clears the sticky banner's close button, which pokes 12px above it. */
+.wrapper {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--sticky-bottom-height, 0px) + 20px);
+  z-index: 49;
+  width: 320px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Mounted while IMA asks for the ad: the slot needs real dimensions for the
+   SDK, but nothing is visible or clickable until an ad has loaded. */
+.pending {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+
+.shown {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 2px 4px 2px 10px;
+  min-height: 28px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.btn {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn:hover {
+  background: hsl(var(--muted));
+}
+
+.btn:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 1px;
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.slot {
+  position: relative;
+  width: 320px;
+  height: 180px;
+  background: #000;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.adContainer {
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 767px) {
+  .wrapper {
+    right: 8px;
+    bottom: calc(var(--sticky-bottom-height, 0px) + 20px);
+    width: 192px;
+  }
+
+  .slot {
+    width: 192px;
+    height: 108px;
+  }
+
+  .toolbar {
+    min-height: 24px;
+    padding-left: 8px;
+  }
+
+  .label {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    transition: none;
+  }
+}

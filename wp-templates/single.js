@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import SeoHead from "../components/SeoHead";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "../components/JsonLd";
 import Link from "next/link";
@@ -26,6 +27,12 @@ import {
   rewriteWpImageSrc,
 } from "../lib/rewriteWpContentImageUrls";
 import styles from "../styles/single.module.css";
+
+// Client-only and code-split: the floating video ad (and the IMA SDK it
+// loads after the page is idle) never weighs on the article's first load.
+const FloatingVideoAd = dynamic(() => import("../components/ads/FloatingVideoAd"), {
+  ssr: false,
+});
 
 const POST_QUERY = gql`
   ${POST_LIST_FRAGMENT}
@@ -380,6 +387,7 @@ export default function Component(props) {
       </main>
 
       <Footer />
+      <FloatingVideoAd />
     </>
   );
 }
