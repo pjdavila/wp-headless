@@ -15,3 +15,4 @@
 - [Odoo /caribbean/suscripcion](odoo-suscripcion-endpoint.md) — NOT used: user chose Stripe-only for the paid print subscription; that endpoint bills on its own.
 - [Cloudflare Workers (OpenNext)](cloudflare-workers-opennext.md) — build in a copy, preview with process env, how to read Worker logs, runtime traps to re-check on upgrades.
 - [Homepage single WP query](homepage-single-query.md) — `/` makes 1 WP request per rebuild; add homepage data to that query, never a new useQuery.
+- [Recombee catalog writers](recombee-catalog.md) — RSS feed (hashed ids, stale, 404 links) vs slug-id items from tracking; app fills only empty props.

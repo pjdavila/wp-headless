@@ -1,11 +1,15 @@
-import { createPostCardCache } from "../../lib/recommendationPostCache";
+import { recommendationToCard } from "../../lib/recombeeItems";
 
 const { getClient, rqs } = require("../../lib/recombee");
 
 const MAX_LEN = 256;
 const ID_RE = /^[a-zA-Z0-9_\-/.]+$/;
-const WP_URL =
-  process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://cms.vnmedia.co/cbusiness";
+
+// Only recommend items that can be rendered as a card. Titles, images, links
+// etc. are stored on the Recombee items themselves (by the RSS catalog feed,
+// by view tracking and by scripts/sync-recombee-items.mjs), so this route
+// never asks WordPress.
+const DISPLAYABLE_FILTER = "'title' != null";
 
 function isValidId(val) {
   return (
@@ -14,81 +18,6 @@ function isValidId(val) {
     val.length <= MAX_LEN &&
     ID_RE.test(val)
   );
-}
-
-const POSTS_BY_SLUGS_QUERY = `query GetPostsBySlugs($slugs: [String], $first: Int) {
-  posts(first: $first, where: { nameIn: $slugs }) {
-    nodes {
-      slug
-      title
-      excerpt
-      uri
-      date
-      featuredImage { node { sourceUrl altText } }
-      categories { nodes { name slug uri } }
-    }
-  }
-}`;
-
-async function fetchPostsBySlugs(slugs) {
-  const resp = await fetch(`${WP_URL}/graphql`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: POSTS_BY_SLUGS_QUERY,
-      variables: { slugs, first: slugs.length },
-    }),
-    signal: AbortSignal.timeout(8000),
-  });
-  if (!resp.ok) throw new Error(`WordPress responded ${resp.status}`);
-  const json = await resp.json();
-  const posts = json?.data?.posts?.nodes;
-  if (!Array.isArray(posts)) {
-    throw new Error(
-      json?.errors?.[0]?.message || "No posts in WordPress response",
-    );
-  }
-  return posts;
-}
-
-// One cache per server process: a recommended post is looked up in WordPress
-// at most about once an hour instead of on every article view.
-const postCardCache = createPostCardCache({ fetchBySlugs: fetchPostsBySlugs });
-
-function mapRecombeeItem(r, wpPost) {
-  if (wpPost) {
-    const cat =
-      wpPost.categories?.nodes?.find((c) => c.slug !== "uncategorized") ||
-      wpPost.categories?.nodes?.[0];
-    return {
-      id: r.id,
-      title: wpPost.title || "",
-      excerpt: wpPost.excerpt || "",
-      uri: wpPost.uri || `/${r.id}/`,
-      date: wpPost.date || "",
-      imageUrl: wpPost.featuredImage?.node?.sourceUrl || "",
-      category: cat?.name || "",
-      categoryUri: cat?.uri || "",
-    };
-  }
-
-  const link = r.values?.link || "";
-  let uri = link;
-  try {
-    if (link && link.startsWith("http")) {
-      uri = new URL(link).pathname;
-    }
-  } catch {}
-  return {
-    id: r.id,
-    title: r.values?.title || "",
-    excerpt: r.values?.description || "",
-    uri: uri || `/${r.id}/`,
-    date: r.values?.pubDate || "",
-    imageUrl: r.values?.["media:content"] || "",
-    category: r.values?.categories || "",
-    categoryUri: "",
-  };
 }
 
 export default async function handler(req, res) {
@@ -120,42 +49,22 @@ export default async function handler(req, res) {
         returnProperties: true,
         cascadeCreate: true,
         scenario: "related-articles",
+        filter: DISPLAYABLE_FILTER,
       });
     } else {
       request = new rqs.RecommendItemsToUser(userId, n, {
         returnProperties: true,
         cascadeCreate: true,
         scenario: "homepage-recommended",
+        filter: DISPLAYABLE_FILTER,
       });
     }
 
     const response = await client.send(request);
     const recomms = response.recomms || [];
 
-    const slugsForWp = [];
-    const idToSlug = {};
-    for (const r of recomms) {
-      let slug = r.id;
-      if (!r.values?.title || !r.values?.["media:content"]) {
-        const link = r.values?.link || "";
-        if (link) {
-          try {
-            const pathname = new URL(link).pathname;
-            slug = pathname.replace(/^\/|\/$/g, "");
-          } catch {}
-        }
-        idToSlug[r.id] = slug;
-        slugsForWp.push(slug);
-      }
-    }
-    const wpMap =
-      slugsForWp.length > 0 ? await postCardCache.getMany(slugsForWp) : {};
-
     const items = recomms
-      .map((r) => {
-        const slug = idToSlug[r.id] || r.id;
-        return mapRecombeeItem(r, wpMap[slug]);
-      })
+      .map(recommendationToCard)
       .filter((item) => item.title);
 
     res.setHeader("Cache-Control", "no-store");
