@@ -1,0 +1,106 @@
+/* In-article 700x1600 scroller (zone 166706).
+   The window keeps the 700x1244 safe-zone proportions and is sized so it
+   always fits between the sticky header and the sticky bottom banner:
+   width = min(column, 700px, visible height * 700 / 1244).
+   The top inset is the header height once it has collapsed on scroll
+   (60px, or 160px from 1024px wide); it is a constant on purpose so the
+   block never resizes while the header animates. */
+.scroller {
+  --scroller-top-inset: 60px;
+  --scroller-avail: calc(
+    100vh - var(--scroller-top-inset) - var(--sticky-bottom-height, 0px) - 24px
+  );
+  width: min(100%, 700px, calc(var(--scroller-avail) * 700 / 1244));
+  margin: 2rem auto;
+}
+
+@supports (height: 100svh) {
+  .scroller {
+    --scroller-avail: calc(
+      100svh - var(--scroller-top-inset) - var(--sticky-bottom-height, 0px) -
+        24px
+    );
+  }
+}
+
+@media (min-width: 1024px) {
+  .scroller {
+    --scroller-top-inset: 160px;
+  }
+}
+
+.label,
+.continue {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  line-height: 1;
+}
+
+.label {
+  margin-bottom: 0.5rem;
+}
+
+.continue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.window {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 700 / 1244;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: hsl(var(--muted));
+  /* Keep scrolling repaints of the creative inside this box. */
+  contain: paint;
+}
+
+.track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 7 / 16;
+  /* Safe zone centred until the scroll handler takes over. */
+  transform: translate3d(0, -11.125%, 0);
+  will-change: transform;
+}
+
+/* Adserver.Online replaces the <ins> with its own markup
+   (div > div > a > img, with inline sizes). Make every level fill the
+   7:16 box so the creative is shown at the exact proportion. */
+.slot,
+.slot :global(div),
+.slot :global(a),
+.slot :global(iframe) {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  border: 0;
+}
+
+.slot :global(img) {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover;
+}
+
+.filled .window {
+  background: transparent;
+}
+
+/* No creative (no campaign or blocked): collapse the whole block. */
+.empty {
+  display: none;
+}

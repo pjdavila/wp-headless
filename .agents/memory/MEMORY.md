@@ -17,3 +17,5 @@
 - [Homepage single WP query](homepage-single-query.md) — `/` makes 1 WP request per rebuild; add homepage data to that query, never a new useQuery.
 - [Recombee catalog writers](recombee-catalog.md) — RSS feed (hashed ids, stale, 404 links) vs slug-id items from tracking; app fills only empty props.
 - [Headless browser checks](headless-browser-checks.md) — Chromium at /repl/tools/bin/chromium + puppeteer-core in /tmp for click/timing/ad checks; IMA sample VAST for tests.
+- [Adserver.Online quirks](adserver-online-quirks.md) — loadAd replaces the `<ins>` (stale refs); auto-scan double-requests zones on hard load; detect fill via wrapper.
+- [In-article scroller geometry](in-article-scroller.md) — window fits the screen, so ~350px wide on desktop; required for "slower than text" + full view.

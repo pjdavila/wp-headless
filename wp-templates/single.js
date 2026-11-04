@@ -13,7 +13,7 @@ import PhotoGallery from "../components/PhotoGallery";
 import StoryCard from "../components/StoryCard";
 import SidebarStoryCard from "../components/SidebarStoryCard";
 import SidebarHalfPage from "../components/ads/SidebarHalfPage";
-import AdServerSlot from "../components/AdServerSlot";
+import InArticleScroller from "../components/ads/InArticleScroller";
 import ArticleAudioPlayer from "../components/ArticleAudioPlayer";
 import { SITE_DATA_QUERY } from "../queries/SiteSettingsQuery";
 import { HEADER_MENU_QUERY } from "../queries/MenuQueries";
@@ -136,9 +136,7 @@ function ArticleContent({ content }) {
         className={styles.articleBody}
         dangerouslySetInnerHTML={{ __html: before }}
       />
-      <div className={styles.inContentAd}>
-        <AdServerSlot zone="161655" width={300} height={250} />
-      </div>
+      <InArticleScroller />
       {after && (
         <div
           className={styles.articleBody}
