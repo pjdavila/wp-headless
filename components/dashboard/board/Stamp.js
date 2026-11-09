@@ -1,90 +1,130 @@
-import { L, formatDay, shortSrc } from "../../../lib/economy/board/format";
+import { L, formatDay } from "../../../lib/economy/board/format";
 import { UI, fill } from "../../../lib/economy/board/i18n";
-import { stampText } from "../../../lib/economy/board/model";
+import { provenance } from "../../../lib/economy/board/model";
 import styles from "../../../styles/dashboard-board.module.css";
 
-const DOT_CLASS = {
-  current: styles.dotCurrent,
-  aging: styles.dotAging,
-  stale: styles.dotStale,
-  discontinued: styles.dotStale,
+const ORIGIN_CLASS = {
+  live: styles.provLive,
+  fixed: styles.provFixed,
+  mixed: styles.provMixed,
 };
 
-/** Freshness stamp: "Al día · jul 2026 · BLS". */
-export function Stamp({ stamp, lang, fallbackText }) {
-  const resolved = stampText(stamp, lang);
-  const fresh = resolved ? resolved.fresh : "current";
-  const text = resolved ? resolved.text : fallbackText;
-  if (!text) return null;
+const FRESH_CLASS = {
+  aging: styles.freshAging,
+  stale: styles.freshStale,
+  discontinued: styles.freshStale,
+};
+
+/**
+ * One-line provenance for a figure: "● En vivo · jul 2026 · BLS" or
+ * "● Dato fijo · jun 2026 · DDEC · Envejeciendo". The source becomes a link
+ * when `url` is given. The full description (retrieval / collection date,
+ * editorial status) is in the tooltip and read by screen readers; `full`
+ * also prints it under the line (detail dialog).
+ */
+export function Provenance({
+  origin,
+  stampKey,
+  period,
+  freq,
+  force,
+  src,
+  url,
+  lives,
+  collectedOn,
+  lang,
+  full = false,
+  className = "",
+}) {
+  const p = provenance(
+    { origin, key: stampKey, period, freq, force, src, lives, collectedOn },
+    lang,
+  );
+  if (!p) return null;
+  const source =
+    p.src && url ? (
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        {p.src}
+        <span aria-hidden="true"> ↗</span>
+        <span className={styles.srOnly}> ({L(UI.newTab, lang)})</span>
+      </a>
+    ) : (
+      p.src
+    );
+  const parts = [
+    <b key="o">{p.originLabel}</b>,
+    p.period || null,
+    source || null,
+    p.freshLabel ? (
+      <span key="f" className={FRESH_CLASS[p.fresh]}>
+        {p.freshLabel}
+      </span>
+    ) : null,
+  ].filter(Boolean);
+
   return (
-    <div className={styles.stamp}>
+    <span className={`${styles.provWrap} ${className}`}>
       <span
-        className={`${styles.dot} ${DOT_CLASS[fresh]}`}
-        aria-hidden="true"
-      />
-      <span>{text}</span>
-    </div>
+        className={`${styles.prov} ${ORIGIN_CLASS[p.origin] || ""}`}
+        title={p.full}
+      >
+        <span className={styles.provDot} aria-hidden="true" />
+        <span className={styles.provText}>
+          {parts.map((part, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <span key={index}>
+              {index > 0 && (
+                <span className={styles.provSep} aria-hidden="true">
+                  {" · "}
+                </span>
+              )}
+              {index > 0 && <span className={styles.srOnly}>, </span>}
+              {part}
+            </span>
+          ))}
+        </span>
+        {!full && <span className={styles.srOnly}>. {p.full}</span>}
+      </span>
+      {full && <span className={styles.provFull}>{p.full}</span>}
+    </span>
   );
 }
 
 /**
- * Where a figure comes from. Live: source and retrieval date. Fixed: the
- * snapshot collection date and "sin validación editorial". Mixed charts list
- * both. `compact` shortens the copy for tiles (full text in the tooltip).
+ * Consistent marker for AI-drafted fixed text (briefs and chart notes):
+ * "Texto fijo · 18 sept 2026", plus "las cifras en vivo pueden diferir" when
+ * the figures next to it are live.
  */
-export function OriginMarker({
-  origin,
-  lives = [],
-  collectedOn,
-  lang,
-  compact = false,
-}) {
-  if (origin === "none") return null;
-  const collected = formatDay(collectedOn, lang);
-  const fixedFull = fill(L(UI.fixedMarker, lang), { date: collected });
-
-  if (origin === "live") {
-    const live = lives[0];
-    const updated = formatDay(live?.retrievedAt, lang);
-    const full = fill(L(UI.liveMarker, lang), {
-      src: lives
-        .map((item) => shortSrc(item.source))
-        .filter((s, i, a) => a.indexOf(s) === i)
-        .join(", "),
-      date: updated,
-    });
-    const failed = lives.some((item) => item.staleReason === "refresh-failed");
-    const text = compact
-      ? fill(L(UI.liveMarkerShort, lang), { date: updated })
-      : full;
-    return (
-      <span className={`${styles.origin} ${styles.originLive}`} title={full}>
-        {text}
-        {failed && !compact ? ` · ${L(UI.refreshFailed, lang)}` : ""}
-      </span>
-    );
-  }
-
-  if (origin === "mixed") {
-    const full = fill(L(UI.mixedMarker, lang), {
-      live: lives.map((item) => shortSrc(item.source)).join(", "),
-      date: collected,
-    });
-    return (
-      <span className={`${styles.origin} ${styles.originMixed}`} title={full}>
-        {compact ? L(UI.origin.mixed, lang) : full}
-      </span>
-    );
-  }
-
+export function FixedTextMark({ collectedOn, live = false, lang }) {
+  const date = formatDay(collectedOn, lang);
+  const fullText = [
+    fill(L(UI.fixedTextFull, lang), { date }),
+    live ? L(UI.fixedTextFullLive, lang) : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <span
-      className={`${styles.origin} ${styles.originFixed}`}
-      title={fixedFull}
-    >
-      {compact
-        ? fill(L(UI.fixedMarkerShort, lang), { date: collected })
-        : fixedFull}
+    <span className={styles.textMark} title={fullText}>
+      <svg
+        viewBox="0 0 16 16"
+        width="12"
+        height="12"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M11.3 2.3a1.5 1.5 0 0 1 2.1 2.1L5.6 12.2 2.5 13l.8-3.1z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span>
+        {fill(L(UI.fixedText, lang), { date })}
+        {live ? ` · ${L(UI.fixedTextLive, lang)}` : ""}
+      </span>
+      <span className={styles.srOnly}>. {fullText}</span>
     </span>
   );
 }

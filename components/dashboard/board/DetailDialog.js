@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import ChartCard from "./ChartCard";
+import { FixedTextMark } from "./Stamp";
 import { chartModel } from "../../../lib/economy/board/model";
 import { L, formatDay } from "../../../lib/economy/board/format";
 import { UI } from "../../../lib/economy/board/i18n";
@@ -44,6 +45,7 @@ function citation(model, board, lang) {
 /** Indicator detail: big chart, "Qué significa", citation and copy button. */
 export default function DetailDialog({ board, chartId, lang, range, onClose }) {
   const ref = useRef(null);
+  const closeRef = useRef(null);
   const [copied, setCopied] = useState(false);
   const model = useMemo(
     () => chartModel(board, chartId, lang, range),
@@ -56,8 +58,21 @@ export default function DetailDialog({ board, chartId, lang, range, onClose }) {
       if (typeof dialog.showModal === "function") dialog.showModal();
       else dialog.setAttribute("open", "");
     }
+    // Start on the close button (not on "Ver datos") and at the top.
+    closeRef.current?.focus();
+    if (dialog) dialog.scrollTop = 0;
     setCopied(false);
   }, [chartId]);
+
+  // Keep the page behind the modal from scrolling (phones especially).
+  useEffect(() => {
+    const { style } = document.documentElement;
+    const previous = style.overflow;
+    style.overflow = "hidden";
+    return () => {
+      style.overflow = previous;
+    };
+  }, []);
 
   if (!model) return null;
   const live = model.origin === "live" || model.origin === "mixed";
@@ -96,26 +111,35 @@ export default function DetailDialog({ board, chartId, lang, range, onClose }) {
           range={range}
           big
           onClose={close}
+          closeRef={closeRef}
         />
         {model.spec.note && (
-          <div>
-            <div className={styles.dlgLabel}>{L(UI.whatItMeans, lang)}</div>
+          <section className={styles.dlgSection}>
+            <h3 className={styles.dlgLabel}>{L(UI.whatItMeans, lang)}</h3>
+            <FixedTextMark
+              collectedOn={board.collectedOn}
+              live={live}
+              lang={lang}
+            />
             <p className={styles.dlgNote}>{L(model.spec.note, lang)}</p>
-            {live && (
-              <p className={styles.fine}>{L(UI.whatItMeansLiveNote, lang)}</p>
-            )}
-          </div>
+          </section>
         )}
-        <div>
-          <div className={styles.dlgLabel}>{L(UI.cite, lang)}</div>
-          <div className={styles.cite}>{cite}</div>
-        </div>
+        <section className={styles.dlgSection}>
+          <h3 className={styles.dlgLabel}>{L(UI.cite, lang)}</h3>
+          <p className={styles.cite}>{cite}</p>
+        </section>
         <div className={styles.acts}>
           <button type="button" className={styles.btn} onClick={copy}>
             {copied ? L(UI.copied, lang) : L(UI.copyCite, lang)}
           </button>
+          <span className={styles.srOnly} role="status">
+            {copied ? L(UI.copied, lang) : ""}
+          </span>
           {liveIndicatorId && (
-            <Link href={indicatorPath(liveIndicatorId)} className={styles.fine}>
+            <Link
+              href={indicatorPath(liveIndicatorId)}
+              className={styles.textLink}
+            >
               {L(UI.fullIndicator, lang)}
             </Link>
           )}

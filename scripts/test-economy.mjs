@@ -727,4 +727,96 @@ assert.equal(yearAgoDate("2026-07-01"), "2025-07-01");
   assert.ok(ivu.every((p) => p.value > 0 && p.value < 1000)); // millions
 }
 
+// /dashboard/ board: one provenance line per figure, never "current" next to
+// "fixed data"; breakdown periods localized; newer live figures detected.
+{
+  const { provenance, newerLiveTiles } =
+    await import("../lib/economy/board/model.js");
+  const { periodLabel } = await import("../lib/economy/board/format.js");
+
+  assert.equal(periodLabel("DECEMBER 2024", "es"), "dic 2024");
+  assert.equal(periodLabel("Q2 2026", "es"), "T2 2026");
+  assert.equal(periodLabel("End of 2025", "es"), "Fin de 2025");
+  assert.equal(periodLabel("Some label", "es"), "Some label");
+
+  const collectedOn = "2026-09-18";
+  for (const lang of ["es", "en"]) {
+    for (const key of ["2019-01", "2099-01"]) {
+      const p = provenance(
+        { origin: "fixed", key, freq: "monthly", src: "DDEC", collectedOn },
+        lang,
+      );
+      assert.equal(p.origin, "fixed");
+      for (const text of [p.text, p.full]) {
+        assert.ok(!/al día|current/i.test(text), `"current" shown: ${text}`);
+      }
+    }
+  }
+  const stale = provenance(
+    {
+      origin: "fixed",
+      key: "2019-01",
+      freq: "monthly",
+      src: "DDEC",
+      collectedOn,
+    },
+    "es",
+  );
+  assert.equal(stale.text, "Dato fijo · ene 2019 · DDEC · Rezagado");
+  assert.match(stale.full, /recopilado 18 sept 2026/);
+  const live = provenance(
+    {
+      origin: "live",
+      key: "2019-01",
+      freq: "monthly",
+      src: "BLS",
+      lives: [{ source: "BLS", retrievedAt: "2026-09-20T00:00:00Z" }],
+    },
+    "en",
+  );
+  assert.ok(live.text.startsWith("Live · Jan 2019 · BLS"));
+  assert.ok(!/fixed/i.test(live.full));
+  assert.equal(provenance({ origin: "none" }, "es"), null);
+
+  const board = (liveKey) => ({
+    collectedOn,
+    fixed: {
+      tiles: {
+        pulse: [
+          {
+            id: "pulse-ur",
+            l: { es: "Tasa de desempleo", en: "Unemployment rate" },
+            v: { s: "ur", fmt: "pct" },
+            k: { last: "ur" },
+            freq: "monthly",
+            src: "BLS",
+          },
+        ],
+      },
+      data: { series: { ur: { o: [["2026-07", 6.0]] } }, facts: {} },
+    },
+    sources: {
+      unemployment: {
+        o: [
+          ["2025-08", 5.5],
+          [liveKey, 6.1],
+        ],
+        frequency: "monthly",
+        source: "BLS",
+        higherIs: "negative",
+      },
+    },
+  });
+  assert.deepEqual(newerLiveTiles(board("2026-08"), "pulse", "es"), [
+    {
+      id: "pulse-ur",
+      label: "Tasa de desempleo",
+      value: "6.1%",
+      period: "ago 2026",
+    },
+  ]);
+  assert.deepEqual(newerLiveTiles(board("2026-07"), "pulse", "es"), []);
+  assert.deepEqual(newerLiveTiles(board("2026-08"), "missing", "es"), []);
+}
+
 console.log("[test-economy] all assertions passed");

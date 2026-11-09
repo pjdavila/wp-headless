@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import useElementWidth from "./useElementWidth";
 import { fmt, axisFmt, L } from "../../../lib/economy/board/format";
-import { UI } from "../../../lib/economy/board/i18n";
+import { UI, fill } from "../../../lib/economy/board/i18n";
 import styles from "../../../styles/dashboard-board.module.css";
 
 /**
@@ -130,6 +130,57 @@ function useGeometry(model, width, big, lang) {
       endLabels,
     };
   }, [model, width, big, lang]);
+}
+
+/**
+ * Text alternative for a chart: kind, span, and for each series its latest
+ * value, high and low (bars: every value when there are only a few).
+ */
+export function chartSummary(model, lang) {
+  const { spec } = model;
+  const kind =
+    spec.kind === "hbar"
+      ? UI.chartKinds.hbar
+      : spec.kind === "line" || model.line
+        ? UI.chartKinds.line
+        : UI.chartKinds.col;
+  const labels = model.full || model.cats;
+  const parts = [`${L(kind, lang)}: ${model.title}`];
+  if (model.sub) parts[0] += ` (${model.sub})`;
+  if (labels.length > 1 && !model.cat) {
+    parts.push(
+      fill(L(UI.chartRange, lang), {
+        from: labels[0],
+        to: labels[labels.length - 1],
+      }),
+    );
+  }
+  for (const s of model.series) {
+    const points = s.vals
+      .map((val, i) => [labels[i], val])
+      .filter(([, val]) => val != null);
+    if (!points.length) continue;
+    const name = model.series.length > 1 ? `${s.name}: ` : "";
+    if (points.length <= 8) {
+      parts.push(
+        name +
+          points
+            .map(([label, val]) => `${label} ${fmt(val, spec.fmt, lang)}`)
+            .join(", "),
+      );
+      continue;
+    }
+    const [lastLabel, lastVal] = points[points.length - 1];
+    const hi = points.reduce((a, b) => (b[1] > a[1] ? b : a));
+    const lo = points.reduce((a, b) => (b[1] < a[1] ? b : a));
+    parts.push(
+      `${name}${L(UI.chartLatest, lang)} ${fmt(lastVal, spec.fmt, lang)} (${lastLabel}), ` +
+        `${L(UI.chartHigh, lang)} ${fmt(hi[1], spec.fmt, lang)} (${hi[0]}), ` +
+        `${L(UI.chartLow, lang)} ${fmt(lo[1], spec.fmt, lang)} (${lo[0]})`,
+    );
+  }
+  const sentences = parts.map((part) => part[0].toUpperCase() + part.slice(1));
+  return `${sentences.join(". ")}. ${L(UI.chartKeys, lang)}`;
 }
 
 function Tooltip({ head, rows, left, right, top }) {
@@ -340,7 +391,17 @@ function XYChart({ model, geo, lang, label }) {
           <path
             key={`bar-${i}-${j}`}
             d={roundedBar(x, top, bw, h, r, up, isLast)}
-            style={{ fill: v(color), fillOpacity: isProj ? 0.38 : 1 }}
+            style={
+              isProj
+                ? {
+                    fill: v(color),
+                    fillOpacity: "var(--proj-fill)",
+                    stroke: v(color),
+                    strokeWidth: 1.2,
+                    strokeDasharray: "3 2",
+                  }
+                : { fill: v(color) }
+            }
           />,
         );
         const text = fmt(val, spec.fmt, lang);
@@ -404,14 +465,15 @@ function XYChart({ model, geo, lang, label }) {
       onKeyDown={onKeyDown}
       onFocus={onFocus}
       onBlur={hide}
+      role="group"
       aria-label={label}
     >
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
         height={H}
-        role="img"
-        aria-label={label}
+        aria-hidden="true"
+        focusable="false"
       >
         {tk.map((t, i) => (
           <g key={`tick-${t}`}>
@@ -523,9 +585,15 @@ function HBarChart({ model, width, lang, label }) {
       tabIndex={0}
       onKeyDown={onKeyDown}
       onBlur={() => setCur(-1)}
+      role="group"
       aria-label={label}
     >
-      <svg viewBox={`0 0 ${W} ${H}`} height={H} role="img" aria-label={label}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        height={H}
+        aria-hidden="true"
+        focusable="false"
+      >
         <line
           x1={labW}
           x2={labW}
@@ -601,7 +669,7 @@ export default function BoardChart({ model, lang, big = false }) {
     big,
     lang,
   );
-  const label = model.title;
+  const label = useMemo(() => chartSummary(model, lang), [model, lang]);
   const minHeight = big ? 340 : model.spec.h || 230;
 
   return (

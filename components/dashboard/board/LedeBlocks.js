@@ -1,21 +1,41 @@
-import { OriginMarker } from "./Stamp";
-import { L, per } from "../../../lib/economy/board/format";
-import { UI } from "../../../lib/economy/board/i18n";
+import { FixedTextMark, Provenance } from "./Stamp";
+import { L, per, formatDay } from "../../../lib/economy/board/format";
+import { UI, fill } from "../../../lib/economy/board/i18n";
 import styles from "../../../styles/dashboard-board.module.css";
 
-/** The tab's brief: fixed AI-drafted text, flagged as such. */
-export function Brief({ brief, lang }) {
+/**
+ * The tab's brief: fixed AI-drafted text, flagged with the same "Texto fijo"
+ * mark as chart notes. When a live KPI on the tab is for a later period than
+ * the figures the brief was written from, a note under it names them, so the
+ * headline never silently contradicts the live number below.
+ */
+export function Brief({ brief, lang, collectedOn, newer = [] }) {
   if (!brief) return <div />;
   return (
     <div className={styles.brief}>
-      <div className={`${styles.tag} ${styles.mono}`}>
-        <b>{L(UI.briefTag, lang)}</b>
-        <span>{L(UI.briefNote, lang)}</span>
+      <div className={styles.briefTag}>
+        <span className={styles.eyebrow}>{L(UI.briefTag, lang)}</span>
+        <FixedTextMark collectedOn={collectedOn} lang={lang} />
       </div>
       <h2>{L(brief.h, lang)}</h2>
       {(brief.p[lang] || brief.p.es).map((text) => (
         <p key={text.slice(0, 40)}>{text}</p>
       ))}
+      {newer.length > 0 && (
+        <p className={styles.newer}>
+          <span className={styles.newerDot} aria-hidden="true" />
+          <span>
+            {L(UI.newerLive, lang)}{" "}
+            {newer.map((item, index) => (
+              <span key={item.id}>
+                {index > 0 ? "; " : ""}
+                <b>{item.label}</b> {item.value} ({item.period})
+              </span>
+            ))}
+            .
+          </span>
+        </p>
+      )}
     </div>
   );
 }
@@ -111,14 +131,15 @@ export function SidePanel({ panel, board, lang }) {
     <aside className={styles.feed}>
       <h3>{title}</h3>
       <ol>{rows}</ol>
-      <div className={styles.panelMarker}>
-        <OriginMarker
-          origin="fixed"
-          collectedOn={board.collectedOn}
-          lang={lang}
-          compact
-        />
-      </div>
+      <Provenance
+        origin="fixed"
+        period={fill(L(UI.collectedOn, lang), {
+          date: formatDay(board.collectedOn, lang),
+        })}
+        collectedOn={board.collectedOn}
+        lang={lang}
+        className={styles.panelMarker}
+      />
     </aside>
   );
 }
@@ -129,7 +150,7 @@ export function Pipeline({ items, lang }) {
     <div className={styles.pipe}>
       {items.map((item) => (
         <div key={L(item.h, "en")}>
-          <h4>{L(item.h, lang)}</h4>
+          <h3>{L(item.h, lang)}</h3>
           <p>{L(item.p, lang)}</p>
           <span className={styles.pipeSrc}>{L(item.s, lang)}</span>
         </div>

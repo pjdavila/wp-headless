@@ -9,3 +9,5 @@ description: Non-obvious rules for /dashboard/ mixing live data-layer values wit
   **Why:** user decision when the board was rebuilt (hybrid data, honest provenance).
 - Some live series differ in definition from the prototype's (BLS NSA jobs vs DDEC SA, total IVU vs General Fund share, all PR airports vs SJU); those charts get retitled copy and a note flag instead of silently swapping numbers.
 - As of Oct 2026 population/income/poverty (Census needs a key) and electricity price/use are in error, gnp-growth pending — so those tiles show fixed data. That is expected, not a bug.
+- Each figure carries ONE provenance line (origin · period · source, plus freshness only when aging/stale). Never print "Al día"/"Current" in it: beside "Dato fijo" it reads as a contradiction (user complaint, Nov 2026). Fixed-written briefs/notes get a "Texto fijo · date" mark, not an in-paragraph disclaimer; when a live tile is newer than the brief, show a callout instead of rewriting the brief.
+  **Why:** the premium-finish review found the double stamp ("AL DÍA" + "Dato fijo") confusing.

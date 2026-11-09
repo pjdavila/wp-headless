@@ -14,10 +14,33 @@ import { indicatorPath } from "../../../lib/economy/dashboardConfig";
 import styles from "../../../styles/dashboard-board.module.css";
 
 const ORIGIN_CLASS = {
-  live: styles.originLive,
-  fixed: styles.originFixed,
-  mixed: styles.originMixed,
+  live: styles.provLive,
+  fixed: styles.provFixed,
+  mixed: styles.provMixed,
 };
+
+const FRESH_CLASS = {
+  aging: styles.freshAging,
+  stale: styles.freshStale,
+  discontinued: styles.freshStale,
+};
+
+/** Example provenance lines for the legend (labels only, no figures). */
+const EXAMPLES = [
+  { origin: "live", period: { es: "jul 2026", en: "Jul 2026" }, src: "BLS" },
+  {
+    origin: "fixed",
+    period: { es: "jun 2026", en: "Jun 2026" },
+    src: "DDEC",
+    fresh: "aging",
+  },
+  {
+    origin: "fixed",
+    period: "2023",
+    src: "BEA",
+    fresh: "discontinued",
+  },
+];
 
 function Section({ title, read, children }) {
   return (
@@ -63,26 +86,36 @@ export default function MethodologyTab({ board, lang }) {
       </Section>
 
       <Section title={L(M.freshTitle, lang)} read={L(M.freshRead, lang)}>
-        <div className={styles.freshRow}>
-          {["current", "aging", "stale"].map((fresh) => (
-            <div className={styles.stamp} key={fresh}>
-              <span
-                className={`${styles.dot} ${
-                  fresh === "current"
-                    ? styles.dotCurrent
-                    : fresh === "aging"
-                      ? styles.dotAging
-                      : styles.dotStale
-                }`}
-              />
-              <span>{L(UI.fresh[fresh], lang)}</span>
-            </div>
+        <ul className={styles.freshRow}>
+          {EXAMPLES.map((ex) => (
+            <li key={`${ex.origin}-${ex.src}`}>
+              <span className={`${styles.prov} ${ORIGIN_CLASS[ex.origin]}`}>
+                <span className={styles.provDot} aria-hidden="true" />
+                <span className={styles.provText}>
+                  <b>{L(UI.origin[ex.origin], lang)}</b> · {L(ex.period, lang)}{" "}
+                  · {ex.src}
+                  {ex.fresh && (
+                    <>
+                      {" · "}
+                      <span className={FRESH_CLASS[ex.fresh]}>
+                        {L(UI.fresh[ex.fresh], lang)}
+                      </span>
+                    </>
+                  )}
+                </span>
+              </span>
+            </li>
           ))}
-        </div>
+        </ul>
       </Section>
 
       <Section title={L(M.seriesTitle, lang)} read={L(M.seriesRead, lang)}>
-        <div className={styles.tablePanel}>
+        <div
+          className={styles.tablePanel}
+          role="region"
+          aria-label={L(M.seriesTitle, lang)}
+          tabIndex={0}
+        >
           <table className={styles.wide}>
             <thead>
               <tr>
@@ -102,14 +135,17 @@ export default function MethodologyTab({ board, lang }) {
                   <td>{row.title}</td>
                   <td className={styles.nowrap}>
                     <span
-                      className={`${styles.origin} ${ORIGIN_CLASS[row.origin] || ""}`}
+                      className={`${styles.prov} ${ORIGIN_CLASS[row.origin] || ""}`}
                     >
-                      {L(UI.origin[row.origin], lang)}
+                      <span className={styles.provDot} aria-hidden="true" />
+                      <b>{L(UI.origin[row.origin], lang)}</b>
                     </span>
                   </td>
                   <td>{row.source}</td>
                   <td>{row.latest}</td>
-                  <td>{row.fresh ? L(UI.fresh[row.fresh], lang) : "—"}</td>
+                  <td className={FRESH_CLASS[row.fresh] || ""}>
+                    {row.fresh ? L(UI.fresh[row.fresh], lang) : "—"}
+                  </td>
                   <td className={styles.nowrap}>
                     {row.url ? (
                       <a
@@ -129,7 +165,12 @@ export default function MethodologyTab({ board, lang }) {
       </Section>
 
       <Section title={L(M.liveTitle, lang)} read={L(M.liveRead, lang)}>
-        <div className={styles.tablePanel}>
+        <div
+          className={styles.tablePanel}
+          role="region"
+          aria-label={L(M.liveTitle, lang)}
+          tabIndex={0}
+        >
           <table className={styles.wide}>
             <thead>
               <tr>

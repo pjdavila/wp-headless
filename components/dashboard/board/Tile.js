@@ -1,4 +1,4 @@
-import { OriginMarker, Stamp } from "./Stamp";
+import { Provenance } from "./Stamp";
 import styles from "../../../styles/dashboard-board.module.css";
 
 const DELTA_CLASS = {
@@ -7,56 +7,110 @@ const DELTA_CLASS = {
   flat: styles.deltaFlat,
 };
 
+const DELTA_ICON = {
+  up: "M3 10 8 5l5 5",
+  down: "M3 6l5 5 5-5",
+};
+
 function Sparkline({ values }) {
   const W = 120;
-  const H = 28;
+  const H = 30;
   const lo = Math.min(...values);
   const hi = Math.max(...values);
   const X = (i) => 2 + ((W - 8) * i) / (values.length - 1);
-  const Y = (v) => 3 + (H - 6) * (1 - (v - lo) / (hi - lo || 1));
+  const Y = (v) => 4 + (H - 8) * (1 - (v - lo) / (hi - lo || 1));
   const d = values
     .map((v, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`)
     .join("");
   const last = values.length - 1;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true">
+    <svg
+      className={styles.spark}
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d={`${d}L${X(last).toFixed(1)} ${H}L${X(0).toFixed(1)} ${H}Z`}
+        style={{ fill: "var(--spark-fill)" }}
+      />
       <path
         d={d}
         fill="none"
-        style={{ stroke: "var(--g2)" }}
+        style={{ stroke: "var(--spark)" }}
         strokeWidth="1.6"
         strokeLinejoin="round"
+        strokeLinecap="round"
       />
       <circle
         cx={X(last)}
         cy={Y(values[last])}
-        r="3.2"
-        style={{ fill: "var(--accent)" }}
+        r="3"
+        style={{ fill: "var(--accent)", stroke: "var(--surface)" }}
+        strokeWidth="1.5"
       />
     </svg>
   );
 }
 
-/** KPI tile: label, value, change, sparkline, freshness stamp and origin. */
+/** KPI tile: label, value, change with arrow, sparkline and one provenance line. */
 export default function Tile({ tile, lang, collectedOn, onOpen }) {
+  const delta = tile.delta;
+  const dir = !delta
+    ? null
+    : delta.sym === "▲"
+      ? "up"
+      : delta.sym === "▼"
+        ? "down"
+        : null;
   const body = (
     <>
-      <div className={styles.tileLabel}>{tile.label}</div>
-      <div className={styles.tileValue}>{tile.value}</div>
-      {tile.delta && (
-        <div className={`${styles.delta} ${DELTA_CLASS[tile.delta.cls]}`}>
-          <span aria-hidden="true">{tile.delta.sym}</span>
-          <span>{tile.delta.text}</span>
-        </div>
+      <span className={styles.tileLabel}>{tile.label}</span>
+      <span className={styles.tileValue}>{tile.value}</span>
+      {delta ? (
+        <span className={`${styles.delta} ${DELTA_CLASS[delta.cls]}`}>
+          {dir ? (
+            <svg
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d={DELTA_ICON[dir]}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ) : (
+            <span className={styles.deltaDot} aria-hidden="true" />
+          )}
+          <span>{delta.text}</span>
+        </span>
+      ) : (
+        <span className={styles.deltaEmpty} aria-hidden="true" />
       )}
-      {tile.spark && <Sparkline values={tile.spark} />}
-      <Stamp stamp={tile.stamp} lang={lang} />
-      <OriginMarker
+      {tile.spark ? (
+        <Sparkline values={tile.spark} />
+      ) : (
+        <span className={styles.sparkEmpty} aria-hidden="true" />
+      )}
+      <Provenance
         origin={tile.origin}
+        stampKey={tile.stamp?.key}
+        freq={tile.stamp?.freq}
+        force={tile.stamp?.force}
+        src={tile.stamp?.src}
         lives={tile.live ? [tile.live] : []}
         collectedOn={collectedOn}
         lang={lang}
-        compact
+        className={styles.tileProv}
       />
     </>
   );
@@ -65,7 +119,8 @@ export default function Tile({ tile, lang, collectedOn, onOpen }) {
     return (
       <button
         type="button"
-        className={styles.tile}
+        className={`${styles.tile} ${styles.tileButton}`}
+        aria-haspopup="dialog"
         onClick={() => onOpen(tile.open)}
       >
         {body}

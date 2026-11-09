@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import BoardTab from "./BoardTab";
 import MethodologyTab from "./MethodologyTab";
 import DetailDialog from "./DetailDialog";
+import { BoardSkeleton, ErrorState, GateState } from "./BoardStates";
 import { TABS } from "../../../lib/economy/board/tabs";
 import { UI, fill } from "../../../lib/economy/board/i18n";
 import { L, formatDay } from "../../../lib/economy/board/format";
@@ -24,6 +25,62 @@ function useHeaderOffset() {
     return () => observer.disconnect();
   }, []);
   return offset;
+}
+
+/**
+ * "Gráficas mensuales: 2 años · 5 años · Todo" — the span of every monthly
+ * chart. Lives in the sticky tab bar (and above the content on phones).
+ */
+function RangeControl({ range, onRange, lang, id, className }) {
+  return (
+    <div className={`${styles.range} ${className || ""}`}>
+      <span
+        className={styles.rangeLabel}
+        id={id}
+        title={L(UI.rangeGroup, lang)}
+      >
+        <svg
+          viewBox="0 0 16 16"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <rect
+            x="2"
+            y="3"
+            width="12"
+            height="11"
+            rx="1.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+          />
+          <path
+            d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+        </svg>
+        {L(UI.rangeLabel, lang)}
+        <span className={styles.srOnly}> · {L(UI.rangeGroup, lang)}</span>
+      </span>
+      <div className={styles.chips} role="group" aria-labelledby={id}>
+        {["2y", "5y", "max"].map((key) => (
+          <button
+            key={key}
+            type="button"
+            aria-pressed={range === key}
+            onClick={() => onRange(key)}
+          >
+            {L(UI.ranges[key], lang)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -60,6 +117,7 @@ export default function BoardView({
       strip.scrollLeft = Math.max(0, left - 16);
     }
   }, [tab]);
+  const showRange = Boolean(board) && tab !== "method";
   const page = board
     ? board.fixed.pages.find((item) => item.key === tab)
     : null;
@@ -69,19 +127,18 @@ export default function BoardView({
       <div className={styles.mast}>
         <div className={`${styles.wrap} ${styles.mastInner}`}>
           <div className={styles.mastId}>
+            <p className={styles.mastEyebrow}>
+              Caribbean Business
+              <span className={styles.beta} title={L(UI.betaTitle, lang)}>
+                {L(UI.beta, lang)}
+              </span>
+            </p>
             <h1 className={styles.mastTitle}>
               The Great Puerto Rico Dashboard
             </h1>
             <p className={styles.mastTag}>{L(UI.tagline, lang)}</p>
           </div>
           <div className={styles.mastTools}>
-            <span className={styles.pill}>
-              <small>{L(UI.prototype, lang)}</small>
-              <span>
-                v{board ? board.fixed.version : "0.1"}
-                {board ? ` · ${formatDay(board.collectedOn, lang)}` : ""}
-              </span>
-            </span>
             <div
               className={styles.seg}
               role="group"
@@ -113,82 +170,82 @@ export default function BoardView({
         style={{ top: headerOffset }}
         aria-label={L(UI.tabsLabel, lang)}
       >
-        <div className={`${styles.wrap} ${styles.navInner}`} ref={navRef}>
-          {TABS.map(({ key }) => (
-            <button
-              key={key}
-              type="button"
-              aria-current={tab === key ? "page" : undefined}
-              onClick={() => onTab(key)}
-            >
-              {L(UI.tabs[key], lang)}
-            </button>
-          ))}
+        <div className={`${styles.wrap} ${styles.navBar}`}>
+          <div className={styles.navInner} ref={navRef}>
+            {TABS.map(({ key }) => (
+              <button
+                key={key}
+                type="button"
+                aria-current={tab === key ? "page" : undefined}
+                onClick={() => onTab(key)}
+              >
+                {L(UI.tabs[key], lang)}
+              </button>
+            ))}
+          </div>
+          {showRange && (
+            <RangeControl
+              range={range}
+              onRange={setRange}
+              lang={lang}
+              id="board-range-nav"
+              className={styles.rangeNav}
+            />
+          )}
         </div>
       </nav>
 
       <main className={`${styles.wrap} ${styles.main}`}>
-        {status === "loading" && (
-          <div className={styles.stateBlock} role="status" aria-live="polite">
-            <p className={styles.stateTitle}>{L(UI.states.loading, lang)}</p>
-          </div>
-        )}
+        {status === "loading" && <BoardSkeleton lang={lang} />}
 
         {status === "unauthenticated" && (
-          <div className={styles.stateBlock}>
-            <h2 className={styles.stateTitle}>
-              {L(UI.states.gateTitle, lang)}
-            </h2>
-            <p className={styles.stateText}>
-              {sessionExpired
-                ? L(UI.states.expiredText, lang)
-                : L(UI.states.gateText, lang)}
-            </p>
-            <button
-              type="button"
-              className={styles.btnPrimary}
-              onClick={onLogin}
-            >
-              {L(UI.states.login, lang)}
-            </button>
-          </div>
+          <GateState
+            lang={lang}
+            sessionExpired={sessionExpired}
+            onLogin={onLogin}
+          />
         )}
 
-        {status === "error" && (
-          <div className={styles.stateBlock} role="alert">
-            <h2 className={styles.stateTitle}>
-              {L(UI.states.errorTitle, lang)}
-            </h2>
-            <p className={styles.stateText}>{L(UI.states.errorText, lang)}</p>
-            <button
-              type="button"
-              className={styles.btnPrimary}
-              onClick={onRetry}
-            >
-              {L(UI.states.retry, lang)}
-            </button>
-          </div>
-        )}
+        {status === "error" && <ErrorState lang={lang} onRetry={onRetry} />}
 
         {board && (
           <>
             <div className={styles.legendBar}>
-              <strong>{L(UI.legendTitle, lang)}</strong>
-              <span>
-                <span className={`${styles.origin} ${styles.originLive}`}>
-                  {L(UI.origin.live, lang)}
+              <p className={styles.legendTitle}>
+                <strong>{L(UI.legendTitle, lang)}</strong>
+                <span>{L(UI.legendLine, lang)}</span>
+              </p>
+              <p className={`${styles.prov} ${styles.provLive}`}>
+                <span className={styles.provDot} aria-hidden="true" />
+                <span className={styles.provText}>
+                  <b>{L(UI.origin.live, lang)}</b>{" "}
+                  <span className={styles.legendText}>
+                    {L(UI.legendLive, lang)}
+                  </span>
                 </span>
-                {L(UI.legendLive, lang)}
-              </span>
-              <span>
-                <span className={`${styles.origin} ${styles.originFixed}`}>
-                  {L(UI.origin.fixed, lang)}
+              </p>
+              <p className={`${styles.prov} ${styles.provFixed}`}>
+                <span className={styles.provDot} aria-hidden="true" />
+                <span className={styles.provText}>
+                  <b>{L(UI.origin.fixed, lang)}</b>{" "}
+                  <span className={styles.legendText}>
+                    {fill(L(UI.legendFixed, lang), {
+                      date: formatDay(board.collectedOn, lang),
+                    })}
+                  </span>
                 </span>
-                {fill(L(UI.legendFixed, lang), {
-                  date: formatDay(board.collectedOn, lang),
-                })}
-              </span>
+              </p>
             </div>
+
+            {showRange && (
+              <RangeControl
+                range={range}
+                onRange={setRange}
+                lang={lang}
+                id="board-range-inline"
+                className={styles.rangeInline}
+              />
+            )}
 
             {tab === "method" ? (
               <MethodologyTab board={board} lang={lang} />
@@ -199,7 +256,6 @@ export default function BoardView({
                   page={page}
                   lang={lang}
                   range={range}
-                  onRange={setRange}
                   onOpen={setDetail}
                 />
               )
