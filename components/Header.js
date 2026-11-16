@@ -7,6 +7,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { useAuth } from "../lib/useAuth";
 import { useMagazineCover } from "../lib/useMagazineCover";
+import { isOptimizableImageUrl } from "../lib/imageHosts";
 import ThemeToggle from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import TsaBadge from "./TsaBadge";
@@ -548,6 +549,7 @@ export default function Header({
                     alt="Portada de la edición más reciente de Caribbean Business"
                     fill
                     sizes="72px"
+                    unoptimized={!isOptimizableImageUrl(magazineCoverSrc)}
                     className={style.drawerMagazineImage}
                   />
                 </span>

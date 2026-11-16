@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useMagazineCover } from "../lib/useMagazineCover";
+import { isOptimizableImageUrl } from "../lib/imageHosts";
 import styles from "../styles/epaper-banner.module.css";
 
 const FALLBACK_COVER_SRC = "/epaper/portada-actual.webp";
@@ -25,6 +26,9 @@ export default function EpaperBanner() {
             alt="Caribbean Business latest edition cover"
             fill
             sizes="(max-width: 640px) 90px, 130px"
+            // The cover URL comes from an external API: if its host is not
+            // allow-listed for optimization, show it as-is instead of crashing.
+            unoptimized={!isOptimizableImageUrl(coverSrc)}
             className={styles.coverImg}
           />
         </div>
