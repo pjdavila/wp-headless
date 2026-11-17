@@ -16,7 +16,6 @@ import PrintEditionWidget from "./PrintEditionWidget";
 import EpaperBanner from "./EpaperBanner";
 import SpecialReportsWidget from "./SpecialReportsWidget";
 import AdServerSlot from "./AdServerSlot";
-import FortyUnder40Promo from "./FortyUnder40Promo";
 import styles from "../styles/front-page.module.css";
 
 /**
@@ -103,7 +102,9 @@ export default function FrontPage({ homepage }) {
           <div className={styles.mainContent}>
             <ShortStoriesRow />
 
-            <FortyUnder40Promo />
+            {/* 40 Under 40 call-for-entries banner turned off (Nov 2026). To
+                bring it back, import components/FortyUnder40Promo and render
+                <FortyUnder40Promo /> here. */}
 
             {latestNewsPosts.length > 0 && (
               <section className={styles.recommendedSection}>
