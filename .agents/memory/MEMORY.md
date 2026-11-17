@@ -15,7 +15,7 @@
 - [Odoo /caribbean/suscripcion](odoo-suscripcion-endpoint.md) — NOT used: user chose Stripe-only for the paid print subscription; that endpoint bills on its own.
 - [Cloudflare Workers (OpenNext)](cloudflare-workers-opennext.md) — build in a copy, preview with process env, how to read Worker logs, runtime traps to re-check on upgrades.
 - [Homepage single WP query](homepage-single-query.md) — `/` makes 1 WP request per rebuild; add homepage data to that query, never a new useQuery.
-- [Recombee catalog writers](recombee-catalog.md) — RSS feed (hashed ids, stale, 404 links) vs slug-id items from tracking; app fills only empty props.
+- [Recombee catalog writers](recombee-catalog.md) — two writers (feed vs slug-id tracking), fill-empty only; Workers need waitUntil for the delayed fill.
 - [Headless browser checks](headless-browser-checks.md) — Chromium at /repl/tools/bin/chromium + puppeteer-core in /tmp for click/timing/ad checks; IMA sample VAST for tests.
 - [Adserver.Online quirks](adserver-online-quirks.md) — loadAd replaces the `<ins>` (stale refs); auto-scan double-requests zones on hard load; detect fill via wrapper.
 - [In-article scroller geometry](in-article-scroller.md) — window fits the screen, so ~350px wide on desktop; required for "slower than text" + full view.

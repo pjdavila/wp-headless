@@ -221,6 +221,20 @@ test("filler backs off after a WordPress error and retries later views", async (
   assert.equal(s.recombee.a.title, "Title “a” & more");
 });
 
+test("settled() waits for the delayed write (what Workers pass to waitUntil)", async () => {
+  const s = setupFiller();
+  s.filler.track("a");
+  let done = false;
+  const settled = s.filler.settled().then(() => (done = true));
+  await Promise.resolve();
+  assert.equal(done, false); // the flush has not run yet
+  await s.runScheduled();
+  await settled;
+  assert.equal(done, true);
+  assert.equal(s.recombee.a.title, "Title “a” & more");
+  await s.filler.settled(); // idle: resolves immediately
+});
+
 test("filler queue is capped", async () => {
   let t = 0;
   const seen = [];

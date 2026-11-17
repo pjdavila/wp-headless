@@ -26,6 +26,18 @@ function getFiller(client) {
   return filler;
 }
 
+// On Cloudflare Workers (OpenNext) work left running after the response is
+// cancelled unless it is handed to `ctx.waitUntil`. OpenNext exposes the
+// request context on this global symbol; on Node hosts it is undefined.
+function getWaitUntil() {
+  try {
+    const ctx = globalThis[Symbol.for("__cloudflare-context__")]?.ctx;
+    return typeof ctx?.waitUntil === "function" ? ctx.waitUntil.bind(ctx) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -41,15 +53,21 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, skipped: true });
   }
 
-  client.send(
-    new rqs.AddDetailView(userId, itemId, {
-      cascadeCreate: true,
-    })
-  ).catch((err) => {
+  // Awaited so the view is recorded before the response on every host.
+  try {
+    await client.send(
+      new rqs.AddDetailView(userId, itemId, {
+        cascadeCreate: true,
+      })
+    );
+  } catch (err) {
     console.error("Recombee track error:", err.message);
-  });
+  }
 
-  getFiller(client).track(itemId);
+  const itemFiller = getFiller(client);
+  itemFiller.track(itemId);
+  const waitUntil = getWaitUntil();
+  if (waitUntil) waitUntil(itemFiller.settled());
 
   return res.status(200).json({ ok: true });
 }
